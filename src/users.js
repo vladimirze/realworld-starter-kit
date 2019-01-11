@@ -1,5 +1,6 @@
 import request from './request';
 import jwt from './jwt';
+import user from './user';
 
 // TODO: append jwt token to each request
 // TODO: handle the case when token is expired
@@ -13,12 +14,13 @@ function register(username, email, password) {
 }
 
 function logIn(email, password) {
-    return request(`${users}/login`, {
+    return request(`${resource}/login`, {
         method: 'POST',
         body: {user: {email: email, password: password}}
     })
     .then((authenticatedUser) => {
         jwt.set(authenticatedUser.user.token);
+        user.isAuthenticated.notify(true);
         return authenticatedUser;
     });
 }
@@ -26,7 +28,8 @@ function logIn(email, password) {
 // TODO: it's better reset the state by navigating the browser back to log-in page after deleting the token
 function logOut() {
     jwt.remove();
-    window.location.href = '/login';
+    user.isAuthenticated.notify(false);
+    window.location.href = '/';
     return Promise.resolve(true);
 }
 

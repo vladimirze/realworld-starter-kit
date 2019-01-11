@@ -1,6 +1,7 @@
 export default class Observable {
-    constructor() {
+    constructor(value) {
         this.subscriptions = [];
+        this.currentValue = value;
     }
 
     subscribe(observer) {

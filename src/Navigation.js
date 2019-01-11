@@ -26,6 +26,8 @@ export default class Navigation extends Component {
     }
 
     render() {
+        const isAuthenticated = !!(this.state.user && this.state.user.user);
+
         return (
             <nav>
                 <ul>
@@ -33,16 +35,35 @@ export default class Navigation extends Component {
                         <Link to="/">Home</Link>
                     </li>
 
-                    <li>
-                        <Link to="editor">New Post</Link>
-                    </li>
-
-                    <li>
-                        <Link to="settings">Settings</Link>
-                    </li>
+                    {
+                        !isAuthenticated &&
+                        <li>
+                            <Link to="/login">Sign In</Link>
+                        </li>
+                    }
 
                     {
-                        this.state.user && this.state.user.user &&
+                        !isAuthenticated &&
+                        <li>
+                            <Link to="/register">Sign Up</Link>
+                        </li>
+                    }
+
+                    {   isAuthenticated &&
+                        <li>
+                            <Link to="editor">New Post</Link>
+                        </li>
+                    }
+
+                    {
+                        isAuthenticated &&
+                        <li>
+                            <Link to="settings">Settings</Link>
+                        </li>
+                    }
+
+                    {
+                        isAuthenticated &&
                         <li>
                             <Link to={`/@${this.state.user.user.username}`}>{this.state.user.user.username}</Link>
                         </li>

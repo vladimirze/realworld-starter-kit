@@ -35,6 +35,11 @@ export function addRequestInterceptor(func) {
     interceptors.push(func);
 }
 
+const responseInterceptors = [];
+export function addResponseInterceptor(func) {
+    responseInterceptors.push(func);
+}
+
 // TODO: add ability to cancel requests?
 // addRequestInterceptor((resource, options, cancelFn) => {
 //     if (resource.startsWith('http://')) {
@@ -72,6 +77,14 @@ export default function request(resource, options) {
     // response.ok is true when status code is between 200-299
     let responseClone;
     return fetch(requestUrl, requestOptions)
+        .then((response) => {
+            if (responseInterceptors.length > 0) {
+                for (const interceptor of responseInterceptors) {
+                    response = interceptor(response);
+                }
+            }
+            return response;
+        })
         .then((response) => {
             responseClone = response.clone();
             return responseClone.json();

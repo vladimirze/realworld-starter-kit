@@ -5,8 +5,9 @@ import Registration from "./Registration";
 import LogIn from './LogIn';
 
 import jwt from './jwt';
-import {addRequestInterceptor} from "./request";
+import {addRequestInterceptor, addResponseInterceptor} from "./request";
 import user from './user';
+import users from './users';
 import Navigation from "./Navigation";
 
 
@@ -19,6 +20,15 @@ addRequestInterceptor((url, options) => {
     return [url, options];
 });
 
+addResponseInterceptor((response) => {
+    // not authorized
+    if (response.status === 401) {
+        // TODO: get a new token and retry the request? or log out user?
+        users.logOut();
+    }
+
+    return response;
+});
 
 class HomePage extends Component {
     render() {
@@ -41,8 +51,28 @@ class UserProfile extends Component {
 }
 
 class App extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            isAuthenticated: false
+        };
+
+        this.checkAuthentication = this.checkAuthentication.bind(this);
+    }
+
+    checkAuthentication(isAuthenticated) {
+        this.setState({isAuthenticated: isAuthenticated});
+        if (isAuthenticated) {
+            user.getCurrentUser();
+        }
+    }
+
     componentDidMount() {
-        user.getCurrentUser();
+        user.isAuthenticated.subscribe(this.checkAuthentication);
+    }
+
+    componentWillUnmount() {
+        user.isAuthenticated.unsubscribe(this.checkAuthentication);
     }
 
     render() {

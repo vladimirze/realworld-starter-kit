@@ -1,9 +1,11 @@
 import request from './request';
 import Observable from './Observable';
+import jwt from './jwt';
 
 
 const resource = 'user';
 const currentUser = new Observable();
+const isAuthenticated = new Observable(!!jwt.get());
 
 function getCurrentUser() {
     return request(resource, {
@@ -17,7 +19,8 @@ function getCurrentUser() {
 
 const user = {
     getCurrentUser: getCurrentUser,
-    currentUser: currentUser
+    currentUser: currentUser,
+    isAuthenticated: isAuthenticated
 };
 
 export default user;
