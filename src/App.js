@@ -30,7 +30,21 @@ class HomePage extends Component {
     }
 }
 
+class UserProfile extends Component {
+    render() {
+        return (
+            <div>
+                {this.props.match.params.user} Profile.
+            </div>
+        )
+    }
+}
+
 class App extends Component {
+    componentDidMount() {
+        user.getCurrentUser();
+    }
+
     render() {
         return (
             <Fragment>
@@ -40,6 +54,7 @@ class App extends Component {
                         <Route path="/" exact component={HomePage}/>
                         <Route path="/register" component={Registration}/>
                         <Route path="/login" component={LogIn}/>
+                        <Route path="/@:user" component={UserProfile}/>
                     </div>
                 </Router>
             </Fragment>

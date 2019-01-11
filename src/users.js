@@ -23,8 +23,10 @@ function logIn(email, password) {
     });
 }
 
+// TODO: it's better reset the state by navigating the browser back to log-in page after deleting the token
 function logOut() {
     jwt.remove();
+    window.location.href = '/login';
     return Promise.resolve(true);
 }
 
