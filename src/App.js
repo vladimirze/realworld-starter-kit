@@ -5,9 +5,10 @@ import Registration from "./Registration";
 import LogIn from './LogIn';
 
 import jwt from './jwt';
-import {addRequestInterceptor, addResponseInterceptor} from "./request";
+import {abortController, addRequestInterceptor, addResponseInterceptor} from "./request";
 import user from './user';
 import Navigation from "./Navigation";
+import {article} from './article';
 
 
 addRequestInterceptor((url, options) => {
@@ -29,11 +30,80 @@ addResponseInterceptor((response) => {
     return response;
 });
 
+class ArticleList extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            articles: [],
+            isReady: false
+        };
+    }
+
+    componentDidMount() {
+        article.getList()
+            .then((articles) => {
+                this.setState({articles: articles.articles, isReady: true});
+            })
+            .catch(console.error);
+    }
+
+    componentWillUnmount() {
+        abortController.abort();
+    }
+
+    renderArticles() {
+        return this.state.articles.map((article) => {
+            return <div key={article.createdAt}>{article.title}</div>
+        });
+    }
+
+    renderNoArticles() {
+        return <div>No articles are here... yet.</div>
+    }
+
+    renderLoader() {
+        return <div>loading...</div>;
+    }
+
+    render() {
+        if (!this.state.isReady) {
+            return this.renderLoader();
+        } else if (this.state.articles.length === 0) {
+            return this.renderNoArticles();
+        } else {
+            return this.renderArticles();
+        }
+    }
+}
+
+const GLOBAL_FEED = 'global';
+const USER_FEED = 'user';
 class HomePage extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            selectedArticleFeed: GLOBAL_FEED
+        };
+
+        this.handleArticleFeedChange = this.handleArticleFeedChange.bind(this);
+    }
+
+    handleArticleFeedChange(event) {
+        this.setState({selectedArticleFeed: event.target.value});
+    }
+
     render() {
         return (
             <div>
                 Home Page
+                <select onChange={this.handleArticleFeedChange}>
+                    <option value={GLOBAL_FEED}>Global Feed</option>
+                    <option value={USER_FEED}>Your Feed</option>
+                </select>
+
+                <ArticleList filterBy={this.state.selectedArticleFeed}/>
             </div>
         );
     }
