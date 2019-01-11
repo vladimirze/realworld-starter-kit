@@ -2,6 +2,7 @@ import React, {Component, Fragment} from 'react';
 import {withRouter} from "react-router-dom";
 
 import user from './user';
+import {ErrorViewer} from "./error";
 
 
 class LogIn extends Component {
@@ -11,7 +12,8 @@ class LogIn extends Component {
         this.state = {
             email: '',
             password: '',
-            isBusy: false
+            isBusy: false,
+            errors: {}
         };
 
         this.logIn = this.logIn.bind(this);
@@ -26,7 +28,9 @@ class LogIn extends Component {
             .then(() => {
                 this.props.history.push('/');
             })
-            .catch(console.error)
+            .catch((error) => {
+                this.setState({isBusy: false, errors: error.response.errors});
+            });
     }
 
     handleInputChange(event) {
@@ -57,6 +61,8 @@ class LogIn extends Component {
                         onChange={this.handleInputChange.bind(this)}/>
 
                     <button onClick={this.logIn}>Log-In</button>
+
+                    <ErrorViewer errors={this.state.errors}/>
                 </div>
             </Fragment>
         );
