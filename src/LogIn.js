@@ -1,7 +1,8 @@
 import React, {Component, Fragment} from 'react';
 import {withRouter} from "react-router-dom";
 
-import users from './users';
+import user from './user';
+
 
 class LogIn extends Component {
     constructor(props) {
@@ -21,7 +22,7 @@ class LogIn extends Component {
         event.preventDefault();
 
         this.setState({isBusy: true});
-        users.logIn(this.state.email, this.state.password)
+        user.logIn(this.state.email, this.state.password)
             .then(() => {
                 this.props.history.push('/');
             })

@@ -3,6 +3,8 @@ import React, {Component} from 'react';
 
 export class BadInput extends Error {} // 422
 
+export class NotAuthorized extends Error {}
+
 export class ErrorViewer extends Component {
     isEmptyObject() {
         return !this.props.errors || Object.keys(this.props.errors).length === 0;

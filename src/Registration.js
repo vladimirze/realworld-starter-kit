@@ -1,5 +1,5 @@
 import React, {Component, Fragment} from 'react';
-import users from './users';
+import user from './user';
 import {ErrorViewer} from "./error";
 import {withRouter} from "react-router-dom";
 
@@ -24,8 +24,8 @@ class Registration extends Component {
         event.preventDefault();
 
         this.setState({isBusy: true, errors: {}});
-        users.register(this.state.username, this.state.email, this.state.password)
-            .then(users.logIn.bind(users, this.state.email, this.state.password))
+        user.register(this.state.username, this.state.email, this.state.password)
+            .then(user.logIn.bind(user, this.state.email, this.state.password))
             .then(() => {
                 this.props.history.push('/');
             })

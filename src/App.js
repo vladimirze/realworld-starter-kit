@@ -7,7 +7,6 @@ import LogIn from './LogIn';
 import jwt from './jwt';
 import {addRequestInterceptor, addResponseInterceptor} from "./request";
 import user from './user';
-import users from './users';
 import Navigation from "./Navigation";
 
 
@@ -24,7 +23,7 @@ addResponseInterceptor((response) => {
     // not authorized
     if (response.status === 401) {
         // TODO: get a new token and retry the request? or log out user?
-        users.logOut();
+        user.logOut();
     }
 
     return response;
