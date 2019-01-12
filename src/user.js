@@ -19,7 +19,6 @@ function getCurrentUser() {
     return req;
 }
 
-// TODO: append jwt token to each request
 // TODO: handle the case when token is expired
 function register(username, email, password) {
     return request('users', {
@@ -29,18 +28,20 @@ function register(username, email, password) {
 }
 
 function logIn(email, password) {
-    return request('users/login', {
+    const req = request('users/login', {
         method: 'POST',
         body: {user: {email: email, password: password}}
-    })
-    .then((authenticatedUser) => {
+    });
+
+    req.promise = req.promise.then((authenticatedUser) => {
         jwt.set(authenticatedUser.user.token);
         user.isAuthenticated.notify(true);
         return authenticatedUser;
     });
+
+    return req;
 }
 
-// TODO: it's better reset the state by navigating the browser back to log-in page after deleting the token
 // TODO: can jwt token be invalidated after user logs out? (backend)
 function logOut() {
     jwt.remove();

@@ -24,7 +24,8 @@ class LogIn extends Component {
         event.preventDefault();
 
         this.setState({isBusy: true});
-        user.logIn(this.state.email, this.state.password)
+        this.loginRequest = user.logIn(this.state.email, this.state.password);
+        this.loginRequest.promise
             .then(() => {
                 this.props.history.push('/');
             })
@@ -32,6 +33,12 @@ class LogIn extends Component {
                 console.error(error);
                 this.setState({isBusy: false, errors: error.response.errors});
             });
+    }
+
+    componentWillUnmount() {
+        if (this.loginRequest) {
+            this.loginRequest.abort();
+        }
     }
 
     handleInputChange(event) {

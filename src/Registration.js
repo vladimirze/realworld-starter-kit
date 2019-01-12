@@ -24,7 +24,8 @@ class Registration extends Component {
         event.preventDefault();
 
         this.setState({isBusy: true, errors: {}});
-        user.register(this.state.username, this.state.email, this.state.password)
+        this.registrationRequest = user.register(this.state.username, this.state.email, this.state.password);
+        this.registrationRequest.promise
             .then(user.logIn.bind(user, this.state.email, this.state.password))
             .then(() => {
                 this.props.history.push('/');
@@ -32,6 +33,12 @@ class Registration extends Component {
             .catch((error) => {
                 this.setState({isBusy: false, errors: error.response.errors});
             });
+    }
+
+    componentWillUnmount() {
+        if (this.registrationRequest) {
+            this.registrationRequest.abort();
+        }
     }
 
     handleInputChange(event) {
