@@ -30,22 +30,34 @@ addResponseInterceptor((response) => {
     return response;
 });
 
-
-function feedFactory(dataSource) {
+// TODO: read page number from URL
+// TODO: make pagination.js module to handle page enumeration logic
+function feedFactory(dataSource, pageLimit=10) {
     return class Feed extends Component {
         constructor(props) {
             super(props);
 
+            this.pageLimit = pageLimit;
             this.state = {
                 feed: [],
-                isReady: false
+                isReady: false,
+                pageNumber: 1,
+                totalArticles: 0,
+                totalPages: 0
             };
+
+            this.getPage = this.getPage.bind(this);
         }
 
-        componentDidMount() {
-            this.feedRequest = dataSource();
-            this.feedRequest.promise.then((feed) => {
-                    this.setState({feed: feed.articles, isReady: true});
+        getFeed(promise) {
+            this.setState({isReady: false});
+            promise.then((feed) => {
+                    this.setState({
+                        feed: feed.articles,
+                        isReady: true,
+                        totalArticles: feed.articlesCount,
+                        totalPages: Math.ceil(feed.articlesCount / this.pageLimit)
+                    });
                 })
                 .catch((error) => {
                     if (error.name === "AbortError") {
@@ -57,10 +69,29 @@ function feedFactory(dataSource) {
                 });
         }
 
+        componentDidMount() {
+            this.feedRequest = dataSource();
+            this.getFeed(this.feedRequest.promise);
+        }
+
         componentWillUnmount() {
             if (this.feedRequest) {
                 this.feedRequest.abort();
             }
+        }
+
+        getPage(page) {
+            this.setState({pageNumber: page});
+            this.feedRequest = dataSource(this.pageLimit, (this.pageLimit * page) - this.pageLimit);
+            this.getFeed(this.feedRequest.promise);
+        }
+
+        paginate() {
+            const pages = [];
+            for (let i = 1; i <= this.state.totalPages; i += 1) {
+                pages.push(<span key={i} onClick={() => {this.getPage(i)}}>{i}</span>);
+            }
+            return pages;
         }
 
         render() {
@@ -75,6 +106,8 @@ function feedFactory(dataSource) {
                             return <div key={article.createdAt}>{article.title}</div>
                         })
                     }
+
+                    {this.paginate()}
                 </div>
             );
         }
