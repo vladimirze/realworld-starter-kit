@@ -15,7 +15,7 @@ export default class Observable {
     unsubscribe(observer) {
         const index = this.subscriptions.findIndex((subscription) => { return observer === subscription; });
         if (index >= 0) {
-            this.subscriptions.splice(1, index);
+            this.subscriptions.splice(index, 1);
         }
     }
 

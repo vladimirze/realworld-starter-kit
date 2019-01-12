@@ -30,6 +30,9 @@ class LogIn extends Component {
                 this.props.history.push('/');
             })
             .catch((error) => {
+                if (error.name === "AbortError") {
+                    return;
+                }
                 console.error(error);
                 this.setState({isBusy: false, errors: error.response.errors});
             });
