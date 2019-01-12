@@ -56,10 +56,10 @@ function applyRequestInterceptors(requestUrl, requestOptions) {
 
 // TODO: is there a chance a different component will be instantiated  before the previous is unmounted?
 // ^and cause the unintended request to be canceled?
-export const abortController = new AbortController();
+// "When abort() is called, the fetch() promise rejects with an AbortError."
 
 export default function request(resource, options) {
-
+    const abortController = new AbortController();
     const defaultOptions = {
         headers: {'Content-type': 'application/json'},
         mode: 'cors',
@@ -76,24 +76,27 @@ export default function request(resource, options) {
 
     // response.ok is true when status code is between 200-299
     let responseClone;
-    return fetch(requestUrl, requestOptions)
-        .then((response) => {
-            if (responseInterceptors.length > 0) {
-                for (const interceptor of responseInterceptors) {
-                    response = interceptor(response);
+    return {
+        promise: fetch(requestUrl, requestOptions)
+            .then((response) => {
+                if (responseInterceptors.length > 0) {
+                    for (const interceptor of responseInterceptors) {
+                        response = interceptor(response);
+                    }
                 }
-            }
-            return response;
-        })
-        .then((response) => {
-            responseClone = response.clone();
-            return responseClone.json();
-        })
-        .then((json) => {
-            if (responseClone.ok) {
-                return json;
-            } else {
-                throw new APIError(responseClone.status, json);
-            }
-        });
+                return response;
+            })
+            .then((response) => {
+                responseClone = response.clone();
+                return responseClone.json();
+            })
+            .then((json) => {
+                if (responseClone.ok) {
+                    return json;
+                } else {
+                    throw new APIError(responseClone.status, json);
+                }
+            }),
+        abort: () => { abortController.abort(); }
+    }
 }

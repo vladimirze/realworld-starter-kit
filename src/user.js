@@ -7,13 +7,16 @@ const currentUser = new Observable();
 const isAuthenticated = new Observable(!!jwt.get());
 
 function getCurrentUser() {
-    return request('user', {
+    const req = request('user', {
         method: 'GET'
-    })
-    .then((authenticatedUser) => {
+    });
+
+    req.promise = req.promise.then((authenticatedUser) => {
         currentUser.notify(authenticatedUser);
         return authenticatedUser;
     });
+
+    return req;
 }
 
 // TODO: append jwt token to each request

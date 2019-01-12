@@ -5,11 +5,11 @@ import Registration from "./Registration";
 import LogIn from './LogIn';
 
 import jwt from './jwt';
-import {abortController, addRequestInterceptor, addResponseInterceptor} from "./request";
+import {addRequestInterceptor, addResponseInterceptor} from "./request";
 import user from './user';
 import Navigation from "./Navigation";
 import {article} from './article';
-
+import {feed} from "./feed";
 
 addRequestInterceptor((url, options) => {
     const token = jwt.get();
@@ -30,80 +30,110 @@ addResponseInterceptor((response) => {
     return response;
 });
 
-class ArticleList extends Component {
-    constructor(props) {
-        super(props);
 
-        this.state = {
-            articles: [],
-            isReady: false
-        };
-    }
+function feedFactory(dataSource) {
+    return class Feed extends Component {
+        constructor(props) {
+            super(props);
 
-    componentDidMount() {
-        article.getList()
-            .then((articles) => {
-                this.setState({articles: articles.articles, isReady: true});
-            })
-            .catch(console.error);
-    }
+            this.state = {
+                feed: [],
+                isReady: false
+            };
+        }
 
-    componentWillUnmount() {
-        abortController.abort();
-    }
+        componentDidMount() {
+            this.feedRequest = dataSource();
+            this.feedRequest.promise.then((feed) => {
+                    this.setState({feed: feed.articles, isReady: true});
+                })
+                .catch((error) => {
+                    if (error.name === "AbortError") {
+                        return
+                    }
 
-    renderArticles() {
-        return this.state.articles.map((article) => {
-            return <div key={article.createdAt}>{article.title}</div>
-        });
-    }
+                    console.error(error);
+                    this.setState({isReady: false});
+                });
+        }
 
-    renderNoArticles() {
-        return <div>No articles are here... yet.</div>
-    }
+        componentWillUnmount() {
+            if (this.feedRequest) {
+                this.feedRequest.abort();
+            }
+        }
 
-    renderLoader() {
-        return <div>loading...</div>;
-    }
+        render() {
+            return (
+                <div>
+                    {!this.state.isReady && <div>Loading articles...</div>}
 
-    render() {
-        if (!this.state.isReady) {
-            return this.renderLoader();
-        } else if (this.state.articles.length === 0) {
-            return this.renderNoArticles();
-        } else {
-            return this.renderArticles();
+                    {this.state.isReady && this.state.feed.length === 0 && <div>No articles are here... yet.</div>}
+
+                    {this.state.isReady && this.state.feed.length > 0 &&
+                        this.state.feed.map((article) => {
+                            return <div key={article.createdAt}>{article.title}</div>
+                        })
+                    }
+                </div>
+            );
         }
     }
 }
 
-const GLOBAL_FEED = 'global';
-const USER_FEED = 'user';
+const GlobalFeed = feedFactory(article.getList);
+const PersonalFeed = feedFactory(feed.getList);
+
+
+// if user is authenticated default is 'personal', if not then 'global'
+const feedChoice = {
+    GLOBAL: 'global',
+    PERSONAL: 'personal'
+};
+
 class HomePage extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            selectedArticleFeed: GLOBAL_FEED
+            isUserAuthenticated: false,
+            selectedFeed: feedChoice.GLOBAL
         };
 
-        this.handleArticleFeedChange = this.handleArticleFeedChange.bind(this);
+        this.handleFeedChange = this.handleFeedChange.bind(this);
+        this.onUserAuthentication = this.onUserAuthentication.bind(this);
     }
 
-    handleArticleFeedChange(event) {
-        this.setState({selectedArticleFeed: event.target.value});
+    handleFeedChange(event) {
+        this.setState({selectedFeed: event.target.value});
+    }
+
+    onUserAuthentication(isUserAuthenticated) {
+        if (isUserAuthenticated) {
+            this.setState({selectedFeed: feedChoice.PERSONAL});
+        }
+        this.setState({isUserAuthenticated: isUserAuthenticated});
+    }
+
+    componentDidMount() {
+        user.isAuthenticated.subscribe(this.onUserAuthentication);
+    }
+
+    componentWillUnmount() {
+        user.isAuthenticated.unsubscribe(this.onUserAuthentication);
     }
 
     render() {
         return (
             <div>
                 Home Page
-                <select onChange={this.handleArticleFeedChange}>
-                    <option value={GLOBAL_FEED}>Global Feed</option>
-                    <option value={USER_FEED}>Your Feed</option>
+                <select onChange={this.handleFeedChange} value={this.state.selectedFeed}>
+                    <option value={feedChoice.GLOBAL}>Global Feed</option>
+                    {this.state.isUserAuthenticated && <option value={feedChoice.PERSONAL}>Your Feed</option>}
                 </select>
 
-                <ArticleList filterBy={this.state.selectedArticleFeed}/>
+                {this.state.selectedFeed === feedChoice.GLOBAL && <GlobalFeed/>}
+                {this.state.selectedFeed === feedChoice.PERSONAL && <PersonalFeed/>}
             </div>
         );
     }

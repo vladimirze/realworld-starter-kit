@@ -29,6 +29,7 @@ class LogIn extends Component {
                 this.props.history.push('/');
             })
             .catch((error) => {
+                console.error(error);
                 this.setState({isBusy: false, errors: error.response.errors});
             });
     }
