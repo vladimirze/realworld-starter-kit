@@ -51,14 +51,14 @@ export default class Navigation extends Component {
 
                     {   isAuthenticated &&
                         <li>
-                            <Link to="editor">New Post</Link>
+                            <Link to="/editor">New Post</Link>
                         </li>
                     }
 
                     {
                         isAuthenticated &&
                         <li>
-                            <Link to="settings">Settings</Link>
+                            <Link to="/settings">Settings</Link>
                         </li>
                     }
 
