@@ -1,6 +1,6 @@
 import React, {Component, Fragment} from 'react';
 import './App.css';
-import {BrowserRouter as Router, Route, Switch, withRouter} from "react-router-dom";
+import {BrowserRouter as Router, Link, Route, Switch, withRouter} from "react-router-dom";
 import Registration from "./Registration";
 import LogIn from './LogIn';
 
@@ -11,6 +11,7 @@ import Navigation from "./Navigation";
 import {articleService} from './article';
 import {feed} from "./feed";
 
+// TODO: when going Home from any other page request to Global Feed gets initiated and immediately canceled
 addRequestInterceptor((url, options) => {
     const token = jwt.get();
     if (token) {
@@ -103,7 +104,11 @@ function feedFactory(dataSource, pageLimit=10) {
 
                     {this.state.isReady && this.state.feed.length > 0 &&
                         this.state.feed.map((article) => {
-                            return <div key={article.createdAt}>{article.title}</div>
+                            return (
+                                <div key={article.createdAt}>
+                                    <Link to={`/article/${article.slug}`}>{article.title}</Link>
+                                </div>
+                            )
                         })
                     }
 
@@ -325,6 +330,60 @@ class ArticleCreator extends Component {
 }
 ArticleCreator = withRouter(ArticleCreator);
 
+
+class ArticleViewer extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            isReady: false
+        };
+
+        this.deleteArticle = this.deleteArticle.bind(this);
+    }
+
+    componentDidMount() {
+        this.request = articleService.get(this.props.match.params.slug);
+        this.request.promise
+            .then((response) => {
+                this.setState({article: response.article});
+            })
+            .catch(console.error);
+    }
+
+    componentWillUnmount() {
+        this.request.abort();
+    }
+
+    deleteArticle() {
+        this.request = articleService.remove(this.props.match.params.slug);
+        this.request.promise
+            .then(() => {
+                this.props.history.push('/');
+            })
+            .catch(console.error);
+    }
+
+    render() {
+        return (
+            <div>
+            {this.state.isReady && <div>Loading...</div>}
+
+            {
+                this.state.article &&
+                <div>
+                    <div>{this.state.article.title}</div>
+                    <Link to={`/editor/${this.state.article.slug}`}>Edit Article</Link>
+                    <button onClick={this.deleteArticle}>Delete Article</button>
+                    <Link to={`/@${this.state.article.author.username}`}>{this.state.article.author.username}</Link>
+                </div>
+            }
+            </div>
+        );
+    }
+}
+ArticleViewer = withRouter(ArticleViewer);
+
 class App extends Component {
     constructor(props) {
         super(props);
@@ -363,6 +422,7 @@ class App extends Component {
                             <Route path="/@:user" component={UserProfile}/>
                             <Route path="/editor/:slug" component={ArticleEditor}/>
                             <Route path="/editor" component={ArticleCreator}/>
+                            <Route path="/article/:slug" component={ArticleViewer}/>
                         </Switch>
                     </Fragment>
                 </Router>

@@ -28,9 +28,16 @@ function create(article) {
     });
 }
 
+function remove(slug) {
+    return request(`${resource}/${slug}`, {
+        method: 'DELETE'
+    });
+}
+
 export const articleService = {
     getList: getList,
     get: get,
     update: update,
-    create: create
+    create: create,
+    remove: remove
 };
