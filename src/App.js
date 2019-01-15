@@ -1,6 +1,6 @@
 import React, {Component, Fragment} from 'react';
 import './App.css';
-import {BrowserRouter as Router, Route} from "react-router-dom";
+import {BrowserRouter as Router, Route, Switch, withRouter} from "react-router-dom";
 import Registration from "./Registration";
 import LogIn from './LogIn';
 
@@ -8,7 +8,7 @@ import jwt from './jwt';
 import {addRequestInterceptor, addResponseInterceptor} from "./request";
 import user from './user';
 import Navigation from "./Navigation";
-import {article} from './article';
+import {articleService} from './article';
 import {feed} from "./feed";
 
 addRequestInterceptor((url, options) => {
@@ -114,7 +114,7 @@ function feedFactory(dataSource, pageLimit=10) {
     }
 }
 
-const GlobalFeed = feedFactory(article.getList);
+const GlobalFeed = feedFactory(articleService.getList);
 const PersonalFeed = feedFactory(feed.getList);
 
 
@@ -182,6 +182,149 @@ class UserProfile extends Component {
     }
 }
 
+
+class ArticleForm extends Component {
+    constructor(props) {
+        super(props);
+
+        this.onSubmit = this.onSubmit.bind(this);
+        this.handleInput = this.handleInput.bind(this);
+
+        this.state = {
+            article: {
+                title: this.props.title || '',
+                description: this.props.description || '',
+                body: this.props.body || '',
+                tagList: (this.props.tagList && this.props.tagList.join()) || ''
+            }
+        };
+    }
+
+    onSubmit(event) {
+        event.preventDefault();
+        const tagList = this.state.article.tagList.length > 0 ? this.state.article.tagList.split(' ') : [];
+        this.props.onSubmit({...this.state.article, tagList: tagList});
+    }
+
+    handleInput(event) {
+        const article = {...this.state.article, [event.target.name]: event.target.value};
+        this.setState({article: article});
+    }
+
+    render() {
+        return (
+            <form>
+                <input
+                    name="title"
+                    type="text"
+                    placeholder="Article Title"
+                    value={this.state.article.title}
+                    onChange={this.handleInput}/>
+
+                <input
+                    name="description"
+                    type="text"
+                    placeholder="Whats this article about?"
+                    value={this.state.article.description}
+                    onChange={this.handleInput}/>
+
+                <textarea
+                    name="body"
+                    placeholder="Write your article (markdown)"
+                    value={this.state.article.body}
+                    onChange={this.handleInput}/>
+
+                <input
+                    name="tagList"
+                    type="text"
+                    placeholder="tags"
+                    value={this.state.article.tagList}
+                    onChange={this.handleInput}/>
+
+                <button onClick={this.onSubmit}>Publish Article</button>
+            </form>
+        );
+    }
+}
+
+class ArticleEditor extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {};
+        this.saveChanges = this.saveChanges.bind(this);
+    }
+
+    componentDidMount() {
+        this.articleRequest = articleService.get(this.props.match.params.slug);
+        this.articleRequest.promise
+            .then((article) => {
+                this.setState({article: article.article});
+            })
+            .catch(console.error);
+    }
+
+    componentWillUnmount() {
+        this.articleRequest.abort();
+    }
+
+    saveChanges(article) {
+        console.log('articleService: ', article);
+        this.articleRequest = articleService.update(this.state.article.slug, article);
+        this.articleRequest.promise
+            .then((response) => {
+                this.props.history.push(`/article/${response.article.slug}`);
+            })
+            .catch(console.error);
+    }
+
+    render() {
+        return (
+            <Fragment>
+                {this.state.article &&
+                <ArticleForm
+                    title={this.state.article.title}
+                    body={this.state.article.body}
+                    description={this.state.article.description}
+                    tagList={this.state.article.tagList}
+                    onSubmit={this.saveChanges}/>}
+            </Fragment>
+        )
+    }
+}
+ArticleEditor = withRouter(ArticleEditor);
+
+
+class ArticleCreator extends Component {
+    constructor(props) {
+        super(props);
+
+        this.create = this.create.bind(this);
+    }
+
+    create(article) {
+        this.request = articleService.create(article);
+        this.request.promise
+            .then((response) => {
+                this.props.history.push(`/article/${response.article.slug}`);
+            })
+            .catch(console.error);
+    }
+
+    componentWillUnmount() {
+        if (this.request) {
+            this.request.abort();
+        }
+    }
+
+    render() {
+        return (
+            <ArticleForm onSubmit={this.create}/>
+        );
+    }
+}
+ArticleCreator = withRouter(ArticleCreator);
+
 class App extends Component {
     constructor(props) {
         super(props);
@@ -211,13 +354,17 @@ class App extends Component {
         return (
             <Fragment>
                 <Router>
-                    <div>
+                    <Fragment>
                         <Navigation/>
-                        <Route path="/" exact component={HomePage}/>
-                        <Route path="/register" component={Registration}/>
-                        <Route path="/login" component={LogIn}/>
-                        <Route path="/@:user" component={UserProfile}/>
-                    </div>
+                        <Switch>
+                            <Route path="/" exact component={HomePage}/>
+                            <Route path="/register" component={Registration}/>
+                            <Route path="/login" component={LogIn}/>
+                            <Route path="/@:user" component={UserProfile}/>
+                            <Route path="/editor/:slug" component={ArticleEditor}/>
+                            <Route path="/editor" component={ArticleCreator}/>
+                        </Switch>
+                    </Fragment>
                 </Router>
             </Fragment>
         );
