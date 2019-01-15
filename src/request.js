@@ -90,6 +90,14 @@ export default function request(resource, options) {
                 responseClone = response.clone();
                 return responseClone.json();
             })
+            .catch((error) => {
+                // could not parse JSON
+                if (error.name === 'SyntaxError') {
+                    return {}
+                } else {
+                    throw error;
+                }
+            })
             .then((json) => {
                 if (responseClone.ok) {
                     return json;
