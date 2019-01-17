@@ -10,8 +10,11 @@ import user from './user';
 import Navigation from "./Navigation";
 import {articleService} from './article';
 import {feed} from "./feed";
+import {commentService} from "./comment";
+
 
 // TODO: when going Home from any other page request to Global Feed gets initiated and immediately canceled
+// TODO: handle errors properly (e.g on 404 the loader is stuck because isReady is never reset)
 addRequestInterceptor((url, options) => {
     const token = jwt.get();
     if (token) {
@@ -122,6 +125,155 @@ function feedFactory(dataSource, pageLimit=10) {
 const GlobalFeed = feedFactory(articleService.getList);
 const PersonalFeed = feedFactory(feed.getList);
 
+
+function withAuthenticatedUser(WrappedComponent) {
+    return class AuthenticatedUserHoc extends Component {
+        constructor(props) {
+            super(props);
+
+            this.state = {currentUser: {}};
+            this.onCurrentUserChange = this.onCurrentUserChange.bind(this);
+        }
+
+        onCurrentUserChange(user) {
+            this.setState({currentUser: user});
+        }
+
+        componentDidMount() {
+            user.currentUser.subscribe(this.onCurrentUserChange);
+        }
+
+        componentWillUnmount() {
+            user.currentUser.unsubscribe(this.onCurrentUserChange);
+        }
+
+        render() {
+            return (
+                <div>
+                    <WrappedComponent {...this.props} currentUser={this.state.currentUser}/>
+                </div>
+            );
+        }
+    }
+}
+
+class CommentViewer extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            isReady: true
+        };
+
+        this.remove = this.remove.bind(this);
+    }
+
+    remove() {
+        this.setState({isReady: false});
+
+        this.request = this.props.onRemove(this.props.comment.id);
+        this.request.promise
+            .catch((error) => {
+                console.error(error);
+                if (error.name === 'AbortError') {
+                    return;
+                }
+
+                this.setState({isReady: true});
+            });
+    }
+
+    componentWillUnmount() {
+        if (this.request) {
+            this.request.abort();
+        }
+    }
+
+    render() {
+        return (
+            <div key={this.props.comment.id}>
+                <div>{this.props.comment.author.username} on {this.props.comment.createdAt}</div>
+                <div>{this.props.comment.body}</div>
+                {
+                    this.props.isAuthor &&
+                    <button onClick={() => {this.remove(this.props.comment.id)}}>delete</button>
+                }
+
+                {!this.state.isReady && <div>removing...</div>}
+            </div>
+        );
+    }
+}
+
+class CommentList extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            comments: [],
+            isReady: false
+        };
+
+        this.removeComment = this.removeComment.bind(this);
+        this.isCommentAuthor = this.isCommentAuthor.bind(this);
+        this.getComments = this.getComments.bind(this);
+    }
+
+    getComments() {
+        this.setState({isReady: false});
+
+        this.request = commentService.getList(this.props.articleSlug);
+        this.request.promise
+            .then((response) => {
+                this.setState({comments: response.comments, isReady: true});
+            })
+            .catch((error) => {
+                if (error.name === 'AbortError') {
+                    return;
+                }
+
+                this.setState({isReady: true});
+            });
+    }
+
+    componentDidMount() {
+        this.getComments();
+    }
+
+    componentWillUnmount() {
+        this.request.abort();
+    }
+
+    removeComment(commentId) {
+        this.request = commentService.remove(this.props.articleSlug, commentId);
+        this.request.promise
+            .then(this.getComments)
+            .catch(console.error);
+        return this.request;
+    }
+
+    isCommentAuthor(comment) {
+        return commentService.isAuthor(this.props.currentUser, comment);
+    }
+
+    render() {
+        return (
+            <div>
+                {
+                    this.state.isReady &&
+                    this.state.comments.map((comment) => {
+                        return <CommentViewer
+                            comment={comment}
+                            onRemove={this.removeComment}
+                            isAuthor={this.isCommentAuthor(comment)}
+                            key={comment.id}/>
+                    })
+                }
+            </div>
+        );
+    }
+}
+const CommentListWithCurrentUser = withAuthenticatedUser(CommentList);
 
 // if user is authenticated default is 'personal', if not then 'global'
 const feedChoice = {
@@ -376,6 +528,7 @@ class ArticleViewer extends Component {
                     <Link to={`/editor/${this.state.article.slug}`}>Edit Article</Link>
                     <button onClick={this.deleteArticle}>Delete Article</button>
                     <Link to={`/@${this.state.article.author.username}`}>{this.state.article.author.username}</Link>
+                    <CommentListWithCurrentUser articleSlug={this.state.article.slug}/>
                 </div>
             }
             </div>
