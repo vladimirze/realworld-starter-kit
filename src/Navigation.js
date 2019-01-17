@@ -26,7 +26,7 @@ export default class Navigation extends Component {
     }
 
     render() {
-        const isAuthenticated = !!(this.state.user && this.state.user.user);
+        const isAuthenticated = !!(this.state.user && this.state.user);
 
         return (
             <nav>
@@ -65,7 +65,7 @@ export default class Navigation extends Component {
                     {
                         isAuthenticated &&
                         <li>
-                            <Link to={`/@${this.state.user.user.username}`}>{this.state.user.user.username}</Link>
+                            <Link to={`/@${this.state.user.username}`}>{this.state.user.username}</Link>
                         </li>
                     }
 

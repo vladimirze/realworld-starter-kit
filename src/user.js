@@ -12,8 +12,10 @@ function getCurrentUser() {
     });
 
     req.promise = req.promise.then((authenticatedUser) => {
-        currentUser.notify(authenticatedUser);
-        return authenticatedUser;
+        const user = authenticatedUser.user;
+
+        currentUser.notify(user);
+        return user;
     });
 
     return req;
