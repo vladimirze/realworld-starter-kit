@@ -10,7 +10,7 @@ function getList(articleSlug) {
 function create(articleSlug, comment) {
     return request(`articles/${articleSlug}/comments`, {
         method: 'POST',
-        body: {comment: comment}
+        body: {comment: {body: comment}}
     });
 }
 

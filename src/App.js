@@ -205,6 +205,58 @@ class CommentViewer extends Component {
     }
 }
 
+class CommentEditor extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            comment: ''
+        };
+        this.handleInput = this.handleInput.bind(this);
+        this.postComment = this.postComment.bind(this);
+        this.resetInput = this.resetInput.bind(this);
+    }
+
+    handleInput(event) {
+        this.setState({[event.target.name]: event.target.value});
+    }
+
+    resetInput() {
+        this.setState({comment: ''});
+    }
+
+    postComment() {
+        this.request = commentService.create(this.props.articleSlug, this.state.comment);
+        this.request.promise
+            .then(() => {
+                this.resetInput();
+                this.props.onPostSuccess();
+            })
+            .catch(console.error);
+    }
+
+    componentWillUnmount() {
+        if (this.request) {
+            this.request.abort();
+        }
+    }
+
+    render() {
+        return (
+            <div>
+                <span>{this.props.currentUser.username}: </span>
+                <textarea
+                    name="comment"
+                    value={this.state.comment}
+                    onChange={this.handleInput}></textarea>
+                <button onClick={this.postComment}>Post comment</button>
+                <hr/>
+            </div>
+        );
+    }
+}
+const CommentEditorWithCurrentUser = withAuthenticatedUser(CommentEditor);
+
 class CommentList extends Component {
     constructor(props) {
         super(props);
@@ -256,19 +308,29 @@ class CommentList extends Component {
         return commentService.isAuthor(this.props.currentUser, comment);
     }
 
+    renderComments() {
+        return <div>
+            <CommentEditorWithCurrentUser articleSlug={this.props.articleSlug} onPostSuccess={this.getComments}/>
+            {
+                this.state.comments.map((comment) => {
+                    return <CommentViewer
+                        comment={comment}
+                        onRemove={this.removeComment}
+                        isAuthor={this.isCommentAuthor(comment)}
+                        key={comment.id}/>
+                })
+            }
+            </div>
+    }
+
+    renderLoader() {
+        return <div>loading...</div>;
+    }
+
     render() {
         return (
             <div>
-                {
-                    this.state.isReady &&
-                    this.state.comments.map((comment) => {
-                        return <CommentViewer
-                            comment={comment}
-                            onRemove={this.removeComment}
-                            isAuthor={this.isCommentAuthor(comment)}
-                            key={comment.id}/>
-                    })
-                }
+                {this.state.isReady ? this.renderComments() : this.renderLoader()}
             </div>
         );
     }
