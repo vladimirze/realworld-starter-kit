@@ -589,6 +589,7 @@ class ArticleViewer extends Component {
                     <div>{this.state.article.title}</div>
                     <Link to={`/editor/${this.state.article.slug}`}>Edit Article</Link>
                     <button onClick={this.deleteArticle}>Delete Article</button>
+                    <div>tags: {this.state.article.tagList.join(',')}</div>
                     <Link to={`/@${this.state.article.author.username}`}>{this.state.article.author.username}</Link>
                     <CommentListWithCurrentUser articleSlug={this.state.article.slug}/>
                 </div>
