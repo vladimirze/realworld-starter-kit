@@ -11,6 +11,7 @@ import Navigation from "./Navigation";
 import {articleService} from './article';
 import {feed} from "./feed";
 import {commentService} from "./comment";
+import {tagService} from "./tag";
 
 
 // TODO: when going Home from any other page request to Global Feed gets initiated and immediately canceled
@@ -337,6 +338,44 @@ class CommentList extends Component {
 }
 const CommentListWithCurrentUser = withAuthenticatedUser(CommentList);
 
+class TagList extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            tags: []
+        };
+    }
+
+    componentDidMount() {
+        this.request = tagService.getList();
+        this.request.promise
+            .then((response) => {
+                this.setState({tags: response.tags});
+            })
+            .catch(console.error);
+    }
+
+    componentWillUnmount() {
+        if (this.request) {
+            this.request.abort();
+        }
+    }
+
+    render() {
+        return (
+            <div>
+                Popular Tags
+                <div>
+                    {
+                        this.state.tags.map(tag => <span key={tag}>{tag} | </span>)
+                    }
+                </div>
+            </div>
+        );
+    }
+}
+
 // if user is authenticated default is 'personal', if not then 'global'
 const feedChoice = {
     GLOBAL: 'global',
@@ -379,6 +418,8 @@ class HomePage extends Component {
         return (
             <div>
                 Home Page
+                <TagList/>
+
                 <select onChange={this.handleFeedChange} value={this.state.selectedFeed}>
                     <option value={feedChoice.GLOBAL}>Global Feed</option>
                     {this.state.isUserAuthenticated && <option value={feedChoice.PERSONAL}>Your Feed</option>}
