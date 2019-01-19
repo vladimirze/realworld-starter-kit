@@ -35,6 +35,37 @@ addResponseInterceptor((response) => {
     return response;
 });
 
+
+class LikeButton extends Component {
+    constructor(props) {
+        super(props);
+
+        this.unfavorite = this.unfavorite.bind(this);
+        this.favorite = this.favorite.bind(this);
+    }
+
+    unfavorite() {
+        this.props.onUnfavorite(this.props.articleSlug);
+    }
+
+    favorite() {
+        this.props.onFavorite(this.props.articleSlug);
+    }
+
+    render() {
+        return (
+            <div>
+                ({this.props.count})
+                {
+                    this.props.isFavorited ?
+                        <button onClick={this.unfavorite}>Unfavorite</button> :
+                        <button onClick={this.favorite}>Favorite</button>
+                }
+            </div>
+        );
+    }
+}
+
 // TODO: read page number from URL
 // TODO: make pagination.js module to handle page enumeration logic
 function feedFactory(dataSource, queryParams) {
@@ -56,6 +87,8 @@ function feedFactory(dataSource, queryParams) {
             };
 
             this.getPage = this.getPage.bind(this);
+            this.favorite = this.favorite.bind(this);
+            this.unfavorite = this.unfavorite.bind(this);
         }
 
         getFeed(promise) {
@@ -88,6 +121,14 @@ function feedFactory(dataSource, queryParams) {
             if (this.feedRequest) {
                 this.feedRequest.abort();
             }
+
+            if (this.favoriteRequest) {
+                this.favoriteRequest.abort();
+            }
+
+            if (this.unfavoriteRequest) {
+                this.unfavoriteRequest.abort();
+            }
         }
 
         getPage(page) {
@@ -109,6 +150,42 @@ function feedFactory(dataSource, queryParams) {
             return pages;
         }
 
+        favorite(articleSlug) {
+            this.favoriteRequest = articleService.favorite(articleSlug);
+            this.favoriteRequest.promise.then(() => {
+                const index = this.state.feed.findIndex(article => article.slug === articleSlug);
+                if (index >= 0) {
+                    const article = {...this.state.feed[index]};
+                    const feed = [...this.state.feed];
+
+                    article.favorited = true;
+                    article.favoritesCount += 1;
+                    feed.splice(index, 1, article);
+
+                    this.setState({feed: feed});
+                }
+            })
+            .catch(console.error);
+        }
+
+        unfavorite(articleSlug) {
+            this.unfavoriteRequest = articleService.unfavorite(articleSlug);
+            this.unfavoriteRequest.promise.then(() => {
+                const index = this.state.feed.findIndex(article => article.slug === articleSlug);
+                if (index >= 0) {
+                    const article = {...this.state.feed[index]};
+                    const feed = [...this.state.feed];
+
+                    article.favorited = false;
+                    article.favoritesCount -= 1;
+                    feed.splice(index, 1, article);
+
+                    this.setState({feed: feed});
+                }
+            })
+            .catch(console.error);
+        }
+
         render() {
             return (
                 <div>
@@ -121,6 +198,11 @@ function feedFactory(dataSource, queryParams) {
                             return (
                                 <div key={article.createdAt}>
                                     <Link to={`/article/${article.slug}`}>{article.title}</Link>
+                                    | <LikeButton articleSlug={article.slug}
+                                                  count={article.favoritesCount}
+                                                  isFavorited={article.favorited}
+                                                  onFavorite={this.favorite}
+                                                  onUnfavorite={this.unfavorite}/>
                                 </div>
                             )
                         })

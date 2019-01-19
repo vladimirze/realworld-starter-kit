@@ -35,10 +35,24 @@ function remove(slug) {
     });
 }
 
+function favorite(slug) {
+    return request(`${resource}/${slug}/favorite`, {
+        method: 'POST'
+    });
+}
+
+function unfavorite(slug) {
+    return request(`${resource}/${slug}/favorite`, {
+        method: 'DELETE'
+    });
+}
+
 export const articleService = {
     getList: getList,
     get: get,
     update: update,
     create: create,
-    remove: remove
+    remove: remove,
+    favorite: favorite,
+    unfavorite: unfavorite
 };
