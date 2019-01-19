@@ -1,0 +1,18 @@
+✔ Home page (URL: /#/ ) @done (2019-1-19 21:25:23)
+    ✔ List of tags @done (2019-1-19 18:47:06)
+    ✔ List of articles pulled from either Feed, Global, or by Tag @done (2019-1-19 18:47:10)
+    ✔ Pagination for list of articles @done (2019-1-19 18:47:12)
+    ✔ User should be able to favorite articles @done (2019-1-19 21:25:20)
+☐ Sign in/Sign up pages (URL: /#/login, /#/register )
+    ✔ Uses JWT (store the token in localStorage) @done (2019-1-19 18:47:50)
+    ☐ Authentication can be easily switched to session/cookie based
+✔ Settings page (URL: /#/settings ) @done (2019-1-19 18:47:52)
+☐ Editor page to create/edit articles (URL: /#/editor, /#/editor/article-slug-here )
+☐ Article page (URL: /#/article/article-slug-here )
+    ☐ Delete article button (only shown to article's author)
+    ☐ Render markdown from server client side
+    ✔ Comments section at bottom of page @done (2019-1-19 18:48:49)
+    ✔ Delete comment button (only shown to comment's author) @done (2019-1-19 18:48:54)
+☐ Profile page (URL: /#/profile/:username, /#/profile/:username/favorites )
+    ☐ Show basic user info
+    ☐ List of articles populated from author's created articles or author's favorited articles
