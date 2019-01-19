@@ -54,10 +54,23 @@ function applyRequestInterceptors(requestUrl, requestOptions) {
     }, [requestUrl, requestOptions]);
 }
 
+
+function prepareQueryParameters(queryParameters) {
+    if (!queryParameters) { return '';}
+
+    const parameters = Object.keys(queryParameters);
+    if (parameters.length > 0) {
+        return '?' + parameters.map((key) => {
+            return `${key}=${queryParameters[key]}`;
+        }).join('&');
+    } else {
+        return '';
+    }
+}
+
 // TODO: is there a chance a different component will be instantiated  before the previous is unmounted?
 // ^and cause the unintended request to be canceled?
 // "When abort() is called, the fetch() promise rejects with an AbortError."
-
 export default function request(resource, options) {
     const abortController = new AbortController();
     const defaultOptions = {
@@ -73,6 +86,7 @@ export default function request(resource, options) {
     if (interceptors.length > 0) {
         [requestUrl, requestOptions] = applyRequestInterceptors(requestUrl, requestOptions);
     }
+    requestUrl = requestUrl + prepareQueryParameters(requestOptions.queryParameters);
 
     // response.ok is true when status code is between 200-299
     let responseClone;

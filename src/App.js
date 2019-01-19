@@ -37,12 +37,16 @@ addResponseInterceptor((response) => {
 
 // TODO: read page number from URL
 // TODO: make pagination.js module to handle page enumeration logic
-function feedFactory(dataSource, pageLimit=10) {
+function feedFactory(dataSource, queryParams) {
     return class Feed extends Component {
         constructor(props) {
             super(props);
 
-            this.pageLimit = pageLimit;
+            this.PAGE_LIMIT = 10;
+            this.defaultQueryParams = {...queryParams};
+            if (this.props.tag) {
+                this.defaultQueryParams.tag = this.props.tag;
+            }
             this.state = {
                 feed: [],
                 isReady: false,
@@ -61,7 +65,7 @@ function feedFactory(dataSource, pageLimit=10) {
                         feed: feed.articles,
                         isReady: true,
                         totalArticles: feed.articlesCount,
-                        totalPages: Math.ceil(feed.articlesCount / this.pageLimit)
+                        totalPages: Math.ceil(feed.articlesCount / this.PAGE_LIMIT)
                     });
                 })
                 .catch((error) => {
@@ -75,7 +79,8 @@ function feedFactory(dataSource, pageLimit=10) {
         }
 
         componentDidMount() {
-            this.feedRequest = dataSource();
+            const queryParams = Object.assign({}, this.defaultQueryParams, {limit: this.PAGE_LIMIT, offset: 0});
+            this.feedRequest = dataSource(queryParams);
             this.getFeed(this.feedRequest.promise);
         }
 
@@ -87,7 +92,12 @@ function feedFactory(dataSource, pageLimit=10) {
 
         getPage(page) {
             this.setState({pageNumber: page});
-            this.feedRequest = dataSource(this.pageLimit, (this.pageLimit * page) - this.pageLimit);
+            const queryParams = Object.assign(
+                {},
+                this.defaultQueryParams,
+                {limit: this.PAGE_LIMIT, offset: (this.PAGE_LIMIT * page) - this.PAGE_LIMIT}
+            );
+            this.feedRequest = dataSource(queryParams);
             this.getFeed(this.feedRequest.promise);
         }
 
@@ -123,8 +133,9 @@ function feedFactory(dataSource, pageLimit=10) {
     }
 }
 
-const GlobalFeed = feedFactory(articleService.getList);
-const PersonalFeed = feedFactory(feed.getList);
+const GlobalFeed = feedFactory(articleService.getList, {});
+const PersonalFeed = feedFactory(feed.getList, {});
+const TagFeed = feedFactory(articleService.getList, {});
 
 
 function withAuthenticatedUser(WrappedComponent) {
@@ -345,6 +356,8 @@ class TagList extends Component {
         this.state = {
             tags: []
         };
+
+        this.selectTag = this.selectTag.bind(this);
     }
 
     componentDidMount() {
@@ -362,13 +375,19 @@ class TagList extends Component {
         }
     }
 
+    selectTag(tag) {
+        this.props.onSelect(tag);
+    }
+
     render() {
         return (
             <div>
                 Popular Tags
                 <div>
                     {
-                        this.state.tags.map(tag => <span key={tag}>{tag} | </span>)
+                        this.state.tags.map(
+                            tag => <span onClick={() => {this.selectTag(tag)}} key={tag}>{tag} |</span>
+                        )
                     }
                 </div>
             </div>
@@ -379,7 +398,8 @@ class TagList extends Component {
 // if user is authenticated default is 'personal', if not then 'global'
 const feedChoice = {
     GLOBAL: 'global',
-    PERSONAL: 'personal'
+    PERSONAL: 'personal',
+    TAG: 'tag' // user selected a tag
 };
 
 class HomePage extends Component {
@@ -393,6 +413,7 @@ class HomePage extends Component {
 
         this.handleFeedChange = this.handleFeedChange.bind(this);
         this.onUserAuthentication = this.onUserAuthentication.bind(this);
+        this.selectTag = this.selectTag.bind(this);
     }
 
     handleFeedChange(event) {
@@ -414,19 +435,25 @@ class HomePage extends Component {
         user.isAuthenticated.unsubscribe(this.onUserAuthentication);
     }
 
+    selectTag(tag) {
+        this.setState({selectedFeed: feedChoice.TAG, tag: tag});
+    }
+
     render() {
         return (
             <div>
                 Home Page
-                <TagList/>
+                <TagList onSelect={this.selectTag}/>
 
                 <select onChange={this.handleFeedChange} value={this.state.selectedFeed}>
                     <option value={feedChoice.GLOBAL}>Global Feed</option>
                     {this.state.isUserAuthenticated && <option value={feedChoice.PERSONAL}>Your Feed</option>}
+                    {this.state.selectedFeed === feedChoice.TAG && <option value={feedChoice.TAG}>{this.state.tag}</option>}
                 </select>
 
                 {this.state.selectedFeed === feedChoice.GLOBAL && <GlobalFeed/>}
                 {this.state.selectedFeed === feedChoice.PERSONAL && <PersonalFeed/>}
+                {this.state.selectedFeed === feedChoice.TAG && <TagFeed key={this.state.tag} tag={this.state.tag}/>}
             </div>
         );
     }

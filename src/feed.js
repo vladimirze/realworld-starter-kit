@@ -2,9 +2,10 @@ import request from './request';
 
 
 const resource = 'articles/feed';
-function getList(limit=10, offset=0) {
-    return request(`${resource}?limit=${limit}&offset=${offset}`, {
-        method: 'GET'
+function getList(queryParameters) {
+    return request(`${resource}`, {
+        method: 'GET',
+        queryParameters: queryParameters
     });
 }
 
