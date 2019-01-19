@@ -52,6 +52,21 @@ function logOut() {
     return Promise.resolve(true);
 }
 
+function update(updatedUser) {
+    const req = request('user', {
+        method: 'PUT',
+        body: {user: updatedUser}
+    });
+
+    req.promise = req.promise.then((authenticatedUser) => {
+        const user = authenticatedUser.user;
+        currentUser.notify(user);
+
+        return user;
+    });
+
+    return req;
+}
 
 const user = {
     getCurrentUser: getCurrentUser,
@@ -59,7 +74,8 @@ const user = {
     isAuthenticated: isAuthenticated,
     register: register,
     logIn: logIn,
-    logOut: logOut
+    logOut: logOut,
+    update: update
 };
 
 export default user;

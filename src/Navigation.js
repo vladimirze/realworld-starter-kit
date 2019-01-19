@@ -11,23 +11,28 @@ export default class Navigation extends Component {
         };
 
         this.updateUser = this.updateUser.bind(this);
+        this.updateIsAuthenticated = this.updateIsAuthenticated.bind(this);
     }
 
     updateUser(authenticatedUser) {
         this.setState({user: authenticatedUser});
     }
 
+    updateIsAuthenticated(isAuthenticated) {
+        this.setState({isAuthenticated: isAuthenticated});
+    }
+
     componentDidMount() {
         user.currentUser.subscribe(this.updateUser);
+        user.isAuthenticated.subscribe(this.updateIsAuthenticated)
     }
 
     componentWillUnmount() {
         user.currentUser.unsubscribe(this.updateUser);
+        user.isAuthenticated.unsubscribe(this.updateIsAuthenticated);
     }
 
     render() {
-        const isAuthenticated = !!(this.state.user && this.state.user);
-
         return (
             <nav>
                 <ul>
@@ -36,34 +41,34 @@ export default class Navigation extends Component {
                     </li>
 
                     {
-                        !isAuthenticated &&
+                        !this.state.isAuthenticated &&
                         <li>
                             <Link to="/login">Sign In</Link>
                         </li>
                     }
 
                     {
-                        !isAuthenticated &&
+                        !this.state.isAuthenticated &&
                         <li>
                             <Link to="/register">Sign Up</Link>
                         </li>
                     }
 
-                    {   isAuthenticated &&
+                    {   this.state.isAuthenticated &&
                         <li>
                             <Link to="/editor">New Post</Link>
                         </li>
                     }
 
                     {
-                        isAuthenticated &&
+                        this.state.isAuthenticated &&
                         <li>
                             <Link to="/settings">Settings</Link>
                         </li>
                     }
 
                     {
-                        isAuthenticated &&
+                        this.state.isAuthenticated &&
                         <li>
                             <Link to={`/@${this.state.user.username}`}>{this.state.user.username}</Link>
                         </li>
