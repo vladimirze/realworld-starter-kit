@@ -9,7 +9,7 @@
 ✔ Settings page (URL: /#/settings ) @done (2019-1-19 18:47:52)
 ☐ Editor page to create/edit articles (URL: /#/editor, /#/editor/article-slug-here )
 ☐ Article page (URL: /#/article/article-slug-here )
-    ☐ Delete article button (only shown to article's author)
+    ✔ Delete article button (only shown to article's author) @done (2019-1-21 12:54:15)
     ☐ Render markdown from server client side
     ✔ Comments section at bottom of page @done (2019-1-19 18:48:49)
     ✔ Delete comment button (only shown to comment's author) @done (2019-1-19 18:48:54)

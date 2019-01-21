@@ -47,6 +47,10 @@ function unfavorite(slug) {
     });
 }
 
+function isAuthor(article, user) {
+    return article.author.username === user.username;
+}
+
 export const articleService = {
     getList: getList,
     get: get,
@@ -54,5 +58,6 @@ export const articleService = {
     create: create,
     remove: remove,
     favorite: favorite,
-    unfavorite: unfavorite
+    unfavorite: unfavorite,
+    isAuthor: isAuthor
 };

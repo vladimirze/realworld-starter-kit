@@ -728,6 +728,10 @@ class ArticleViewer extends Component {
             .catch(console.error);
     }
 
+    isAuthor() {
+        return articleService.isAuthor(this.state.article, this.props.currentUser);
+    }
+
     render() {
         return (
             <div>
@@ -737,8 +741,8 @@ class ArticleViewer extends Component {
                 this.state.article &&
                 <div>
                     <div>{this.state.article.title}</div>
-                    <Link to={`/editor/${this.state.article.slug}`}>Edit Article</Link>
-                    <button onClick={this.deleteArticle}>Delete Article</button>
+                    {this.isAuthor() && <Link to={`/editor/${this.state.article.slug}`}>Edit Article</Link>}
+                    {this.isAuthor() && <button onClick={this.deleteArticle}>Delete Article</button>}
                     <div>tags: {this.state.article.tagList.join(',')}</div>
                     <Link to={`/@${this.state.article.author.username}`}>{this.state.article.author.username}</Link>
                     <CommentListWithCurrentUser articleSlug={this.state.article.slug}/>
@@ -748,7 +752,7 @@ class ArticleViewer extends Component {
         );
     }
 }
-ArticleViewer = withRouter(ArticleViewer);
+ArticleViewer = withAuthenticatedUser(withRouter(ArticleViewer));
 
 
 class ProfileSettings extends Component {
