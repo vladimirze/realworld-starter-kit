@@ -14,5 +14,5 @@
     ✔ Comments section at bottom of page @done (2019-1-19 18:48:49)
     ✔ Delete comment button (only shown to comment's author) @done (2019-1-19 18:48:54)
 ☐ Profile page (URL: /#/profile/:username, /#/profile/:username/favorites )
-    ☐ Show basic user info
+    ✔ Show basic user info @done (2019-1-21 20:18:45)
     ☐ List of articles populated from author's created articles or author's favorited articles

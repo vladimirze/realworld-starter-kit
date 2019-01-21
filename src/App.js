@@ -13,6 +13,7 @@ import {articleService} from './article';
 import {feed} from "./feed";
 import {commentService} from "./comment";
 import {tagService} from "./tag";
+import {profileService} from './profileService';
 
 
 // TODO: when going Home from any other page request to Global Feed gets initiated and immediately canceled
@@ -199,6 +200,7 @@ function feedFactory(dataSource, queryParams) {
                             return (
                                 <div key={article.createdAt}>
                                     <Link to={`/article/${article.slug}`}>{article.title}</Link>
+                                    | <span>by {article.author.username}</span>
                                     | <LikeButton articleSlug={article.slug}
                                                   count={article.favoritesCount}
                                                   isFavorited={article.favorited}
@@ -543,15 +545,44 @@ class HomePage extends Component {
 }
 
 class UserProfile extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            profile: {}
+        };
+    }
+
+    isOwner() {
+        return this.props.currentUser.username === this.props.match.params.user;
+    }
+
+    componentDidMount() {
+        this.request = profileService.get(this.props.match.params.user);
+        this.request.promise
+            .then((profile) => {
+                this.setState({profile: profile});
+            })
+            .catch(console.error);
+    }
+
+    componentWillUnmount() {
+        if (this.request) {
+            this.request.abort();
+        }
+    }
+
     render() {
         return (
             <div>
                 {this.props.match.params.user} Profile.
+                {this.state.profile.bio}
+                {this.isOwner() && <Link to="/settings">Edit Profile Settings</Link>}
             </div>
         )
     }
 }
-
+const UserProfileWithCurrentUser = withAuthenticatedUser(UserProfile);
 
 class ArticleForm extends Component {
     constructor(props) {
@@ -899,7 +930,7 @@ class App extends Component {
                             <Route path="/" exact component={HomePage}/>
                             <Route path="/register" component={Registration}/>
                             <Route path="/login" component={LogIn}/>
-                            <Route path="/@:user" component={UserProfile}/>
+                            <Route path="/@:user" component={UserProfileWithCurrentUser}/>
                             <Route path="/editor/:slug" component={ArticleEditor}/>
                             <Route path="/editor" component={ArticleCreator}/>
                             <Route path="/article/:slug" component={ArticleViewer}/>
