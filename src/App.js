@@ -1,6 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import './App.css';
 import {BrowserRouter as Router, Link, Route, Switch, withRouter} from "react-router-dom";
+import marked from 'marked';
 import Registration from "./Registration";
 import LogIn from './LogIn';
 
@@ -743,6 +744,7 @@ class ArticleViewer extends Component {
                     <div>{this.state.article.title}</div>
                     {this.isAuthor() && <Link to={`/editor/${this.state.article.slug}`}>Edit Article</Link>}
                     {this.isAuthor() && <button onClick={this.deleteArticle}>Delete Article</button>}
+                    <div dangerouslySetInnerHTML={{__html: marked(this.state.article.body, {sanitize: true})}}></div>
                     <div>tags: {this.state.article.tagList.join(',')}</div>
                     <Link to={`/@${this.state.article.author.username}`}>{this.state.article.author.username}</Link>
                     <CommentListWithCurrentUser articleSlug={this.state.article.slug}/>

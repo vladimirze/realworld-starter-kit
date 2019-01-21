@@ -7,10 +7,10 @@
     ✔ Uses JWT (store the token in localStorage) @done (2019-1-19 18:47:50)
     ☐ Authentication can be easily switched to session/cookie based
 ✔ Settings page (URL: /#/settings ) @done (2019-1-19 18:47:52)
-☐ Editor page to create/edit articles (URL: /#/editor, /#/editor/article-slug-here )
-☐ Article page (URL: /#/article/article-slug-here )
+✔ Editor page to create/edit articles (URL: /#/editor, /#/editor/article-slug-here ) @done (2019-1-21 14:24:51)
+✔ Article page (URL: /#/article/article-slug-here ) @done (2019-1-21 14:19:41)
     ✔ Delete article button (only shown to article's author) @done (2019-1-21 12:54:15)
-    ☐ Render markdown from server client side
+    ✔ Render markdown from server client side @done (2019-1-21 14:19:38)
     ✔ Comments section at bottom of page @done (2019-1-19 18:48:49)
     ✔ Delete comment button (only shown to comment's author) @done (2019-1-19 18:48:54)
 ☐ Profile page (URL: /#/profile/:username, /#/profile/:username/favorites )
