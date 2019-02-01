@@ -10,10 +10,20 @@ export class ErrorViewer extends Component {
         return !this.props.errors || Object.keys(this.props.errors).length === 0;
     }
 
+
     render() {
         return (
             <div>
-                {this.isEmptyObject() || <pre>{JSON.stringify(this.props.errors, null, 10)}</pre>}
+                {
+                    !this.isEmptyObject() &&
+                    <ul className="text-danger">
+                        {
+                            Object.keys(this.props.errors).map((errorKey) => {
+                                return <li>{errorKey}: {this.props.errors[errorKey]}</li>
+                            })
+                        }
+                    </ul>
+                }
             </div>
         );
     }

@@ -1,5 +1,5 @@
 import React, {Component, Fragment} from 'react';
-import {withRouter} from "react-router-dom";
+import {Link, withRouter} from "react-router-dom";
 
 import user from '../../resources/user';
 import {ErrorViewer} from "../../components/ErrorViewer";
@@ -49,33 +49,47 @@ class LogIn extends Component {
     }
 
     render() {
-        const busyClassName = this.state.isBusy ? 'component-loader': '';
-
         return (
-            <Fragment>
-                <h1>Log-In</h1>
-                <div className={busyClassName}>
-                    <label htmlFor="email">Email</label>
-                    <input
-                        name="email"
-                        id="email"
-                        type="text"
-                        value={this.state.email}
-                        onChange={this.handleInputChange.bind(this)}/>
+            <div className="auth-page">
+                <div className="container page">
+                    <div className="row">
+                        <div className="col-md-6 offset-md-3 col-xs-12">
+                            <h1 className="text-xs-center">Sign in</h1>
+                            <p className="text-xs-center">
+                                <Link to="/register">Need an account?</Link>
+                            </p>
 
-                    <label htmlFor="password">Password</label>
-                    <input
-                        name="password"
-                        id="password"
-                        type="password"
-                        value={this.state.password}
-                        onChange={this.handleInputChange.bind(this)}/>
+                            <form>
+                                <ErrorViewer errors={this.state.errors}/>
 
-                    <button onClick={this.logIn}>Log-In</button>
+                                <fieldset className="form-group">
+                                    <input className="form-control form-control-lg"
+                                           type="text"
+                                           placeholder="Email"
+                                           name="email"
+                                           onChange={this.handleInputChange}/>
 
-                    <ErrorViewer errors={this.state.errors}/>
+                                </fieldset>
+
+                                <fieldset className="form-group">
+                                    <input className="form-control form-control-lg"
+                                           type="password"
+                                           onChange={this.handleInputChange}
+                                           name="password"
+                                           placeholder="Password"/>
+                                </fieldset>
+
+                                <button className="btn btn-lg btn-primary pull-xs-right"
+                                        disabled={this.state.isBusy}
+                                        onClick={this.logIn}>
+                                    Sign in
+                                </button>
+                            </form>
+                        </div>
+
+                    </div>
                 </div>
-            </Fragment>
+            </div>
         );
     }
 }
