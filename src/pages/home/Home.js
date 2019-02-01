@@ -9,7 +9,8 @@ import TagList from "../../components/TagList";
 const feedChoice = {
     GLOBAL: 'global',
     PERSONAL: 'personal',
-    TAG: 'tag' // user selected a tag
+    TAG: 'tag', // user selected a tag
+    NONE: 'none'
 };
 
 export default class HomePage extends Component {
@@ -18,7 +19,7 @@ export default class HomePage extends Component {
 
         this.state = {
             isUserAuthenticated: false,
-            selectedFeed: feedChoice.GLOBAL
+            selectedFeed: feedChoice.NONE
         };
 
         this.handleFeedChange = this.handleFeedChange.bind(this);
@@ -33,7 +34,10 @@ export default class HomePage extends Component {
     onUserAuthentication(isUserAuthenticated) {
         if (isUserAuthenticated) {
             this.setState({selectedFeed: feedChoice.PERSONAL});
+        } else {
+            this.setState({selectedFeed: feedChoice.GLOBAL});
         }
+
         this.setState({isUserAuthenticated: isUserAuthenticated});
     }
 
