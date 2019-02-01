@@ -6,28 +6,24 @@ export default class LikeButton extends Component {
     constructor(props) {
         super(props);
 
-        this.unfavorite = this.unfavorite.bind(this);
-        this.favorite = this.favorite.bind(this);
+        this.onButtonClick = this.onButtonClick.bind(this);
     }
 
-    unfavorite() {
-        this.props.onUnfavorite(this.props.articleSlug);
-    }
-
-    favorite() {
-        this.props.onFavorite(this.props.articleSlug);
+    onButtonClick() {
+        if (this.props.isFavorited) {
+            this.props.onUnfavorite(this.props.articleSlug);
+        } else {
+            this.props.onFavorite(this.props.articleSlug);
+        }
     }
 
     render() {
         return (
-            <div>
-                ({this.props.count})
-                {
-                    this.props.isFavorited ?
-                        <button onClick={this.unfavorite}>Unfavorite</button> :
-                        <button onClick={this.favorite}>Favorite</button>
-                }
-            </div>
+            <button
+                className={`btn ${this.props.className} ${this.props.isFavorited ? 'btn-primary' : 'btn-outline-primary'}`}
+                onClick={this.onButtonClick}>
+                <i className="ion-heart"></i> {this.props.count}
+            </button>
         );
     }
 }

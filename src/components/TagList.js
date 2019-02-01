@@ -36,11 +36,17 @@ export default class TagList extends Component {
     render() {
         return (
             <div>
-                Popular Tags
-                <div>
+                <div className="tag-list">
                     {
-                        this.state.tags.map(
-                            tag => <span onClick={() => {this.selectTag(tag)}} key={tag}>{tag} |</span>
+                        this.state.tags.map((tag) => {
+                            return (
+                                <span className="tag-pill tag-default"
+                                   key={tag}
+                                   onClick={() => {this.selectTag(tag)}}>
+                                    {tag}
+                                </span>
+                                );
+                            }
                         )
                     }
                 </div>

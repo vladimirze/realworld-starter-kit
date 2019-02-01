@@ -85,9 +85,24 @@ function feedFactory(dataSource, queryParams) {
         paginate() {
             const pages = [];
             for (let i = 1; i <= this.state.totalPages; i += 1) {
-                pages.push(<span key={i} onClick={() => {this.getPage(i)}}>{i}</span>);
+                pages.push(
+                    (
+                        <li className={`u-cursor page-item ${this.state.pageNumber === i ? 'active' : ''}`}
+                            key={i}
+                            onClick={() => {this.getPage(i)}}>
+                            <span className="page-link">
+                                {i}
+                            </span>
+                        </li>
+                    )
+                );
             }
-            return pages;
+
+            return (
+                <ul className="pagination">
+                    {pages}
+                </ul>
+            );
         }
 
         favorite(articleSlug) {
@@ -136,14 +151,39 @@ function feedFactory(dataSource, queryParams) {
                     {this.state.isReady && this.state.feed.length > 0 &&
                         this.state.feed.map((article) => {
                             return (
-                                <div key={article.createdAt}>
-                                    <Link to={`/article/${article.slug}`}>{article.title}</Link>
-                                    | <span>by {article.author.username}</span>
-                                    | <LikeButton articleSlug={article.slug}
-                                                  count={article.favoritesCount}
-                                                  isFavorited={article.favorited}
-                                                  onFavorite={this.favorite}
-                                                  onUnfavorite={this.unfavorite}/>
+                                <div className="article-preview" key={article.createdAt}>
+                                    <div className="article-meta">
+                                        {/* Author image*/}
+                                        <Link to={`/@${article.author.username}`}>
+                                            <img src={article.author.image} alt={article.author.username}/>
+                                        </Link>
+
+                                        {/* Author username */}
+                                        <div className="info">
+                                            <Link to={`/@${article.author.username}`} className="author">
+                                                {article.author.username}
+                                            </Link>
+
+                                            {/* TODO: format date */}
+                                            <span className="date">{article.createdAt}</span>
+                                        </div>
+
+                                        <LikeButton
+                                            className="btn-sm pull-xs-right"
+                                            articleSlug={article.slug}
+                                            count={article.favoritesCount}
+                                            isFavorited={article.favorited}
+                                            onFavorite={this.favorite}
+                                            onUnfavorite={this.unfavorite}>
+                                        </LikeButton>
+                                    </div>
+
+                                    {/* Link to article */}
+                                    <Link to={`/article/${article.slug}`} className="preview-link">
+                                        <h1>{article.title}</h1>
+                                        <p>{article.description}</p>
+                                        <span>Read more...</span>
+                                    </Link>
                                 </div>
                             )
                         })
