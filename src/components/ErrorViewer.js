@@ -19,7 +19,7 @@ export class ErrorViewer extends Component {
                     <ul className="text-danger">
                         {
                             Object.keys(this.props.errors).map((errorKey) => {
-                                return <li>{errorKey}: {this.props.errors[errorKey]}</li>
+                                return <li key={errorKey}>{errorKey}: {this.props.errors[errorKey]}</li>
                             })
                         }
                     </ul>

@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import user from '../../resources/user';
 import {ErrorViewer} from "../../components/ErrorViewer";
-import {withRouter} from "react-router-dom";
+import {Link, withRouter} from "react-router-dom";
 
 
 class Registration extends Component {
@@ -26,7 +26,10 @@ class Registration extends Component {
         this.setState({isBusy: true, errors: {}});
         this.registrationRequest = user.register(this.state.username, this.state.email, this.state.password);
         this.registrationRequest.promise
-            .then(user.logIn.bind(user, this.state.email, this.state.password))
+            .then(() => {
+                this.loginRequest = user.logIn(this.state.email, this.state.password);
+                return this.loginRequest.promise;
+            })
             .then(() => {
                 this.props.history.push('/');
             })
@@ -43,6 +46,10 @@ class Registration extends Component {
         if (this.registrationRequest) {
             this.registrationRequest.abort();
         }
+
+        if (this.loginRequest) {
+            this.loginRequest.abort();
+        }
     }
 
     handleInputChange(event) {
@@ -50,41 +57,56 @@ class Registration extends Component {
     }
 
     render() {
-        const busyClassName = this.state.isBusy ? 'component-loader': '';
-
         return (
-            <Fragment>
-                <h1>Registration</h1>
-                <div className={busyClassName}>
-                    <label htmlFor="username">Username</label>
-                    <input
-                        name="username"
-                        id="username"
-                        type="text"
-                        value={this.state.username}
-                        onChange={this.handleInputChange}/>
+            <div className="auth-page">
+                <div className="container page">
+                    <div className="row">
+                        <div className="col-md-6 offset-md-3 col-xs-12">
+                            <h1 className="text-xs-center">Sign Up</h1>
+                            <p className="text-xs-center">
+                                <Link to="/login">Have an account?</Link>
+                            </p>
 
-                    <label htmlFor="email">Email</label>
-                    <input
-                        name="email"
-                        id="email"
-                        type="text"
-                        value={this.props.email}
-                        onChange={this.handleInputChange}/>
+                            <form>
+                                <ErrorViewer errors={this.state.errors}/>
 
-                    <label htmlFor="password">Password</label>
-                    <input
-                        name="password"
-                        id="password"
-                        type="password"
-                        value={this.props.password}
-                        onChange={this.handleInputChange}/>
+                                <fieldset className="form-group">
+                                    <input className="form-control form-control-lg"
+                                           type="text"
+                                           placeholder="Username"
+                                           name="username"
+                                           onChange={this.handleInputChange}/>
 
-                    <button onClick={this.register}>Register</button>
+                                </fieldset>
 
-                    <ErrorViewer errors={this.state.errors}/>
+                                <fieldset className="form-group">
+                                    <input className="form-control form-control-lg"
+                                           type="text"
+                                           placeholder="Email"
+                                           name="email"
+                                           onChange={this.handleInputChange}/>
+
+                                </fieldset>
+
+                                <fieldset className="form-group">
+                                    <input className="form-control form-control-lg"
+                                           type="password"
+                                           onChange={this.handleInputChange}
+                                           name="password"
+                                           placeholder="Password"/>
+                                </fieldset>
+
+                                <button className="btn btn-lg btn-primary pull-xs-right"
+                                        disabled={this.state.isBusy}
+                                        onClick={this.register}>
+                                    Sign in
+                                </button>
+                            </form>
+                        </div>
+
+                    </div>
                 </div>
-            </Fragment>
+            </div>
         );
     }
 }
