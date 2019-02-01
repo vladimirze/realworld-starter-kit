@@ -1,4 +1,4 @@
-import request from './request';
+import request from '../services/request';
 
 
 function getList(articleSlug) {
@@ -25,7 +25,7 @@ function isAuthor(user, comment) {
 }
 
 
-export const commentService = {
+export const commentResource = {
     create: create,
     getList: getList,
     remove: remove,

@@ -27,6 +27,3 @@ export default class Observable {
         this.currentValue = value;
     }
 }
-
-
-

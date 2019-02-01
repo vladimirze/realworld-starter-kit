@@ -1,6 +1,6 @@
-import request from './request';
-import Observable from './Observable';
-import jwt from './jwt';
+import request from '../services/request';
+import Observable from '../services/Observable';
+import jwt from '../services/jwt';
 
 
 const currentUser = new Observable();
@@ -37,7 +37,7 @@ function logIn(email, password) {
 
     req.promise = req.promise.then((authenticatedUser) => {
         jwt.set(authenticatedUser.user.token);
-        user.isAuthenticated.notify(true);
+        userResource.isAuthenticated.notify(true);
         return authenticatedUser;
     });
 
@@ -47,7 +47,7 @@ function logIn(email, password) {
 // TODO: can jwt token be invalidated after user logs out? (backend)
 function logOut() {
     jwt.remove();
-    user.isAuthenticated.notify(false);
+    userResource.isAuthenticated.notify(false);
     window.location.href = '/';
     return Promise.resolve(true);
 }
@@ -68,7 +68,7 @@ function update(updatedUser) {
     return req;
 }
 
-const user = {
+const userResource = {
     getCurrentUser: getCurrentUser,
     currentUser: currentUser,
     isAuthenticated: isAuthenticated,
@@ -78,4 +78,4 @@ const user = {
     update: update
 };
 
-export default user;
+export default userResource;

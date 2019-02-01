@@ -1,8 +1,8 @@
 import React, {Component, Fragment} from 'react';
 import {withRouter} from "react-router-dom";
 
-import user from './user';
-import {ErrorViewer} from "./error";
+import user from '../../resources/user';
+import {ErrorViewer} from "../../components/ErrorViewer";
 
 
 class LogIn extends Component {

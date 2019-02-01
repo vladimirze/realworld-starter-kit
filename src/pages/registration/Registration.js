@@ -1,6 +1,6 @@
 import React, {Component, Fragment} from 'react';
-import user from './user';
-import {ErrorViewer} from "./error";
+import user from '../../resources/user';
+import {ErrorViewer} from "../../components/ErrorViewer";
 import {withRouter} from "react-router-dom";
 
 

@@ -1,4 +1,4 @@
-import request from './request';
+import request from '../services/request';
 
 
 const resource = 'articles/feed';
@@ -9,6 +9,6 @@ function getList(queryParameters) {
     });
 }
 
-export const feed = {
+export const feedResource = {
     getList: getList
 };

@@ -1,4 +1,4 @@
-import request from './request';
+import request from '../services/request';
 
 
 const resource = 'articles';
@@ -51,7 +51,7 @@ function isAuthor(article, user) {
     return article.author.username === user.username;
 }
 
-export const articleService = {
+export const articleResource = {
     getList: getList,
     get: get,
     update: update,

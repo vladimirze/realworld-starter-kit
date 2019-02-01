@@ -1,4 +1,4 @@
-import request from './request';
+import request from '../services/request';
 
 
 function getList() {
@@ -7,6 +7,6 @@ function getList() {
     });
 }
 
-export const tagService = {
+export const tagResource = {
     getList: getList
 };

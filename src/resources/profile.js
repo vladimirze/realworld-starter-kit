@@ -1,4 +1,4 @@
-import request from "./request";
+import request from "../services/request";
 
 
 function get(username) {
@@ -13,6 +13,6 @@ function get(username) {
     return req;
 }
 
-export const profileService = {
+export const profileResource = {
     get: get
 };
