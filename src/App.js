@@ -14,6 +14,7 @@ import UserProfile from "./pages/user-profile/UserProfile";
 import ArticleViewer from "./pages/article/ArticleViewer";
 import ArticleEditor from "./pages/article-editor/ArticleEditor";
 import ArticleCreator from "./pages/article-creator/ArticleCreator";
+import Footer from "./components/Footer";
 
 
 // TODO: when going Home from any other page request to Global Feed gets initiated and immediately canceled
@@ -68,6 +69,7 @@ class App extends Component {
                 <Router>
                     <Fragment>
                         <Navigation/>
+
                         <Switch>
                             <Route path="/" exact component={Home}/>
                             <Route path="/register" component={Registration}/>
@@ -78,6 +80,8 @@ class App extends Component {
                             <Route path="/article/:slug" component={ArticleViewer}/>
                             <Route path="/settings" component={ProfileSettings}/>
                         </Switch>
+
+                        <Footer/>
                     </Fragment>
                 </Router>
             </Fragment>
