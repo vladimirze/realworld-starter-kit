@@ -13,7 +13,7 @@ function feedFactory(dataSource, queryParams) {
         constructor(props) {
             super(props);
 
-            this.PAGE_LIMIT = 10;
+            this.MAX_ITEMS_PER_PAGE = queryParams.limit || 10;
             this.defaultQueryParams = {...queryParams};
             if (this.props.tag) {
                 this.defaultQueryParams.tag = this.props.tag;
@@ -38,7 +38,7 @@ function feedFactory(dataSource, queryParams) {
                         feed: feed.articles,
                         isReady: true,
                         totalArticles: feed.articlesCount,
-                        totalPages: Math.ceil(feed.articlesCount / this.PAGE_LIMIT)
+                        totalPages: Math.ceil(feed.articlesCount / this.MAX_ITEMS_PER_PAGE)
                     });
                 })
                 .catch((error) => {
@@ -52,7 +52,7 @@ function feedFactory(dataSource, queryParams) {
         }
 
         componentDidMount() {
-            const queryParams = Object.assign({}, this.defaultQueryParams, {limit: this.PAGE_LIMIT, offset: 0});
+            const queryParams = Object.assign({}, this.defaultQueryParams, {limit: this.MAX_ITEMS_PER_PAGE, offset: 0});
             this.feedRequest = dataSource(queryParams);
             this.getFeed(this.feedRequest.promise);
         }
@@ -76,7 +76,7 @@ function feedFactory(dataSource, queryParams) {
             const queryParams = Object.assign(
                 {},
                 this.defaultQueryParams,
-                {limit: this.PAGE_LIMIT, offset: (this.PAGE_LIMIT * page) - this.PAGE_LIMIT}
+                {limit: this.MAX_ITEMS_PER_PAGE, offset: (this.MAX_ITEMS_PER_PAGE * page) - this.MAX_ITEMS_PER_PAGE}
             );
             this.feedRequest = dataSource(queryParams);
             this.getFeed(this.feedRequest.promise);
@@ -200,4 +200,18 @@ const GlobalFeed = feedFactory(articleResource.getList, {});
 const PersonalFeed = feedFactory(feedResource.getList, {});
 const TagFeed = feedFactory(articleResource.getList, {});
 
-export { GlobalFeed, PersonalFeed, TagFeed };
+const authorFeedFactory = function(username) {
+    return feedFactory(articleResource.getList, {author: username, limit: 5});
+};
+
+const favoritedArticlesFeedFactory = function(username) {
+    return feedFactory(articleResource.getList, {favorited: username, limit: 5});
+};
+
+export {
+    GlobalFeed,
+    PersonalFeed,
+    TagFeed,
+    authorFeedFactory,
+    favoritedArticlesFeedFactory
+};
