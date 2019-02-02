@@ -20,7 +20,9 @@ class ProfileSettings extends Component {
         this.setState({user: user});
     }
 
-    updateSettings() {
+    updateSettings(event) {
+        event.preventDefault();
+
         const updatedUser = {...this.state.user};
         if (updatedUser.password.length === 0) {
             delete updatedUser.password;
@@ -63,48 +65,77 @@ class ProfileSettings extends Component {
 
     render() {
         return (
-            <Fragment>
-                <h1>Your Settings</h1>
-            <div>
-                <input
-                    type="text"
-                    placeholder="URL of profile picture"
-                    name="image"
-                    value={this.state.user.image}
-                    onChange={this.handleInputChange}/>
+            <div className="settings-page">
+                <div className="container page">
+                    <div className="row">
 
-                <input
-                    type="text"
-                    placeholder="Username"
-                    name="username"
-                    value={this.state.user.username}
-                    onChange={this.handleInputChange}/>
+                        <div className="col-md-6 offset-md-3 col-xs-12">
+                            <h1 className="text-xs-center">Your Settings</h1>
 
-                <textarea
-                    placeholder="Bio"
-                    name="bio"
-                    value={this.state.user.bio}
-                    onChange={this.handleInputChange}>
-                </textarea>
+                            <form>
+                                <fieldset>
+                                    <fieldset className="form-group">
+                                        <input className="form-control"
+                                               type="text"
+                                               placeholder="URL of profile picture"
+                                               name="image"
+                                               value={this.state.user.image}
+                                               onChange={this.handleInputChange}/>
+                                    </fieldset>
 
-                <input
-                    type="text"
-                    placeholder="email"
-                    name="email"
-                    value={this.state.user.email}
-                    onChange={this.handleInputChange}/>
+                                    <fieldset className="form-group">
+                                        <input className="form-control form-control-lg"
+                                               type="text"
+                                               placeholder="Your Name"
+                                               name="username"
+                                               value={this.state.user.username}
+                                               onChange={this.handleInputChange}/>
+                                    </fieldset>
 
-                <input
-                    type="password"
-                    name="password"
-                    value={this.state.user.password}
-                    onChange={this.handleInputChange}/>
+                                    <fieldset className="form-group">
+                                        <textarea className="form-control form-control-lg"
+                                                  rows="8"
+                                                  placeholder="Short bio about you"
+                                                  name="bio"
+                                                  value={this.state.user.bio}
+                                                  onChange={this.handleInputChange}></textarea>
+                                    </fieldset>
 
+                                    <fieldset className="form-group">
+                                        <input className="form-control form-control-lg"
+                                               type="text"
+                                               placeholder="Email"
+                                               name="email"
+                                               value={this.state.user.email}
+                                               onChange={this.handleInputChange}/>
+                                    </fieldset>
 
-                <button onClick={this.updateSettings}>Update Settings</button>
-                <button onClick={this.logOut}>Log Out</button>
+                                    <fieldset className="form-group">
+                                        <input className="form-control form-control-lg"
+                                               type="password"
+                                               placeholder="Password"
+                                               name="password"
+                                               value={this.state.user.password}
+                                               onChange={this.handleInputChange}/>
+                                    </fieldset>
+
+                                    <button className="btn btn-lg btn-primary pull-xs-right"
+                                            onClick={this.updateSettings}>
+                                        Update Settings
+                                    </button>
+                                </fieldset>
+                            </form>
+
+                            <hr/>
+
+                            <button className="btn btn-outline-danger" onClick={this.logOut}>
+                                Or click here to logout.
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
             </div>
-            </Fragment>
         );
     }
 }
