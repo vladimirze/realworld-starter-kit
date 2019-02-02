@@ -3,19 +3,24 @@
     ✔ List of articles pulled from either Feed, Global, or by Tag @done (2019-1-19 18:47:10)
     ✔ Pagination for list of articles @done (2019-1-19 18:47:12)
     ✔ User should be able to favorite articles @done (2019-1-19 21:25:20)
-☐ Sign in/Sign up pages (URL: /#/login, /#/register )
+✔ Sign in/Sign up pages (URL: /#/login, /#/register ) @done (2019-2-2 13:58:01)
     ✔ Uses JWT (store the token in localStorage) @done (2019-1-19 18:47:50)
-    ☐ Authentication can be easily switched to session/cookie based
+    ✘ Authentication can be easily switched to session/cookie based @cancelled (2019-2-2 13:57:58)
 ✔ Settings page (URL: /#/settings ) @done (2019-1-19 18:47:52)
+    ☐ Styling
 ✔ Editor page to create/edit articles (URL: /#/editor, /#/editor/article-slug-here ) @done (2019-1-21 14:24:51)
+    ☐ Styling
 ✔ Article page (URL: /#/article/article-slug-here ) @done (2019-1-21 14:19:41)
     ✔ Delete article button (only shown to article's author) @done (2019-1-21 12:54:15)
     ✔ Render markdown from server client side @done (2019-1-21 14:19:38)
     ✔ Comments section at bottom of page @done (2019-1-19 18:48:49)
     ✔ Delete comment button (only shown to comment's author) @done (2019-1-19 18:48:54)
-☐ Profile page (URL: /#/profile/:username, /#/profile/:username/favorites )
+✔ Profile page (URL: /#/profile/:username, /#/profile/:username/favorites ) @done (2019-2-2 13:56:37)
     ✔ Show basic user info @done (2019-1-21 20:18:45)
     ✔ List of author's created articles @done (2019-2-2 12:04:54)
     ✔ List of author's favorited articles @done (2019-2-2 12:04:56)
-    ☐ Follow user
+    ✔ Follow user @done (2019-2-2 13:56:34)
+    ✔ Style @done (2019-2-2 13:56:58)
 ☐ [bug] feed is empty if user is not logged in
+☐ [ui] Home page - Popular Tags
+    ☐ change mouse cursor to pointer when hovering over the tags
