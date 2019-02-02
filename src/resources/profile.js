@@ -13,6 +13,20 @@ function get(username) {
     return req;
 }
 
+function follow(username) {
+    return request(`profiles/${username}/follow`, {
+        method: 'POST'
+    });
+}
+
+function unfollow(username) {
+    return request(`profiles/${username}/follow`, {
+        method: 'DELETE'
+    });
+}
+
 export const profileResource = {
-    get: get
+    get: get,
+    follow: follow,
+    unfollow: unfollow
 };

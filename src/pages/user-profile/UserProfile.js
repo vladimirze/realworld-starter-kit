@@ -4,6 +4,7 @@ import {Link} from "react-router-dom";
 import withAuthenticatedUser from "../../components/withAuthenticatedUser";
 import React from "react";
 import {authorFeedFactory, favoritedArticlesFeedFactory} from "../../components/feed";
+import FollowUserButton from "../../components/FollowUserButton";
 
 
 const feedChoice = {
@@ -23,6 +24,7 @@ class UserProfile extends Component {
         };
 
         this.changeFeed = this.changeFeed.bind(this);
+        this.getUserProfile = this.getUserProfile.bind(this);
     }
 
     isOwner() {
@@ -30,16 +32,7 @@ class UserProfile extends Component {
     }
 
     componentDidMount() {
-        this.request = profileResource.get(this.props.match.params.user);
-        this.request.promise
-            .then((profile) => {
-                this.setState({
-                    profile: profile,
-                    AuthorFeed: authorFeedFactory(profile.username),
-                    FavoritedArticlesFeed: favoritedArticlesFeedFactory(profile.username)
-                });
-            })
-            .catch(console.error);
+        this.getUserProfile();
     }
 
     componentWillUnmount() {
@@ -54,6 +47,24 @@ class UserProfile extends Component {
 
     changeFeed(feed) {
         this.setState({selectedFeed: feed});
+    }
+
+    getUserProfile() {
+        this.request = profileResource.get(this.props.match.params.user);
+        this.request.promise
+            .then((profile) => {
+                this.setState({
+                    profile: profile
+                });
+
+                if (!this.state.AuthorFeed || !this.state.FavoritedArticlesFeed) {
+                    this.setState({
+                        AuthorFeed: authorFeedFactory(profile.username),
+                        FavoritedArticlesFeed: favoritedArticlesFeedFactory(profile.username)
+                    });
+                }
+            })
+            .catch(console.error);
     }
 
     render() {
@@ -72,12 +83,19 @@ class UserProfile extends Component {
 
                                 <p>{this.state.profile.bio}</p>
 
-                                {/*TODO: Follow button*/}
-                                <button className="btn btn-sm btn-outline-secondary action-btn">
-                                    <i className="ion-plus-round"></i>
-                                    &nbsp;
-                                    Follow {this.state.profile.username}
-                                </button>
+                                {
+                                    this.isOwner() &&
+                                    <Link to="/settings" className="btn btn-sm btn-outline-secondary action-btn">
+                                        <i className="ion-gear-a"></i> Edit Profile Settings
+                                    </Link>
+                                }
+
+                                {
+                                    !this.isOwner() &&
+                                    <FollowUserButton className="action-btn"
+                                                      profile={this.state.profile}
+                                                      onSuccess={this.getUserProfile}/>
+                                }
                             </div>
 
                         </div>
