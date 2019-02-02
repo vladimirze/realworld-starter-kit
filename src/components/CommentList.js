@@ -62,11 +62,10 @@ class CommentList extends Component {
             <CommentEditor articleSlug={this.props.articleSlug} onPostSuccess={this.getComments}/>
             {
                 this.state.comments.map((comment) => {
-                    return <CommentViewer
-                        comment={comment}
-                        onRemove={this.removeComment}
-                        isAuthor={this.isCommentAuthor(comment)}
-                        key={comment.id}/>
+                    return <CommentViewer comment={comment}
+                                          onRemove={this.removeComment}
+                                          isAuthor={this.isCommentAuthor(comment)}
+                                          key={comment.id}/>
                 })
             }
             </div>

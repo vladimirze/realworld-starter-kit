@@ -24,7 +24,9 @@ class CommentEditor extends Component {
         this.setState({comment: ''});
     }
 
-    postComment() {
+    postComment(event) {
+        event.preventDefault();
+
         this.request = commentResource.create(this.props.articleSlug, this.state.comment);
         this.request.promise
             .then(() => {
@@ -42,15 +44,25 @@ class CommentEditor extends Component {
 
     render() {
         return (
-            <div>
-                <span>{this.props.currentUser.username}: </span>
-                <textarea
-                    name="comment"
-                    value={this.state.comment}
-                    onChange={this.handleInput}></textarea>
-                <button onClick={this.postComment}>Post comment</button>
-                <hr/>
-            </div>
+            <form className="card comment-form">
+                <div className="card-block">
+                    <textarea className="form-control"
+                              placeholder="Write a comment..."
+                              rows="3"
+                              value={this.state.comment}
+                              name="comment"
+                              onChange={this.handleInput}></textarea>
+                </div>
+
+                <div className="card-footer">
+                    {/* TODO: comment author image */}
+                    <img src="http://i.imgur.com/Qr71crq.jpg" className="comment-author-img"/>
+
+                    <button className="btn btn-sm btn-primary" onClick={this.postComment}>
+                        Post Comment
+                    </button>
+                </div>
+            </form>
         );
     }
 }

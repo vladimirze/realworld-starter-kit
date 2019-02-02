@@ -1,4 +1,4 @@
-import {Component} from "react";
+import {Component, Fragment} from "react";
 import {articleResource} from "../../resources/article";
 import {Link, withRouter} from "react-router-dom";
 import marked from "marked";
@@ -46,22 +46,103 @@ class ArticleViewer extends Component {
 
     render() {
         return (
-            <div>
+            <Fragment>
             {this.state.isReady && <div>Loading...</div>}
 
             {
                 this.state.article &&
-                <div>
-                    <div>{this.state.article.title}</div>
-                    {this.isAuthor() && <Link to={`/editor/${this.state.article.slug}`}>Edit Article</Link>}
-                    {this.isAuthor() && <button onClick={this.deleteArticle}>Delete Article</button>}
-                    <div dangerouslySetInnerHTML={{__html: marked(this.state.article.body, {sanitize: true})}}></div>
-                    <div>tags: {this.state.article.tagList.join(',')}</div>
-                    <Link to={`/@${this.state.article.author.username}`}>{this.state.article.author.username}</Link>
-                    <CommentList articleSlug={this.state.article.slug}/>
+                <div className="article-page">
+
+                    <div className="banner">
+                        <div className="container">
+
+                            <h1>{this.state.article.title}</h1>
+
+                            <div className="article-meta">
+                                <Link to={`/@${this.state.article.author.username}`}>
+                                    <img src={this.state.article.author.image}/>
+                                </Link>
+
+                                <div className="info">
+                                    <Link to={`/@${this.state.article.author.username}`} className="author">
+                                        Eric Simons
+                                    </Link>
+                                    {/* TODO: date formatting */}
+                                    <span className="date">{this.state.article.createdAt}</span>
+                                </div>
+
+                                {/* TODO: Follow button */}
+                                <button className="btn btn-sm btn-outline-secondary">
+                                    <i className="ion-plus-round"></i>
+                                    &nbsp;
+                                    Follow Eric Simons <span className="counter">(10)</span>
+                                </button>
+
+                                {/* TODO: Favorite button */}
+                                &nbsp;&nbsp;
+                                <button className="btn btn-sm btn-outline-primary">
+                                    <i className="ion-heart"></i>
+                                    &nbsp;
+                                    Favorite Post <span className="counter">(29)</span>
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div className="container page">
+
+                        <div className="row article-content">
+                            <div className="col-md-12">
+                                <p dangerouslySetInnerHTML={{__html: marked(this.state.article.body, {sanitize: true})}}></p>
+                            </div>
+                        </div>
+
+                        <hr/>
+
+                        <div className="article-actions">
+                            {/* TODO: article meta (same as above) */}
+                            <div className="article-meta">
+                                <Link to={`/@${this.state.article.author.username}`}>
+                                    <img src={this.state.article.author.image}/>
+                                </Link>
+
+                                <div className="info">
+                                    <Link to={`/@${this.state.article.author.username}`} className="author">
+                                        Eric Simons
+                                    </Link>
+                                    {/* TODO: date formatting */}
+                                    <span className="date">{this.state.article.createdAt}</span>
+                                </div>
+
+                                {/* TODO: Follow button */}
+                                <button className="btn btn-sm btn-outline-secondary">
+                                    <i className="ion-plus-round"></i>
+                                    &nbsp;
+                                    Follow Eric Simons <span className="counter">(10)</span>
+                                </button>
+
+                                {/* TODO: Favorite button */}
+                                &nbsp;&nbsp;
+                                <button className="btn btn-sm btn-outline-primary">
+                                    <i className="ion-heart"></i>
+                                    &nbsp;
+                                    Favorite Post <span className="counter">(29)</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="row">
+                            <div className="col-xs-12 col-md-8 offset-md-2">
+                                <CommentList articleSlug={this.state.article.slug}/>
+                            </div>
+                        </div>
+
+                    </div>
+
                 </div>
             }
-            </div>
+            </Fragment>
         );
     }
 }

@@ -1,5 +1,6 @@
 import {Component} from "react";
 import React from "react";
+import {Link} from "react-router-dom";
 
 
 export default class CommentViewer extends Component {
@@ -36,15 +37,24 @@ export default class CommentViewer extends Component {
 
     render() {
         return (
-            <div key={this.props.comment.id}>
-                <div>{this.props.comment.author.username} on {this.props.comment.createdAt}</div>
-                <div>{this.props.comment.body}</div>
-                {
-                    this.props.isAuthor &&
-                    <button onClick={() => {this.remove(this.props.comment.id)}}>delete</button>
-                }
+            <div className="card" key={this.props.comment.id}>
+                <div className="card-block">
+                    <p className="card-text">{this.props.comment.body}</p>
+                </div>
 
-                {!this.state.isReady && <div>removing...</div>}
+                <div className="card-footer">
+                    <Link to={`/@${this.props.comment.author.username}`} className="comment-author">
+                        <img src={this.props.comment.author.image} className="comment-author-img"/>
+                    </Link>
+                    &nbsp;
+
+                    <Link to={`/@${this.props.comment.author.username}`}
+                          className="comment-author">{this.props.comment.author.username}
+                    </Link>
+
+                    {/* TODO: Date formatting */}
+                    <span className="date-posted">{this.props.comment.createdAt}</span>
+                </div>
             </div>
         );
     }
