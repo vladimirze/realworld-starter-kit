@@ -24,3 +24,5 @@
 ☐ [bug] feed is empty if user is not logged in
 ☐ [ui] Home page - Popular Tags
     ☐ change mouse cursor to pointer when hovering over the tags
+☐ [ui] Article Editor / Article Creator. 
+    ☐ are tags supposed to be separated by whitespace or commas?

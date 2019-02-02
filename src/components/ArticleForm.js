@@ -21,6 +21,7 @@ export default class ArticleForm extends Component {
 
     onSubmit(event) {
         event.preventDefault();
+
         const tagList = this.state.article.tagList.length > 0 ? this.state.article.tagList.split(' ') : [];
         this.props.onSubmit({...this.state.article, tagList: tagList});
     }
@@ -32,36 +33,62 @@ export default class ArticleForm extends Component {
 
     render() {
         return (
-            <form>
-                <input
-                    name="title"
-                    type="text"
-                    placeholder="Article Title"
-                    value={this.state.article.title}
-                    onChange={this.handleInput}/>
+            <div className="editor-page">
+                <div className="container page">
+                    <div className="row">
 
-                <input
-                    name="description"
-                    type="text"
-                    placeholder="Whats this article about?"
-                    value={this.state.article.description}
-                    onChange={this.handleInput}/>
+                        <div className="col-md-10 offset-md-1 col-xs-12">
+                            <form>
+                                <fieldset>
+                                    <fieldset className="form-group">
+                                        <input type="text"
+                                               className="form-control form-control-lg"
+                                               placeholder="Article Title"
+                                               value={this.state.article.title}
+                                               name="title"
+                                               onChange={this.handleInput}/>
+                                    </fieldset>
 
-                <textarea
-                    name="body"
-                    placeholder="Write your article (markdown)"
-                    value={this.state.article.body}
-                    onChange={this.handleInput}/>
+                                    <fieldset className="form-group">
+                                        <input type="text"
+                                               className="form-control"
+                                               placeholder="What's this article about?"
+                                               value={this.state.article.description}
+                                               name="description"
+                                               onChange={this.handleInput}/>
+                                    </fieldset>
 
-                <input
-                    name="tagList"
-                    type="text"
-                    placeholder="tags"
-                    value={this.state.article.tagList}
-                    onChange={this.handleInput}/>
+                                    <fieldset className="form-group">
+                                        <textarea className="form-control"
+                                                  rows="8"
+                                                  placeholder="Write your article (in markdown)"
+                                                  value={this.state.article.body}
+                                                  name="body"
+                                                  onChange={this.handleInput}></textarea>
+                                    </fieldset>
 
-                <button onClick={this.onSubmit}>Publish Article</button>
-            </form>
+                                    <fieldset className="form-group">
+                                        <input type="text"
+                                               className="form-control"
+                                               placeholder="Enter tags"
+                                               value={this.state.article.tagList}
+                                               name="tagList"
+                                               onChange={this.handleInput}/>
+                                            <div className="tag-list"></div>
+                                    </fieldset>
+
+                                    <button className="btn btn-lg pull-xs-right btn-primary"
+                                            type="button"
+                                            onClick={this.onSubmit}>
+                                        Publish Article
+                                    </button>
+                                </fieldset>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
         );
     }
 }
