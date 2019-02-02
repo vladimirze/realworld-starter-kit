@@ -24,5 +24,11 @@
 ☐ [bug] feed is empty if user is not logged in
 ☐ [ui] Home page - Popular Tags
     ☐ change mouse cursor to pointer when hovering over the tags
+☐ [ui] Article Viewer
+    ☐ tags are missing
+    ☐ "Edit Article" and "Delete Article" buttons missing for article author
+    ☐ "Follow Author" button is missing
+    ☐ "Favorite Article" button is missing
+    ☐ Implement ArticleAuthor component which shows author username, image and the article date it was posted
 ☐ [ui] Article Editor / Article Creator. 
     ☐ are tags supposed to be separated by whitespace or commas?
