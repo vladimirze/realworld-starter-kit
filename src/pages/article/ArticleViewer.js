@@ -7,6 +7,7 @@ import React from "react";
 import CommentList from "../../components/CommentList";
 import {ArticleLikeButton} from "../../components/LikeButton";
 import {FollowUserButton} from "../../components/FollowButton";
+import ArticleAuthor from "../../components/ArticleAuthor";
 
 
 class ArticleViewer extends Component {
@@ -80,17 +81,7 @@ class ArticleViewer extends Component {
                             <h1>{this.state.article.title}</h1>
 
                             <div className="article-meta">
-                                <Link to={`/@${this.state.article.author.username}`}>
-                                    <img src={this.state.article.author.image}/>
-                                </Link>
-
-                                <div className="info">
-                                    <Link to={`/@${this.state.article.author.username}`} className="author">
-                                        Eric Simons
-                                    </Link>
-                                    {/* TODO: date formatting */}
-                                    <span className="date">{this.state.article.createdAt}</span>
-                                </div>
+                                <ArticleAuthor article={this.state.article}/>
 
                                 <FollowUserButton className="action-btn"
                                                   profile={this.state.article.author}
