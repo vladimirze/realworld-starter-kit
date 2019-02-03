@@ -4,7 +4,7 @@ import {Link} from "react-router-dom";
 import withAuthenticatedUser from "../../components/withAuthenticatedUser";
 import React from "react";
 import {authorFeedFactory, favoritedArticlesFeedFactory} from "../../components/feed";
-import FollowUserButton from "../../components/FollowUserButton";
+import {FollowUserButton} from "../../components/FollowButton";
 
 
 const feedChoice = {
@@ -94,7 +94,8 @@ class UserProfile extends Component {
                                     !this.isOwner() &&
                                     <FollowUserButton className="action-btn"
                                                       profile={this.state.profile}
-                                                      onSuccess={this.getUserProfile}/>
+                                                      onFollow={this.getUserProfile}
+                                                      onUnfollow={this.getUserProfile}/>
                                 }
                             </div>
 

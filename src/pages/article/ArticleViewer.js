@@ -6,6 +6,7 @@ import withAuthenticatedUser from "../../components/withAuthenticatedUser";
 import React from "react";
 import CommentList from "../../components/CommentList";
 import {ArticleLikeButton} from "../../components/LikeButton";
+import {FollowUserButton} from "../../components/FollowButton";
 
 
 class ArticleViewer extends Component {
@@ -19,6 +20,7 @@ class ArticleViewer extends Component {
         this.deleteArticle = this.deleteArticle.bind(this);
         this.favorite = this.favorite.bind(this);
         this.unfavorite = this.unfavorite.bind(this);
+        this.handleFollowClick = this.handleFollowClick.bind(this);
     }
 
     componentDidMount() {
@@ -55,6 +57,14 @@ class ArticleViewer extends Component {
         this.setState({article: Object.assign({}, this.state.article, {favorited: false})});
     }
 
+    handleFollowClick(isFollowing) {
+        const author = Object.assign({}, this.state.article.author, {following: isFollowing});
+        const article = Object.assign({}, this.state.article);
+        article.author = author;
+
+        this.setState({article: article});
+    }
+
     render() {
         return (
             <Fragment>
@@ -82,12 +92,10 @@ class ArticleViewer extends Component {
                                     <span className="date">{this.state.article.createdAt}</span>
                                 </div>
 
-                                {/* TODO: Follow button */}
-                                <button className="btn btn-sm btn-outline-secondary">
-                                    <i className="ion-plus-round"></i>
-                                    &nbsp;
-                                    Follow Eric Simons <span className="counter">(10)</span>
-                                </button>
+                                <FollowUserButton className="action-btn"
+                                                  profile={this.state.article.author}
+                                                  onFollow={() => {this.handleFollowClick(true);}}
+                                                  onUnfollow={() => {this.handleFollowClick(false);}}/>
 
                                 &nbsp;&nbsp;
                                 <ArticleLikeButton
