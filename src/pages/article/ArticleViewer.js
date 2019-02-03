@@ -10,6 +10,31 @@ import {FollowUserButton} from "../../components/FollowButton";
 import ArticleAuthor from "../../components/ArticleAuthor";
 
 
+class ArticleMeta extends Component {
+    render() {
+        return (
+            <div className="article-meta">
+                <ArticleAuthor article={this.props.article}/>
+
+                <FollowUserButton className="action-btn"
+                                  profile={this.props.article.author}
+                                  onFollow={this.props.onFollow}
+                                  onUnfollow={this.props.onUnfollow}/>
+
+                &nbsp;&nbsp;
+                <ArticleLikeButton
+                    className="btn-sm"
+                    articleSlug={this.props.article.slug}
+                    count={this.props.article.favoritesCount}
+                    isFavorited={this.props.article.favorited}
+                    onFavorite={this.props.onFavorite}
+                    onUnfavorite={this.props.onUnfavorite}>
+                </ArticleLikeButton>
+            </div>
+        );
+    }
+}
+
 class ArticleViewer extends Component {
     constructor(props) {
         super(props);
@@ -80,25 +105,11 @@ class ArticleViewer extends Component {
 
                             <h1>{this.state.article.title}</h1>
 
-                            <div className="article-meta">
-                                <ArticleAuthor article={this.state.article}/>
-
-                                <FollowUserButton className="action-btn"
-                                                  profile={this.state.article.author}
-                                                  onFollow={() => {this.handleFollowClick(true);}}
-                                                  onUnfollow={() => {this.handleFollowClick(false);}}/>
-
-                                &nbsp;&nbsp;
-                                <ArticleLikeButton
-                                    className="btn-sm"
-                                    articleSlug={this.state.article.slug}
-                                    count={this.state.article.favoritesCount}
-                                    isFavorited={this.state.article.favorited}
-                                    onFavorite={this.favorite}
-                                    onUnfavorite={this.unfavorite}>
-                                </ArticleLikeButton>
-                            </div>
-
+                            <ArticleMeta article={this.state.article}
+                                         onFollow={() => {this.handleFollowClick(true);}}
+                                         onUnfollow={() => {this.handleFollowClick(false);}}
+                                         onFavorite={this.favorite}
+                                         onUnfavorite={this.unfavorite}/>
                         </div>
                     </div>
 
@@ -113,35 +124,11 @@ class ArticleViewer extends Component {
                         <hr/>
 
                         <div className="article-actions">
-                            {/* TODO: article meta (same as above) */}
-                            <div className="article-meta">
-                                <Link to={`/@${this.state.article.author.username}`}>
-                                    <img src={this.state.article.author.image}/>
-                                </Link>
-
-                                <div className="info">
-                                    <Link to={`/@${this.state.article.author.username}`} className="author">
-                                        Eric Simons
-                                    </Link>
-                                    {/* TODO: date formatting */}
-                                    <span className="date">{this.state.article.createdAt}</span>
-                                </div>
-
-                                {/* TODO: Follow button */}
-                                <button className="btn btn-sm btn-outline-secondary">
-                                    <i className="ion-plus-round"></i>
-                                    &nbsp;
-                                    Follow Eric Simons <span className="counter">(10)</span>
-                                </button>
-
-                                {/* TODO: Favorite button */}
-                                &nbsp;&nbsp;
-                                <button className="btn btn-sm btn-outline-primary">
-                                    <i className="ion-heart"></i>
-                                    &nbsp;
-                                    Favorite Post <span className="counter">(29)</span>
-                                </button>
-                            </div>
+                            <ArticleMeta article={this.state.article}
+                                 onFollow={() => {this.handleFollowClick(true);}}
+                                 onUnfollow={() => {this.handleFollowClick(false);}}
+                                 onFavorite={this.favorite}
+                                 onUnfavorite={this.unfavorite}/>
                         </div>
 
                         <div className="row">
