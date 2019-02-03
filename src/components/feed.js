@@ -5,7 +5,7 @@ import {articleResource} from "../resources/article";
 import {Link} from "react-router-dom";
 import {feedResource} from "../resources/feed";
 import React from "react";
-import LikeButton from "./LikeButton";
+import {ArticleLikeButton} from "./LikeButton";
 
 
 function feedFactory(dataSource, queryParams) {
@@ -27,8 +27,7 @@ function feedFactory(dataSource, queryParams) {
             };
 
             this.getPage = this.getPage.bind(this);
-            this.favorite = this.favorite.bind(this);
-            this.unfavorite = this.unfavorite.bind(this);
+            this.handleLikeButton = this.handleLikeButton.bind(this);
         }
 
         getFeed(promise) {
@@ -105,40 +104,23 @@ function feedFactory(dataSource, queryParams) {
             );
         }
 
-        favorite(articleSlug) {
-            this.favoriteRequest = articleResource.favorite(articleSlug);
-            this.favoriteRequest.promise.then(() => {
-                const index = this.state.feed.findIndex(article => article.slug === articleSlug);
-                if (index >= 0) {
-                    const article = {...this.state.feed[index]};
-                    const feed = [...this.state.feed];
+        // increment/decrement `favorited` field for an article in place instead of fetching articles again.
+        handleLikeButton(response) {
+            const articleSlug = response.article.slug;
+            const index = this.state.feed.findIndex(article => article.slug === articleSlug);
 
-                    article.favorited = true;
-                    article.favoritesCount += 1;
-                    feed.splice(index, 1, article);
+            if (index === -1) {
+                return;
+            }
 
-                    this.setState({feed: feed});
-                }
-            })
-            .catch(console.error);
-        }
+            const article = {...this.state.feed[index]};
+            const feed = [...this.state.feed];
 
-        unfavorite(articleSlug) {
-            this.unfavoriteRequest = articleResource.unfavorite(articleSlug);
-            this.unfavoriteRequest.promise.then(() => {
-                const index = this.state.feed.findIndex(article => article.slug === articleSlug);
-                if (index >= 0) {
-                    const article = {...this.state.feed[index]};
-                    const feed = [...this.state.feed];
+            article.favorited = !article.favorited;
+            article.favoritesCount = article.favorited ? article.favoritesCount + 1 : article.favoritesCount - 1;
 
-                    article.favorited = false;
-                    article.favoritesCount -= 1;
-                    feed.splice(index, 1, article);
-
-                    this.setState({feed: feed});
-                }
-            })
-            .catch(console.error);
+            feed.splice(index, 1, article);
+            this.setState({feed: feed});
         }
 
         render() {
@@ -168,14 +150,14 @@ function feedFactory(dataSource, queryParams) {
                                             <span className="date">{article.createdAt}</span>
                                         </div>
 
-                                        <LikeButton
+                                        <ArticleLikeButton
                                             className="btn-sm pull-xs-right"
                                             articleSlug={article.slug}
                                             count={article.favoritesCount}
                                             isFavorited={article.favorited}
-                                            onFavorite={this.favorite}
-                                            onUnfavorite={this.unfavorite}>
-                                        </LikeButton>
+                                            onFavorite={this.handleLikeButton}
+                                            onUnfavorite={this.handleLikeButton}>
+                                        </ArticleLikeButton>
                                     </div>
 
                                     {/* Link to article */}

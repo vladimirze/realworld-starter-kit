@@ -5,6 +5,7 @@ import marked from "marked";
 import withAuthenticatedUser from "../../components/withAuthenticatedUser";
 import React from "react";
 import CommentList from "../../components/CommentList";
+import {ArticleLikeButton} from "../../components/LikeButton";
 
 
 class ArticleViewer extends Component {
@@ -16,6 +17,8 @@ class ArticleViewer extends Component {
         };
 
         this.deleteArticle = this.deleteArticle.bind(this);
+        this.favorite = this.favorite.bind(this);
+        this.unfavorite = this.unfavorite.bind(this);
     }
 
     componentDidMount() {
@@ -42,6 +45,14 @@ class ArticleViewer extends Component {
 
     isAuthor() {
         return articleResource.isAuthor(this.state.article, this.props.currentUser);
+    }
+
+    favorite() {
+        this.setState({article: Object.assign({}, this.state.article, {favorited: true})});
+    }
+
+    unfavorite() {
+        this.setState({article: Object.assign({}, this.state.article, {favorited: false})});
     }
 
     render() {
@@ -78,13 +89,15 @@ class ArticleViewer extends Component {
                                     Follow Eric Simons <span className="counter">(10)</span>
                                 </button>
 
-                                {/* TODO: Favorite button */}
                                 &nbsp;&nbsp;
-                                <button className="btn btn-sm btn-outline-primary">
-                                    <i className="ion-heart"></i>
-                                    &nbsp;
-                                    Favorite Post <span className="counter">(29)</span>
-                                </button>
+                                <ArticleLikeButton
+                                    className="btn-sm"
+                                    articleSlug={this.state.article.slug}
+                                    count={this.state.article.favoritesCount}
+                                    isFavorited={this.state.article.favorited}
+                                    onFavorite={this.favorite}
+                                    onUnfavorite={this.unfavorite}>
+                                </ArticleLikeButton>
                             </div>
 
                         </div>
