@@ -75,12 +75,31 @@ class ArticleViewer extends Component {
         return articleResource.isAuthor(this.state.article, this.props.currentUser);
     }
 
+    // change the favorite counter in place instead of re-fetching the article
     favorite() {
-        this.setState({article: Object.assign({}, this.state.article, {favorited: true})});
+        this.setState((state) => {
+            return {
+                article: Object.assign(
+                    {},
+                    state.article,
+                    {favorited: true, favoritesCount: state.article.favoritesCount + 1}
+                )
+            }
+        });
+
+        this.setState();
     }
 
     unfavorite() {
-        this.setState({article: Object.assign({}, this.state.article, {favorited: false})});
+        this.setState((state) => {
+            return {
+                article: Object.assign(
+                    {},
+                    state.article,
+                    {favorited: false, favoritesCount: state.article.favoritesCount - 1}
+                )}
+            }
+        );
     }
 
     handleFollowClick(isFollowing) {
