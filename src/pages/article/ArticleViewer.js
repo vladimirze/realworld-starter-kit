@@ -10,30 +10,112 @@ import {FollowUserButton} from "../../components/FollowButton";
 import ArticleAuthor from "../../components/ArticleAuthor";
 
 
-class ArticleMeta extends Component {
+class BaseArticleMeta extends Component {
+    constructor(props) {
+        super(props);
+
+        this.handleFollowClick = this.handleFollowClick.bind(this);
+        this.favorite = this.favorite.bind(this);
+        this.unfavorite = this.unfavorite.bind(this);
+        this.deleteArticle = this.deleteArticle.bind(this);
+        this.isAuthor = this.isAuthor.bind(this);
+    }
+
+    // change the favorite counter in place instead of re-fetching the article
+    favorite() {
+        const updatedArticle = Object.assign(
+            {},
+            this.props.article,
+            {favorited: true, favoritesCount: this.props.article.favoritesCount + 1}
+        );
+
+        this.props.onArticleChange(updatedArticle);
+    }
+
+    unfavorite() {
+        const updatedArticle = Object.assign(
+            {},
+            this.props.article,
+            {favorited: false, favoritesCount: this.props.article.favoritesCount - 1}
+        );
+
+        this.props.onArticleChange(updatedArticle);
+    }
+
+    handleFollowClick(isFollowing) {
+        const author = Object.assign({}, this.props.article.author, {following: isFollowing});
+        const updatedArticle = Object.assign({}, this.props.article);
+        updatedArticle.author = author;
+
+        this.props.onArticleChange(updatedArticle);
+    }
+
+    deleteArticle() {
+        this.request = articleResource.remove(this.props.match.params.slug);
+        this.request.promise
+            .then(() => {
+                this.props.history.push('/');
+            })
+            .catch(console.error);
+    }
+
+    isAuthor() {
+        return articleResource.isAuthor(this.props.article, this.props.currentUser);
+    }
+
+    componentWillUnmount() {
+        if (this.request) {
+            this.request.abort();
+        }
+    }
+
     render() {
         return (
             <div className="article-meta">
                 <ArticleAuthor article={this.props.article}/>
 
-                <FollowUserButton className="action-btn"
-                                  profile={this.props.article.author}
-                                  onFollow={this.props.onFollow}
-                                  onUnfollow={this.props.onUnfollow}/>
+                {
+                    this.isAuthor() &&
+                    <Link to={`/editor/${this.props.article.slug}`} className="btn btn-sm btn-outline-secondary">
+                        <i className="ion-edit"></i> Edit Article
+                    </Link>
+                }
 
                 &nbsp;&nbsp;
-                <ArticleLikeButton
-                    className="btn-sm"
-                    articleSlug={this.props.article.slug}
-                    count={this.props.article.favoritesCount}
-                    isFavorited={this.props.article.favorited}
-                    onFavorite={this.props.onFavorite}
-                    onUnfavorite={this.props.onUnfavorite}>
-                </ArticleLikeButton>
+                {
+                    this.isAuthor() &&
+                    <button onClick={this.deleteArticle} className="btn btn-sm btn-outline-danger">
+                        <i className="ion-trash-a"></i> Delete Article
+                    </button>
+                }
+
+                {
+                    !this.isAuthor() &&
+                    <FollowUserButton className="action-btn"
+                                      profile={this.props.article.author}
+                                      onFollow={() => {this.handleFollowClick(true);}}
+                                      onUnfollow={() => {this.handleFollowClick(false);}}/>
+                }
+
+                &nbsp;&nbsp;
+                {
+                    !this.isAuthor() &&
+                    <ArticleLikeButton
+                        className="btn-sm"
+                        articleSlug={this.props.article.slug}
+                        count={this.props.article.favoritesCount}
+                        isFavorited={this.props.article.favorited}
+                        onFavorite={this.favorite}
+                        onUnfavorite={this.unfavorite}>
+                    </ArticleLikeButton>
+                }
             </div>
         );
     }
 }
+
+const ArticleMeta = withRouter(BaseArticleMeta);
+
 
 class ArticleViewer extends Component {
     constructor(props) {
@@ -43,10 +125,7 @@ class ArticleViewer extends Component {
             isReady: false
         };
 
-        this.deleteArticle = this.deleteArticle.bind(this);
-        this.favorite = this.favorite.bind(this);
-        this.unfavorite = this.unfavorite.bind(this);
-        this.handleFollowClick = this.handleFollowClick.bind(this);
+        this.updateArticle = this.updateArticle.bind(this);
     }
 
     componentDidMount() {
@@ -62,51 +141,7 @@ class ArticleViewer extends Component {
         this.request.abort();
     }
 
-    deleteArticle() {
-        this.request = articleResource.remove(this.props.match.params.slug);
-        this.request.promise
-            .then(() => {
-                this.props.history.push('/');
-            })
-            .catch(console.error);
-    }
-
-    isAuthor() {
-        return articleResource.isAuthor(this.state.article, this.props.currentUser);
-    }
-
-    // change the favorite counter in place instead of re-fetching the article
-    favorite() {
-        this.setState((state) => {
-            return {
-                article: Object.assign(
-                    {},
-                    state.article,
-                    {favorited: true, favoritesCount: state.article.favoritesCount + 1}
-                )
-            }
-        });
-
-        this.setState();
-    }
-
-    unfavorite() {
-        this.setState((state) => {
-            return {
-                article: Object.assign(
-                    {},
-                    state.article,
-                    {favorited: false, favoritesCount: state.article.favoritesCount - 1}
-                )}
-            }
-        );
-    }
-
-    handleFollowClick(isFollowing) {
-        const author = Object.assign({}, this.state.article.author, {following: isFollowing});
-        const article = Object.assign({}, this.state.article);
-        article.author = author;
-
+    updateArticle(article) {
         this.setState({article: article});
     }
 
@@ -125,10 +160,8 @@ class ArticleViewer extends Component {
                             <h1>{this.state.article.title}</h1>
 
                             <ArticleMeta article={this.state.article}
-                                         onFollow={() => {this.handleFollowClick(true);}}
-                                         onUnfollow={() => {this.handleFollowClick(false);}}
-                                         onFavorite={this.favorite}
-                                         onUnfavorite={this.unfavorite}/>
+                                         onArticleChange={this.updateArticle}
+                                         currentUser={this.props.currentUser}/>
                         </div>
                     </div>
 
@@ -144,10 +177,8 @@ class ArticleViewer extends Component {
 
                         <div className="article-actions">
                             <ArticleMeta article={this.state.article}
-                                 onFollow={() => {this.handleFollowClick(true);}}
-                                 onUnfollow={() => {this.handleFollowClick(false);}}
-                                 onFavorite={this.favorite}
-                                 onUnfavorite={this.unfavorite}/>
+                                         onArticleChange={this.updateArticle}
+                                         currentUser={this.props.currentUser}/>
                         </div>
 
                         <div className="row">
