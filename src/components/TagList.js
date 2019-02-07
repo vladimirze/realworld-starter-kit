@@ -8,6 +8,7 @@ export default class TagList extends Component {
         super(props);
 
         this.onTagClick = this.onTagClick.bind(this);
+        this.onTagRemove = this.onTagRemove.bind(this);
     }
 
     onTagClick(tag) {
@@ -16,16 +17,28 @@ export default class TagList extends Component {
         }
     }
 
+    onTagRemove(tag, index) {
+        if (this.props.onTagRemove) {
+            this.props.onTagRemove(tag, index);
+        }
+    }
+
     render() {
-        const cursorClass = this.props.onTagClick !== undefined ? 'u-cursor' : ''
+        const cursorClass = this.props.onTagClick !== undefined ? 'u-cursor' : '';
 
         return (
             <ul className="tag-list">
                 {
-                    this.props.tags.map((tag) => {
+                    this.props.tags.map((tag, index) => {
 
                         return (
-                            <li className={`tag-pill tag-default ${cursorClass}`} key={tag} onClick={() => {this.onTagClick(tag)}}>
+                            <li className={`tag-pill tag-default ${cursorClass}`}
+                                key={`tag-${index}`}
+                                onClick={() => {this.onTagClick(tag)}}>
+                                {
+                                    this.props.onTagRemove &&
+                                    <i className="ion-close-round" onClick={() => {this.onTagRemove(tag, index)}}></i>
+                                }
                                 {tag}
                             </li>
                         )

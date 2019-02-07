@@ -32,5 +32,5 @@
     ✔ "Follow Author" button is missing @done (2019-2-3 17:15:24)
     ✔ "Favorite Article" button is missing @done (2019-2-3 17:15:26)
     ✔ Implement ArticleAuthor component which shows author username, image and the article date it was posted @done (2019-2-3 17:15:29)
-☐ [ui] Article Editor / Article Creator. 
-    ☐ are tags supposed to be separated by whitespace or commas?
+✔ [ui] Article Editor / Article Creator. @done (2019-2-7 16:16:20)
+    ✔ are tags supposed to be separated by whitespace or commas? @done (2019-2-7 16:16:21)
