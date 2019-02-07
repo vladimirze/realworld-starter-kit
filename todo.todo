@@ -7,9 +7,9 @@
     ✔ Uses JWT (store the token in localStorage) @done (2019-1-19 18:47:50)
     ✘ Authentication can be easily switched to session/cookie based @cancelled (2019-2-2 13:57:58)
 ✔ Settings page (URL: /#/settings ) @done (2019-1-19 18:47:52)
-    ☐ Styling
+    ✔ Styling @done (2019-2-7 13:22:11)
 ✔ Editor page to create/edit articles (URL: /#/editor, /#/editor/article-slug-here ) @done (2019-1-21 14:24:51)
-    ☐ Styling
+    ✔ Styling @done (2019-2-7 13:22:12)
 ✔ Article page (URL: /#/article/article-slug-here ) @done (2019-1-21 14:19:41)
     ✔ Delete article button (only shown to article's author) @done (2019-1-21 12:54:15)
     ✔ Render markdown from server client side @done (2019-1-21 14:19:38)
@@ -22,13 +22,15 @@
     ✔ Follow user @done (2019-2-2 13:56:34)
     ✔ Style @done (2019-2-2 13:56:58)
 ☐ [bug] feed is empty if user is not logged in
-☐ [ui] Home page - Popular Tags
-    ☐ change mouse cursor to pointer when hovering over the tags
-☐ [ui] Article Viewer
-    ☐ tags are missing
-    ☐ "Edit Article" and "Delete Article" buttons missing for article author
-    ☐ "Follow Author" button is missing
-    ☐ "Favorite Article" button is missing
-    ☐ Implement ArticleAuthor component which shows author username, image and the article date it was posted
+✔ [ui] Home page - Popular Tags @done (2019-2-7 13:22:05)
+    ✔ change mouse cursor to pointer when hovering over the tags @done (2019-2-7 13:22:05)
+✔ [ui] Article Viewer @done (2019-2-7 13:20:04)
+    ✔ tags are missing @done (2019-2-7 13:20:03)
+    ✔ if author of the article is the current logged user then replace Follow & Favorite buttons: @done (2019-2-4 17:29:02)
+        ✔ "Edit Article" (left) @done (2019-2-4 17:29:03)
+        ✔ "Delete Article" (right) @done (2019-2-4 17:29:03)
+    ✔ "Follow Author" button is missing @done (2019-2-3 17:15:24)
+    ✔ "Favorite Article" button is missing @done (2019-2-3 17:15:26)
+    ✔ Implement ArticleAuthor component which shows author username, image and the article date it was posted @done (2019-2-3 17:15:29)
 ☐ [ui] Article Editor / Article Creator. 
     ☐ are tags supposed to be separated by whitespace or commas?

@@ -8,6 +8,7 @@ import CommentList from "../../components/CommentList";
 import {ArticleLikeButton} from "../../components/LikeButton";
 import {FollowUserButton} from "../../components/FollowButton";
 import ArticleAuthor from "../../components/ArticleAuthor";
+import {ArticleTags} from "../../components/TagList";
 
 
 class BaseArticleMeta extends Component {
@@ -172,6 +173,8 @@ class ArticleViewer extends Component {
                                 <p dangerouslySetInnerHTML={{__html: marked(this.state.article.body, {sanitize: true})}}></p>
                             </div>
                         </div>
+
+                        <ArticleTags tags={this.state.article.tagList}/>
 
                         <hr/>
 

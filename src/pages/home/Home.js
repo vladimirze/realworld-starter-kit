@@ -2,7 +2,7 @@ import {Component} from "react";
 import user from "../../resources/user";
 import React from "react";
 import {GlobalFeed, PersonalFeed, TagFeed} from "../../components/feed";
-import TagList from "../../components/TagList";
+import {PopularTags} from "../../components/TagList";
 
 
 // if user is authenticated default is 'personal', if not then 'global'
@@ -127,7 +127,7 @@ export default class HomePage extends Component {
                             <div className="sidebar">
                                 <p>Popular Tags</p>
 
-                                <TagList onSelect={this.selectTag}/>
+                                <PopularTags onSelect={this.selectTag}/>
                             </div>
                         </div>
 
