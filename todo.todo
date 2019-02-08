@@ -37,3 +37,18 @@
 ☐ redirect user to log-in page if he tries to access a protected page (such as User Profile)
 ✔ [bug] User Profile - you should not be able to follow yourself. @done (2019-2-8 17:58:17)
     ✔ show "Edit User Profile" button instead of "Follow" @done (2019-2-8 17:58:16)
+☐ [bug] Article page - comment text area shown for anonymous user
+☐ Article page - show "Sign in or sign up to add comments on this article." message for anonymous users 
+    ☐ "Sign in", "sign up" should be links
+☐ Article page
+    ☐ allow comment authors to delete comments
+    ☐ remove hardcoded avatar in the comment editor
+☐ anonymous users should not be able to click on "Like" button
+    ☐ Article page
+    ☐ Home page
+    ☐ User Profile page
+☐ hide "Follow" button for anonymous users
+    ☐ Article page
+    ☐ User Profile page
+☐ fix article date formatting
+    ☐ date should look to like "Feb 07 2019"
