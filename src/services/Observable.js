@@ -2,12 +2,12 @@ export default class Observable {
     constructor(value) {
         this.subscriptions = [];
         this.currentValue = value;
-        this._hasInitialValue = arguments.length > 0;
+        this._isCurrentValueSet = arguments.length > 0;
     }
 
     subscribe(observer) {
         this.subscriptions.push(observer);
-        if (this._hasInitialValue) {
+        if (this._isCurrentValueSet) {
             observer(this.currentValue);
         }
     }
@@ -20,10 +20,11 @@ export default class Observable {
     }
 
     notify(value) {
+        this.currentValue = value;
+        this._isCurrentValueSet = true;
+
         for (const observer of this.subscriptions) {
             observer(value);
         }
-
-        this.currentValue = value;
     }
 }
