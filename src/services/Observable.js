@@ -2,12 +2,12 @@ export default class Observable {
     constructor(value) {
         this.subscriptions = [];
         this.currentValue = value;
+        this._hasInitialValue = arguments.length > 0;
     }
 
     subscribe(observer) {
-        // TODO: should new observers get latest value when subscribed?
         this.subscriptions.push(observer);
-        if (this.currentValue) {
+        if (this._hasInitialValue) {
             observer(this.currentValue);
         }
     }

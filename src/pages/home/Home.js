@@ -23,7 +23,7 @@ export default class HomePage extends Component {
         };
 
         this.selectFeed = this.selectFeed.bind(this);
-        this.onUserAuthentication = this.onUserAuthentication.bind(this);
+        this.onUserAuthenticationChange = this.onUserAuthenticationChange.bind(this);
         this.selectTag = this.selectTag.bind(this);
     }
 
@@ -31,22 +31,19 @@ export default class HomePage extends Component {
         this.setState({selectedFeed: feed});
     }
 
-    onUserAuthentication(isUserAuthenticated) {
-        if (isUserAuthenticated) {
-            this.setState({selectedFeed: feedChoice.PERSONAL});
-        } else {
-            this.setState({selectedFeed: feedChoice.GLOBAL});
-        }
-
-        this.setState({isUserAuthenticated: isUserAuthenticated});
+    onUserAuthenticationChange(isUserAuthenticated) {
+        this.setState({
+            isUserAuthenticated: isUserAuthenticated,
+            selectedFeed: isUserAuthenticated ? feedChoice.PERSONAL : feedChoice.GLOBAL
+        });
     }
 
     componentDidMount() {
-        user.isAuthenticated.subscribe(this.onUserAuthentication);
+        user.isAuthenticated.subscribe(this.onUserAuthenticationChange);
     }
 
     componentWillUnmount() {
-        user.isAuthenticated.unsubscribe(this.onUserAuthentication);
+        user.isAuthenticated.unsubscribe(this.onUserAuthenticationChange);
     }
 
     selectTag(tag) {

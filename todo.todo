@@ -21,7 +21,7 @@
     ✔ List of author's favorited articles @done (2019-2-2 12:04:56)
     ✔ Follow user @done (2019-2-2 13:56:34)
     ✔ Style @done (2019-2-2 13:56:58)
-☐ [bug] feed is empty if user is not logged in
+✔ [bug] feed is empty if user is not logged in @done (2019-2-8 17:17:40)
 ✔ [ui] Home page - Popular Tags @done (2019-2-7 13:22:05)
     ✔ change mouse cursor to pointer when hovering over the tags @done (2019-2-7 13:22:05)
 ✔ [ui] Article Viewer @done (2019-2-7 13:20:04)
@@ -34,3 +34,6 @@
     ✔ Implement ArticleAuthor component which shows author username, image and the article date it was posted @done (2019-2-3 17:15:29)
 ✔ [ui] Article Editor / Article Creator. @done (2019-2-7 16:16:20)
     ✔ are tags supposed to be separated by whitespace or commas? @done (2019-2-7 16:16:21)
+☐ redirect user to log-in page if he tries to access a protected page (such as User Profile)
+☐ [bug] User Profile - you should not be able to follow yourself. 
+    ☐ show "Edit User Profile" button instead of "Follow"
