@@ -38,8 +38,8 @@
 ✔ [bug] User Profile - you should not be able to follow yourself. @done (2019-2-8 17:58:17)
     ✔ show "Edit User Profile" button instead of "Follow" @done (2019-2-8 17:58:16)
 ✔ [bug] Article page - comment text area shown for anonymous user @done (2019-2-9 17:03:38)
-☐ Article page - show "Sign in or sign up to add comments on this article." message for anonymous users 
-    ☐ "Sign in", "sign up" should be links
+✔ Article page - show "Sign in or sign up to add comments on this article." message for anonymous users @done (2019-2-9 17:22:39)
+    ✔ "Sign in", "sign up" should be links @done (2019-2-9 17:22:40)
 ☐ Article page
     ☐ allow comment authors to delete comments
     ☐ remove hardcoded avatar in the comment editor

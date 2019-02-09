@@ -184,6 +184,25 @@ class ArticleViewer extends Component {
                                          currentUser={this.props.currentUser}/>
                         </div>
 
+                        {
+                            !this.props.isUserAuthenticated &&
+                            <div className="row">
+                                <div className="col-xs-12 col-md-8 offset-md-2">
+                                    <p>
+                                        <Link to={{pathname: '/login', state: {from: this.props.location}}}>
+                                            Sign in
+                                        </Link>
+
+                                        &nbsp; or &nbsp;
+
+                                        <Link to={{pathname: '/register', state: {from: this.props.location}}}>
+                                            sign up
+                                        </Link> to add comments on this article.
+                                    </p>
+                                </div>
+                            </div>
+                        }
+
                         <div className="row">
                             <div className="col-xs-12 col-md-8 offset-md-2">
                                 <CommentList articleSlug={this.state.article.slug}/>
@@ -199,4 +218,4 @@ class ArticleViewer extends Component {
     }
 }
 
-export default withAuthenticatedUser(withRouter(ArticleViewer));
+export default withRouter(withAuthenticatedUser(withRouter(ArticleViewer)));

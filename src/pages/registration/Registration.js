@@ -31,7 +31,11 @@ class Registration extends Component {
                 return this.loginRequest.promise;
             })
             .then(() => {
-                this.props.history.push('/');
+                if (this.props.location.state && this.props.location.state.from) {
+                    this.props.history.push(this.props.location.state.from);
+                } else {
+                    this.props.history.push('/');
+                }
             })
             .catch((error) => {
                 if (error.name === "AbortError") {
