@@ -1,6 +1,6 @@
 import React, {Component, Fragment} from 'react';
 import './App.css';
-import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
+import {BrowserRouter as Router, Redirect, Route, Switch} from "react-router-dom";
 import Registration from "./pages/registration/Registration";
 import LogIn from './pages/login/LogIn';
 
@@ -17,7 +17,6 @@ import ArticleCreator from "./pages/article-creator/ArticleCreator";
 import Footer from "./components/Footer";
 
 
-// TODO: when going Home from any other page request to Global Feed gets initiated and immediately canceled
 // TODO: handle errors properly (e.g on 404 the loader is stuck because isReady is never reset)
 addRequestInterceptor((url, options) => {
     const token = jwt.get();
@@ -38,6 +37,72 @@ addResponseInterceptor((response) => {
     return response;
 });
 
+
+class ProtectedRoute extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            isRouteReady: false,
+            isAuthenticated: false
+        };
+
+        this.isAuthenticatedUser = this.isAuthenticatedUser.bind(this);
+        this.isAnonymousUser = this.isAnonymousUser.bind(this);
+        this.onAuthentication = this.onAuthentication.bind(this);
+    }
+
+    onAuthentication(isAuthenticated) {
+        this.setState({isAuthenticated: isAuthenticated, isRouteReady: true});
+    }
+
+
+    componentDidMount() {
+        user.isAuthenticated.subscribe(this.onAuthentication);
+    }
+
+    componentWillUnmount() {
+        user.isAuthenticated.unsubscribe(this.onAuthentication);
+    }
+
+    isAuthenticatedUser() {
+        return this.state.isRouteReady && this.state.isAuthenticated;
+    }
+
+    isAnonymousUser() {
+        return this.state.isRouteReady && !this.state.isAuthenticated;
+    }
+
+    render() {
+        const {component: Component, ...rest} = this.props;
+
+        return (
+            <Fragment>
+                {
+                    !this.state.isRouteReady &&
+                    <span>Route is loading...</span>
+                }
+
+                <Route {...rest}
+                   render={(props) => {
+                       return <Fragment>
+                           {
+                               this.isAuthenticatedUser() &&
+                               <Component {...props}/>
+                           }
+
+                           {
+                               this.isAnonymousUser() &&
+                               <Redirect to={{pathname: "/login", state:{from: props.location}}}/>
+                           }
+                       </Fragment>
+                   }}/>
+            </Fragment>
+        );
+    }
+}
+
+
 class App extends Component {
     constructor(props) {
         super(props);
@@ -45,10 +110,10 @@ class App extends Component {
             isAuthenticated: false
         };
 
-        this.checkAuthentication = this.checkAuthentication.bind(this);
+        this.onAuthentication = this.onAuthentication.bind(this);
     }
 
-    checkAuthentication(isAuthenticated) {
+    onAuthentication(isAuthenticated) {
         this.setState({isAuthenticated: isAuthenticated});
         if (isAuthenticated) {
             user.getCurrentUser();
@@ -56,11 +121,11 @@ class App extends Component {
     }
 
     componentDidMount() {
-        user.isAuthenticated.subscribe(this.checkAuthentication);
+        user.isAuthenticated.subscribe(this.onAuthentication);
     }
 
     componentWillUnmount() {
-        user.isAuthenticated.unsubscribe(this.checkAuthentication);
+        user.isAuthenticated.unsubscribe(this.onAuthentication);
     }
 
     render() {
@@ -75,10 +140,10 @@ class App extends Component {
                             <Route path="/register" component={Registration}/>
                             <Route path="/login" component={LogIn}/>
                             <Route path="/@:user" component={UserProfile}/>
-                            <Route path="/editor/:slug" component={ArticleEditor}/>
-                            <Route path="/editor" component={ArticleCreator}/>
+                            <ProtectedRoute path="/editor/:slug" component={ArticleEditor}/>
+                            <ProtectedRoute path="/editor" component={ArticleCreator}/>
                             <Route path="/article/:slug" component={ArticleViewer}/>
-                            <Route path="/settings" component={ProfileSettings}/>
+                            <ProtectedRoute path="/settings" component={ProfileSettings}/>
                         </Switch>
 
                         <Footer/>

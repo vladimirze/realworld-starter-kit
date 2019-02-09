@@ -34,7 +34,7 @@
     ✔ Implement ArticleAuthor component which shows author username, image and the article date it was posted @done (2019-2-3 17:15:29)
 ✔ [ui] Article Editor / Article Creator. @done (2019-2-7 16:16:20)
     ✔ are tags supposed to be separated by whitespace or commas? @done (2019-2-7 16:16:21)
-☐ redirect user to log-in page if he tries to access a protected page (such as User Profile)
+✔ redirect user to log-in page if he tries to access a protected page (such as User Profile) @done (2019-2-9 14:55:23)
 ✔ [bug] User Profile - you should not be able to follow yourself. @done (2019-2-8 17:58:17)
     ✔ show "Edit User Profile" button instead of "Follow" @done (2019-2-8 17:58:16)
 ☐ [bug] Article page - comment text area shown for anonymous user
@@ -52,3 +52,7 @@
     ☐ User Profile page
 ☐ fix article date formatting
     ☐ date should look to like "Feb 07 2019"
+☐ Home page - articles missing tag list
+☐ block users from viewing the Article Editor page for articles they don't own
+    ☐ if the above happens redirect those users to unauthorized page
+☐ Home page, User profile page - prevent re-fetching page if user clicks on the page he is currently at
