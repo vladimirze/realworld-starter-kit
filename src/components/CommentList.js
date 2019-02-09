@@ -57,28 +57,29 @@ class CommentList extends Component {
         return commentResource.isAuthor(this.props.currentUser, comment);
     }
 
-    renderComments() {
-        return <div>
-            <CommentEditor articleSlug={this.props.articleSlug} onPostSuccess={this.getComments}/>
-            {
-                this.state.comments.map((comment) => {
-                    return <CommentViewer comment={comment}
-                                          onRemove={this.removeComment}
-                                          isAuthor={this.isCommentAuthor(comment)}
-                                          key={comment.id}/>
-                })
-            }
-            </div>
-    }
-
-    renderLoader() {
-        return <div>loading...</div>;
-    }
-
     render() {
         return (
             <div>
-                {this.state.isReady ? this.renderComments() : this.renderLoader()}
+                {
+                    !this.state.isReady &&
+                    <div>loading...</div>
+                }
+
+
+                {
+                    this.state.isReady && this.props.isUserAuthenticated &&
+                    <CommentEditor articleSlug={this.props.articleSlug} onPostSuccess={this.getComments}/>
+                }
+
+                {
+                    this.state.isReady &&
+                    this.state.comments.map((comment) => {
+                        return <CommentViewer comment={comment}
+                                              onRemove={this.removeComment}
+                                              isAuthor={this.isCommentAuthor(comment)}
+                                              key={comment.id}/>
+                        })
+                }
             </div>
         );
     }

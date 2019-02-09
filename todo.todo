@@ -37,7 +37,7 @@
 ✔ redirect user to log-in page if he tries to access a protected page (such as User Profile) @done (2019-2-9 14:55:23)
 ✔ [bug] User Profile - you should not be able to follow yourself. @done (2019-2-8 17:58:17)
     ✔ show "Edit User Profile" button instead of "Follow" @done (2019-2-8 17:58:16)
-☐ [bug] Article page - comment text area shown for anonymous user
+✔ [bug] Article page - comment text area shown for anonymous user @done (2019-2-9 17:03:38)
 ☐ Article page - show "Sign in or sign up to add comments on this article." message for anonymous users 
     ☐ "Sign in", "sign up" should be links
 ☐ Article page
