@@ -54,6 +54,13 @@ export default class CommentViewer extends Component {
 
                     {/* TODO: Date formatting */}
                     <span className="date-posted">{this.props.comment.createdAt}</span>
+
+                    {
+                        this.props.isAuthor &&
+                        <span className="mod-options">
+                            <i className="ion-trash-a" onClick={this.remove}></i>
+                        </span>
+                    }
                 </div>
             </div>
         );
