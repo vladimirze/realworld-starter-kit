@@ -6,6 +6,7 @@ import {Link} from "react-router-dom";
 import {feedResource} from "../resources/feed";
 import React from "react";
 import {ArticleLikeButton} from "./LikeButton";
+import {date} from '../services/representator';
 
 
 function feedFactory(dataSource, queryParams) {
@@ -146,8 +147,7 @@ function feedFactory(dataSource, queryParams) {
                                                 {article.author.username}
                                             </Link>
 
-                                            {/* TODO: format date */}
-                                            <span className="date">{article.createdAt}</span>
+                                            <span className="date">{date.format(article.createdAt)}</span>
                                         </div>
 
                                         <ArticleLikeButton

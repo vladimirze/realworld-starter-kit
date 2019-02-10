@@ -1,6 +1,7 @@
 import {Component} from "react";
 import React from "react";
 import CommentAuthor from "./CommentAuthor";
+import {date} from '../services/representator';
 
 
 export default class CommentViewer extends Component {
@@ -45,8 +46,7 @@ export default class CommentViewer extends Component {
                 <div className="card-footer">
                     <CommentAuthor author={this.props.comment.author}/>
 
-                    {/* TODO: Date formatting */}
-                    <span className="date-posted">{this.props.comment.createdAt}</span>
+                    <span className="date-posted">{date.format(this.props.comment.createdAt)}</span>
 
                     {
                         this.props.isAuthor &&

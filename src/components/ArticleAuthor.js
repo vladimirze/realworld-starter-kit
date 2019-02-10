@@ -1,5 +1,6 @@
 import React, {Component, Fragment} from 'react';
 import {Link} from "react-router-dom";
+import {date} from '../services/representator';
 
 
 export default class ArticleAuthor extends Component {
@@ -19,8 +20,7 @@ export default class ArticleAuthor extends Component {
                     <Link to={`/@${this.props.article.author.username}`} className="author">
                         {this.props.article.author.username}
                     </Link>
-                    {/* TODO: date formatting */}
-                    <span className="date">{this.props.article.createdAt}</span>
+                    <span className="date">{date.format(this.props.article.createdAt)}</span>
                 </div>
             </Fragment>
         );

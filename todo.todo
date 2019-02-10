@@ -50,8 +50,8 @@
 ✔ prevent anonymous users from clicking on "Follow" button @done (10/02/2019, 15:58:04)
     ✔ Article page @done (10/02/2019, 15:58:05)
     ✔ User Profile page @done (10/02/2019, 15:58:05)
-☐ fix article date formatting
-    ☐ date should look to like "Feb 07 2019"
+✔ fix article date formatting @done (10/02/2019, 18:30:09)
+    ✔ date should look to like "Feb 07 2019" @done (10/02/2019, 18:30:08)
 ☐ Home page - articles missing tag list
 ☐ block users from viewing the Article Editor page for articles they don't own
     ☐ if the above happens redirect those users to unauthorized page
