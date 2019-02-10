@@ -68,7 +68,10 @@ class CommentList extends Component {
 
                 {
                     this.state.isReady && this.props.isUserAuthenticated &&
-                    <CommentEditor articleSlug={this.props.articleSlug} onPostSuccess={this.getComments}/>
+                    <CommentEditor
+                        articleSlug={this.props.articleSlug}
+                        onPostSuccess={this.getComments}
+                        author={this.props.currentUser}/>
                 }
 
                 {

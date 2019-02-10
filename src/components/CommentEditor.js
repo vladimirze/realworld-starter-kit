@@ -2,6 +2,7 @@ import {Component} from "react";
 import {commentResource} from "../resources/comment";
 import withAuthenticatedUser from "./withAuthenticatedUser";
 import React from "react";
+import CommentAuthor from "./CommentAuthor";
 
 
 class CommentEditor extends Component {
@@ -55,8 +56,7 @@ class CommentEditor extends Component {
                 </div>
 
                 <div className="card-footer">
-                    {/* TODO: comment author image */}
-                    <img src="http://i.imgur.com/Qr71crq.jpg" className="comment-author-img"/>
+                    <CommentAuthor author={this.props.currentUser}/>
 
                     <button className="btn btn-sm btn-primary" onClick={this.postComment}>
                         Post Comment

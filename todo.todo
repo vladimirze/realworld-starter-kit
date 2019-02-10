@@ -40,9 +40,9 @@
 ✔ [bug] Article page - comment text area shown for anonymous user @done (2019-2-9 17:03:38)
 ✔ Article page - show "Sign in or sign up to add comments on this article." message for anonymous users @done (2019-2-9 17:22:39)
     ✔ "Sign in", "sign up" should be links @done (2019-2-9 17:22:40)
-☐ Article page
-    ☐ allow comment authors to delete comments
-    ☐ remove hardcoded avatar in the comment editor
+✔ Article page @done (10/02/2019, 15:06:24)
+    ✔ allow comment authors to delete comments @done (10/02/2019, 14:39:21)
+    ✔ remove hardcoded avatar in the comment editor @done (10/02/2019, 15:06:14)
 ☐ anonymous users should not be able to click on "Like" button
     ☐ Article page
     ☐ Home page

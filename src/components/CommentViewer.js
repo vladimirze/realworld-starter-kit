@@ -1,6 +1,6 @@
 import {Component} from "react";
 import React from "react";
-import {Link} from "react-router-dom";
+import CommentAuthor from "./CommentAuthor";
 
 
 export default class CommentViewer extends Component {
@@ -43,14 +43,7 @@ export default class CommentViewer extends Component {
                 </div>
 
                 <div className="card-footer">
-                    <Link to={`/@${this.props.comment.author.username}`} className="comment-author">
-                        <img src={this.props.comment.author.image} className="comment-author-img"/>
-                    </Link>
-                    &nbsp;
-
-                    <Link to={`/@${this.props.comment.author.username}`}
-                          className="comment-author">{this.props.comment.author.username}
-                    </Link>
+                    <CommentAuthor author={this.props.comment.author}/>
 
                     {/* TODO: Date formatting */}
                     <span className="date-posted">{this.props.comment.createdAt}</span>
