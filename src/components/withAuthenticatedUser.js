@@ -37,11 +37,9 @@ export default function withAuthenticatedUser(WrappedComponent) {
 
         render() {
             return (
-                <div>
-                    <WrappedComponent {...this.props}
-                                      currentUser={this.state.currentUser}
-                                      isUserAuthenticated={this.state.isAuthenticated}/>
-                </div>
+                <WrappedComponent {...this.props}
+                                  currentUser={this.state.currentUser}
+                                  isUserAuthenticated={this.state.isAuthenticated}/>
             );
         }
     }
