@@ -1,6 +1,7 @@
 import {Component} from "react";
 import React from "react";
 import {articleResource} from "../resources/article";
+import withAuthenticatedUser from "./withAuthenticatedUser";
 
 
 export default class LikeButton extends Component {
@@ -22,14 +23,15 @@ export default class LikeButton extends Component {
         return (
             <button
                 className={`btn ${this.props.className} ${this.props.isFavorited ? 'btn-primary' : 'btn-outline-primary'}`}
-                onClick={this.onButtonClick}>
+                onClick={this.onButtonClick}
+                disabled={this.props.isDisabled || false}>
                 <i className="ion-heart"></i> {this.props.count}
             </button>
         );
     }
 }
 
-export class ArticleLikeButton extends Component {
+class ArticleLikeButton extends Component {
     constructor(props) {
         super(props);
 
@@ -59,7 +61,13 @@ export class ArticleLikeButton extends Component {
 
     render() {
         return (
-            <LikeButton {...this.props} onFavorite={this.favorite} onUnfavorite={this.unfavorite}/>
+            <LikeButton {...this.props}
+                        onFavorite={this.favorite}
+                        onUnfavorite={this.unfavorite}
+                        isDisabled={!this.props.isUserAuthenticated}/>
         );
     }
 }
+ArticleLikeButton = withAuthenticatedUser(ArticleLikeButton);
+
+export {ArticleLikeButton};

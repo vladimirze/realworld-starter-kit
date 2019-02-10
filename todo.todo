@@ -43,10 +43,10 @@
 ✔ Article page @done (10/02/2019, 15:06:24)
     ✔ allow comment authors to delete comments @done (10/02/2019, 14:39:21)
     ✔ remove hardcoded avatar in the comment editor @done (10/02/2019, 15:06:14)
-☐ anonymous users should not be able to click on "Like" button
-    ☐ Article page
-    ☐ Home page
-    ☐ User Profile page
+✔ anonymous users should not be able to click on "Like" button @done (10/02/2019, 15:31:09)
+    ✔ Article page @done (10/02/2019, 15:31:07)
+    ✔ Home page @done (10/02/2019, 15:31:07)
+    ✔ User Profile page @done (10/02/2019, 15:31:08)
 ☐ hide "Follow" button for anonymous users
     ☐ Article page
     ☐ User Profile page
