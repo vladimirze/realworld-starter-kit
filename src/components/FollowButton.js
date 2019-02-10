@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {profileResource} from "../resources/profile";
+import withAuthenticatedUser from "./withAuthenticatedUser";
 
 
 export class FollowButton extends Component {
@@ -21,7 +22,9 @@ export class FollowButton extends Component {
         const buttonStyle = this.props.isFollowing ? 'btn-secondary' : 'btn-outline-secondary';
 
         return (
-            <button className={`btn btn-sm ${buttonStyle} ${this.props.className}`} onClick={this.onButtonClick}>
+            <button className={`btn btn-sm ${buttonStyle} ${this.props.className}`}
+                    onClick={this.onButtonClick}
+                    disabled={this.props.isDisabled}>
                 <i className="ion-plus-round"></i>
                 &nbsp;
                 {this.props.isFollowing ? 'Unfollow' : 'Follow'} {this.props.subject}
@@ -30,7 +33,7 @@ export class FollowButton extends Component {
     }
 }
 
-export class FollowUserButton extends Component {
+class FollowUserButton extends Component {
     constructor(props) {
         super(props);
 
@@ -78,9 +81,14 @@ export class FollowUserButton extends Component {
     render() {
         return (
             <FollowButton isFollowing={this.props.profile.following}
-                      onUnfollow={this.unfollow}
-                      onFollow={this.follow}
-                      subject={this.props.profile.username}/>
+                          onUnfollow={this.unfollow}
+                          onFollow={this.follow}
+                          subject={this.props.profile.username}
+                          isDisabled={!this.props.isUserAuthenticated}/>
         );
     }
 }
+
+FollowUserButton = withAuthenticatedUser(FollowUserButton);
+
+export { FollowUserButton };

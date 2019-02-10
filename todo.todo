@@ -47,9 +47,9 @@
     ✔ Article page @done (10/02/2019, 15:31:07)
     ✔ Home page @done (10/02/2019, 15:31:07)
     ✔ User Profile page @done (10/02/2019, 15:31:08)
-☐ hide "Follow" button for anonymous users
-    ☐ Article page
-    ☐ User Profile page
+✔ prevent anonymous users from clicking on "Follow" button @done (10/02/2019, 15:58:04)
+    ✔ Article page @done (10/02/2019, 15:58:05)
+    ✔ User Profile page @done (10/02/2019, 15:58:05)
 ☐ fix article date formatting
     ☐ date should look to like "Feb 07 2019"
 ☐ Home page - articles missing tag list
