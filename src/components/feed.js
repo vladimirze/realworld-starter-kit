@@ -7,6 +7,7 @@ import {feedResource} from "../resources/feed";
 import React from "react";
 import {ArticleLikeButton} from "./LikeButton";
 import {date} from '../services/representator';
+import {ArticleTags} from "./TagList";
 
 
 function feedFactory(dataSource, queryParams) {
@@ -165,6 +166,7 @@ function feedFactory(dataSource, queryParams) {
                                         <h1>{article.title}</h1>
                                         <p>{article.description}</p>
                                         <span>Read more...</span>
+                                        <ArticleTags tags={article.tagList}/>
                                     </Link>
                                 </div>
                             )
