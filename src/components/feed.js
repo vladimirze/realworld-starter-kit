@@ -73,6 +73,10 @@ function feedFactory(dataSource, queryParams) {
         }
 
         getPage(page) {
+            if (this.state.pageNumber === page) {
+                return;
+            }
+
             this.setState({pageNumber: page});
             const queryParams = Object.assign(
                 {},
