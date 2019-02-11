@@ -1,28 +1,23 @@
-import React, {Component, Fragment} from 'react';
+import React, {Fragment} from 'react';
 import {Link} from "react-router-dom";
 import {date} from '../services/representator';
 
 
-export default class ArticleAuthor extends Component {
-    constructor(props) {
-        super(props);
-
-    }
-
-    render() {
-        return (
+const ArticleAuthor = (props) => {
+    return (
             <Fragment>
-                <Link to={`/@${this.props.article.author.username}`}>
-                    <img src={this.props.article.author.image}/>
+                <Link to={`/@${props.article.author.username}`}>
+                    <img src={props.article.author.image} alt={props.article.author.username}/>
                 </Link>
 
                 <div className="info">
-                    <Link to={`/@${this.props.article.author.username}`} className="author">
-                        {this.props.article.author.username}
+                    <Link to={`/@${props.article.author.username}`} className="author">
+                        {props.article.author.username}
                     </Link>
-                    <span className="date">{date.format(this.props.article.createdAt)}</span>
+                    <span className="date">{date.format(props.article.createdAt)}</span>
                 </div>
             </Fragment>
         );
-    }
-}
+};
+
+export default ArticleAuthor;

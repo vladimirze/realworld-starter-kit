@@ -9,7 +9,8 @@ const CommentAuthor = (props) => {
         <Fragment>
             <Link to={`/@${props.author.username}`} className="comment-author">
                 <img src={props.author.image || config.DEFAULT_USER_IMAGE}
-                     className="comment-author-img"/>
+                     className="comment-author-img"
+                     alt={`${props.author.username}`}/>
             </Link>
             &nbsp;
 

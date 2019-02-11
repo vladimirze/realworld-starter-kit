@@ -1,4 +1,4 @@
-import {Component, Fragment} from "react";
+import {Component} from "react";
 import user from "../../resources/user";
 import React from "react";
 import withAuthenticatedUser from "../../components/withAuthenticatedUser";
