@@ -1,33 +1,27 @@
 import {Component, Fragment} from "react";
 import {articleResource} from "../../resources/article";
-import {withRouter} from "react-router-dom";
 import React from "react";
 import ArticleForm from "../../components/ArticleForm";
+import withAuthorizationCheck from "../../components/withAuthorizationCheck";
 
 
 class ArticleEditor extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {};
+        this.state = {
+            article: {...this.props.resolved.article}
+        };
         this.saveChanges = this.saveChanges.bind(this);
     }
 
-    componentDidMount() {
-        this.articleRequest = articleResource.get(this.props.match.params.slug);
-        this.articleRequest.promise
-            .then((article) => {
-                this.setState({article: article.article});
-            })
-            .catch(console.error);
-    }
-
     componentWillUnmount() {
-        this.articleRequest.abort();
+        if (this.articleRequest) {
+            this.articleRequest.abort();
+        }
     }
 
     saveChanges(article) {
-        console.log('articleResource: ', article);
         this.articleRequest = articleResource.update(this.state.article.slug, article);
         this.articleRequest.promise
             .then((response) => {
@@ -51,4 +45,12 @@ class ArticleEditor extends Component {
     }
 }
 
-export default withRouter(ArticleEditor);
+function getArticle(match) {
+    return articleResource.get(match.params.slug);
+}
+
+function hasPermission(currentUser, response) {
+    return currentUser.username === response.article.author.username;
+}
+
+export default withAuthorizationCheck(ArticleEditor, getArticle, hasPermission);

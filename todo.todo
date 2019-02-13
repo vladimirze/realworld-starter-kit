@@ -53,6 +53,6 @@
 ✔ fix article date formatting @done (10/02/2019, 18:30:09)
     ✔ date should look to like "Feb 07 2019" @done (10/02/2019, 18:30:08)
 ✔ Home page - articles missing tag list @done (11/02/2019, 16:16:28)
-☐ block users from viewing the Article Editor page for articles they don't own
-    ☐ if the above happens redirect those users to unauthorized page
+✔ block users from viewing the Article Editor page for articles they don't own @done (13/02/2019, 20:07:59)
+    ✔ if the above happens redirect those users to unauthorized page @done (13/02/2019, 20:07:59)
 ✔ Home page, User profile page - prevent re-fetching page if user clicks on the page he is currently at @done (11/02/2019, 16:26:58)
