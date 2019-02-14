@@ -21,7 +21,6 @@ function getCurrentUser() {
     return req;
 }
 
-// TODO: handle the case when token is expired
 function register(username, email, password) {
     return request('users', {
         method: 'POST',
@@ -44,7 +43,6 @@ function logIn(email, password) {
     return req;
 }
 
-// TODO: can jwt token be invalidated after user logs out? (backend)
 function logOut() {
     jwt.remove();
     userResource.isAuthenticated.notify(false);

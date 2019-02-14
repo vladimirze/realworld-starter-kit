@@ -1,5 +1,3 @@
-// TODO: read page number from URL
-// TODO: make pagination.js module to handle page enumeration logic
 import {Component} from "react";
 import {articleResource} from "../resources/article";
 import {Link} from "react-router-dom";

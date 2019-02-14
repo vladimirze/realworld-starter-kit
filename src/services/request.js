@@ -40,13 +40,6 @@ export function addResponseInterceptor(func) {
     responseInterceptors.push(func);
 }
 
-// TODO: add ability to cancel requests?
-// addRequestInterceptor((resource, options, cancelFn) => {
-//     if (resource.startsWith('http://')) {
-//         cancelFn();
-//     }
-// });
-
 function applyRequestInterceptors(requestUrl, requestOptions) {
     return interceptors.reduce((request, interceptor) => {
         const [url, options] = request;
@@ -68,9 +61,6 @@ function prepareQueryParameters(queryParameters) {
     }
 }
 
-// TODO: is there a chance a different component will be instantiated  before the previous is unmounted?
-// ^and cause the unintended request to be canceled?
-// "When abort() is called, the fetch() promise rejects with an AbortError."
 export default function request(resource, options) {
     const abortController = new AbortController();
     const defaultOptions = {
