@@ -133,7 +133,7 @@ class ArticleViewer extends Component {
         this.request = articleResource.get(this.props.match.params.slug);
         this.request.promise
             .then((response) => {
-                this.setState({article: response.article});
+                this.setState({article: response.article, isReady: true});
             })
             .catch(console.error);
     }
@@ -149,7 +149,7 @@ class ArticleViewer extends Component {
     render() {
         return (
             <Fragment>
-            {this.state.isReady && <div>Loading...</div>}
+            {!this.state.isReady && <div>Loading...</div>}
 
             {
                 this.state.article &&
@@ -218,4 +218,4 @@ class ArticleViewer extends Component {
     }
 }
 
-export default withRouter(withAuthenticatedUser(withRouter(ArticleViewer)));
+export default withRouter(withAuthenticatedUser(ArticleViewer));
