@@ -5,6 +5,7 @@ import withAuthenticatedUser from "../../components/withAuthenticatedUser";
 import React from "react";
 import {authorFeedFactory, favoritedArticlesFeedFactory} from "../../components/feed";
 import {FollowUserButton} from "../../components/FollowButton";
+import NotFound404 from "../../components/NotFound404";
 
 
 const feedChoice = {
@@ -20,7 +21,8 @@ class UserProfile extends Component {
             profile: {},
             selectedFeed: feedChoice.AUTHOR_ARTICLES,
             AuthorFeed: undefined,
-            FavoritedArticlesFeed: undefined
+            FavoritedArticlesFeed: undefined,
+            isUserProfileNotFound: false
         };
 
         this.changeFeed = this.changeFeed.bind(this);
@@ -64,82 +66,88 @@ class UserProfile extends Component {
                     });
                 }
             })
-            .catch(console.error);
+            .catch((error) => {
+                if (error.statusCode === 404) {
+                    this.setState({isUserProfileNotFound: true});
+                }
+            });
     }
 
     render() {
         return (
-            <div className="profile-page">
+            <NotFound404 isShown={this.state.isUserProfileNotFound}>
+                <div className="profile-page">
 
-                <div className="user-info">
+                    <div className="user-info">
+                        <div className="container">
+                            <div className="row">
+
+                                <div className="col-xs-12 col-md-10 offset-md-1">
+                                    <img src={this.state.profile.image} className="user-img"
+                                         alt={`${this.state.profile.username} avatar`}/>
+
+                                    <h4>{this.state.profile.username}</h4>
+
+                                    <p>{this.state.profile.bio}</p>
+
+                                    {
+                                        this.isOwner() &&
+                                        <Link to="/settings" className="btn btn-sm btn-outline-secondary action-btn">
+                                            <i className="ion-gear-a"></i> Edit Profile Settings
+                                        </Link>
+                                    }
+
+                                    {
+                                        !this.isOwner() &&
+                                        <FollowUserButton className="action-btn"
+                                                          profile={this.state.profile}
+                                                          onFollow={this.getUserProfile}
+                                                          onUnfollow={this.getUserProfile}/>
+                                    }
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
                     <div className="container">
                         <div className="row">
 
                             <div className="col-xs-12 col-md-10 offset-md-1">
-                                <img src={this.state.profile.image} className="user-img"
-                                     alt={`${this.state.profile.username} avatar`}/>
+                                <div className="articles-toggle">
+                                    <ul className="nav nav-pills outline-active">
+                                        <li className="nav-item u-cursor" onClick={() => {this.changeFeed(feedChoice.AUTHOR_ARTICLES)}}>
+                                            <span className={`nav-link ${this.ifFeedThen(feedChoice.AUTHOR_ARTICLES, "active")}`}>
+                                                My Articles
+                                            </span>
+                                        </li>
 
-                                <h4>{this.state.profile.username}</h4>
+                                        <li className="nav-item u-cursor" onClick={() => {this.changeFeed(feedChoice.AUTHOR_FAVORITES)}}>
+                                            <span className={`nav-link ${this.ifFeedThen(feedChoice.AUTHOR_FAVORITES, "active")}`}>
+                                                Favorited Articles
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
 
-                                <p>{this.state.profile.bio}</p>
-
+                                {/* Author articles */}
                                 {
-                                    this.isOwner() &&
-                                    <Link to="/settings" className="btn btn-sm btn-outline-secondary action-btn">
-                                        <i className="ion-gear-a"></i> Edit Profile Settings
-                                    </Link>
+                                    this.state.profile.username && this.state.selectedFeed === feedChoice.AUTHOR_ARTICLES &&
+                                    this.state.AuthorFeed && <this.state.AuthorFeed/>
                                 }
 
+                                {/* Author favorited articles */}
                                 {
-                                    !this.isOwner() &&
-                                    <FollowUserButton className="action-btn"
-                                                      profile={this.state.profile}
-                                                      onFollow={this.getUserProfile}
-                                                      onUnfollow={this.getUserProfile}/>
+                                    this.state.profile.username && this.state.selectedFeed === feedChoice.AUTHOR_FAVORITES &&
+                                    this.state.FavoritedArticlesFeed && <this.state.FavoritedArticlesFeed/>
                                 }
                             </div>
 
                         </div>
                     </div>
+
                 </div>
-
-                <div className="container">
-                    <div className="row">
-
-                        <div className="col-xs-12 col-md-10 offset-md-1">
-                            <div className="articles-toggle">
-                                <ul className="nav nav-pills outline-active">
-                                    <li className="nav-item u-cursor" onClick={() => {this.changeFeed(feedChoice.AUTHOR_ARTICLES)}}>
-                                        <span className={`nav-link ${this.ifFeedThen(feedChoice.AUTHOR_ARTICLES, "active")}`}>
-                                            My Articles
-                                        </span>
-                                    </li>
-
-                                    <li className="nav-item u-cursor" onClick={() => {this.changeFeed(feedChoice.AUTHOR_FAVORITES)}}>
-                                        <span className={`nav-link ${this.ifFeedThen(feedChoice.AUTHOR_FAVORITES, "active")}`}>
-                                            Favorited Articles
-                                        </span>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            {/* Author articles */}
-                            {
-                                this.state.profile.username && this.state.selectedFeed === feedChoice.AUTHOR_ARTICLES &&
-                                this.state.AuthorFeed && <this.state.AuthorFeed/>
-                            }
-
-                            {/* Author favorited articles */}
-                            {
-                                this.state.profile.username && this.state.selectedFeed === feedChoice.AUTHOR_FAVORITES &&
-                                this.state.FavoritedArticlesFeed && <this.state.FavoritedArticlesFeed/>
-                            }
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
+            </NotFound404>
         )
     }
 }

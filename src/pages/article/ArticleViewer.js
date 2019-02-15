@@ -1,4 +1,4 @@
-import {Component, Fragment} from "react";
+import {Component} from "react";
 import {articleResource} from "../../resources/article";
 import {Link, withRouter} from "react-router-dom";
 import marked from "marked";
@@ -9,6 +9,7 @@ import {ArticleLikeButton} from "../../components/LikeButton";
 import {FollowUserButton} from "../../components/FollowButton";
 import ArticleAuthor from "../../components/ArticleAuthor";
 import {ArticleTags} from "../../components/TagList";
+import NotFound404 from "../../components/NotFound404";
 
 
 class BaseArticleMeta extends Component {
@@ -123,7 +124,8 @@ class ArticleViewer extends Component {
         super(props);
 
         this.state = {
-            isReady: false
+            isReady: false,
+            isArticleNotFound: false
         };
 
         this.updateArticle = this.updateArticle.bind(this);
@@ -135,7 +137,15 @@ class ArticleViewer extends Component {
             .then((response) => {
                 this.setState({article: response.article, isReady: true});
             })
-            .catch(console.error);
+            .catch((error) => {
+                if (error.name === 'AbortError') {
+                    return;
+                } else if (error.statusCode === 404) {
+                    this.setState({isArticleNotFound: true});
+                }
+
+                console.error(error);
+            });
     }
 
     componentWillUnmount() {
@@ -148,72 +158,72 @@ class ArticleViewer extends Component {
 
     render() {
         return (
-            <Fragment>
-            {!this.state.isReady && <div>Loading...</div>}
+            <NotFound404 isShown={this.state.isArticleNotFound}>
+                {!this.state.isReady && <div>Loading...</div>}
 
-            {
-                this.state.article &&
-                <div className="article-page">
+                {
+                    this.state.article &&
+                    <div className="article-page">
 
-                    <div className="banner">
-                        <div className="container">
+                        <div className="banner">
+                            <div className="container">
 
-                            <h1>{this.state.article.title}</h1>
+                                <h1>{this.state.article.title}</h1>
 
-                            <ArticleMeta article={this.state.article}
-                                         onArticleChange={this.updateArticle}
-                                         currentUser={this.props.currentUser}/>
-                        </div>
-                    </div>
-
-                    <div className="container page">
-
-                        <div className="row article-content">
-                            <div className="col-md-12">
-                                <p dangerouslySetInnerHTML={{__html: marked(this.state.article.body, {sanitize: true})}}></p>
+                                <ArticleMeta article={this.state.article}
+                                             onArticleChange={this.updateArticle}
+                                             currentUser={this.props.currentUser}/>
                             </div>
                         </div>
 
-                        <ArticleTags tags={this.state.article.tagList}/>
+                        <div className="container page">
 
-                        <hr/>
-
-                        <div className="article-actions">
-                            <ArticleMeta article={this.state.article}
-                                         onArticleChange={this.updateArticle}
-                                         currentUser={this.props.currentUser}/>
-                        </div>
-
-                        {
-                            !this.props.isUserAuthenticated &&
-                            <div className="row">
-                                <div className="col-xs-12 col-md-8 offset-md-2">
-                                    <p>
-                                        <Link to={{pathname: '/login', state: {from: this.props.location}}}>
-                                            Sign in
-                                        </Link>
-
-                                        &nbsp; or &nbsp;
-
-                                        <Link to={{pathname: '/register', state: {from: this.props.location}}}>
-                                            sign up
-                                        </Link> to add comments on this article.
-                                    </p>
+                            <div className="row article-content">
+                                <div className="col-md-12">
+                                    <p dangerouslySetInnerHTML={{__html: marked(this.state.article.body, {sanitize: true})}}></p>
                                 </div>
                             </div>
-                        }
 
-                        <div className="row">
-                            <div className="col-xs-12 col-md-8 offset-md-2">
-                                <CommentList articleSlug={this.state.article.slug}/>
+                            <ArticleTags tags={this.state.article.tagList}/>
+
+                            <hr/>
+
+                            <div className="article-actions">
+                                <ArticleMeta article={this.state.article}
+                                             onArticleChange={this.updateArticle}
+                                             currentUser={this.props.currentUser}/>
                             </div>
+
+                            {
+                                !this.props.isUserAuthenticated &&
+                                <div className="row">
+                                    <div className="col-xs-12 col-md-8 offset-md-2">
+                                        <p>
+                                            <Link to={{pathname: '/login', state: {from: this.props.location}}}>
+                                                Sign in
+                                            </Link>
+
+                                            &nbsp; or &nbsp;
+
+                                            <Link to={{pathname: '/register', state: {from: this.props.location}}}>
+                                                sign up
+                                            </Link> to add comments on this article.
+                                        </p>
+                                    </div>
+                                </div>
+                            }
+
+                            <div className="row">
+                                <div className="col-xs-12 col-md-8 offset-md-2">
+                                    <CommentList articleSlug={this.state.article.slug}/>
+                                </div>
+                            </div>
+
                         </div>
 
                     </div>
-
-                </div>
-            }
-            </Fragment>
+                }
+            </NotFound404>
         );
     }
 }

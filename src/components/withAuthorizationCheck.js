@@ -3,6 +3,7 @@ import React from "react";
 import withAuthenticatedUser from "./withAuthenticatedUser";
 import {withRouter} from "react-router-dom";
 import {ErrorViewer} from "./ErrorViewer";
+import NotFound404 from "./NotFound404";
 
 
 
@@ -15,7 +16,8 @@ const withAuthorizationCheck = (WrappedComponent, resolveFn, hasPermissionFn) =>
                 isAuthorized: false,
                 isReady: false,
                 isErrorHappened: false,
-                resolved: {}
+                resolved: {},
+                isNotFoundError: false
             }
         }
 
@@ -28,12 +30,15 @@ const withAuthorizationCheck = (WrappedComponent, resolveFn, hasPermissionFn) =>
                         isReady: true,
                         resolved: response
                     })
-                }).catch((error) => {
+                })
+                .catch((error) => {
                     if (error.name === 'AbortError') {
                         return;
+                    } else if (error.statusCode === 404) {
+                        this.setState({isNotFoundError: true});
+                    } else {
+                        this.setState({isErrorHappened: true, error: error});
                     }
-
-                    this.setState({isErrorHappened: true, error: error});
                 })
         }
 
@@ -45,7 +50,7 @@ const withAuthorizationCheck = (WrappedComponent, resolveFn, hasPermissionFn) =>
 
         render() {
             return (
-                <div>
+                <NotFound404 isShown={this.state.isNotFoundError}>
                     {/*Authorized*/}
                     {this.state.isReady && this.state.isAuthorized &&
                         <WrappedComponent {...this.props} resolved={this.state.resolved}/>
@@ -77,7 +82,7 @@ const withAuthorizationCheck = (WrappedComponent, resolveFn, hasPermissionFn) =>
                             </div>
                         </div>
                     }
-                </div>
+                </NotFound404>
             );
         }
     }
