@@ -27,6 +27,7 @@ class UserProfile extends Component {
 
         this.changeFeed = this.changeFeed.bind(this);
         this.getUserProfile = this.getUserProfile.bind(this);
+        this.prepareUserProfilePage = this.prepareUserProfilePage.bind(this);
     }
 
     isOwner() {
@@ -34,7 +35,13 @@ class UserProfile extends Component {
     }
 
     componentDidMount() {
-        this.getUserProfile();
+        this.prepareUserProfilePage();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.match.params.user !== this.props.match.params.user) {
+            this.prepareUserProfilePage();
+        }
     }
 
     componentWillUnmount() {
@@ -51,26 +58,34 @@ class UserProfile extends Component {
         this.setState({selectedFeed: feed});
     }
 
+    prepareUserProfilePage() {
+        this.setState({selectedFeed: feedChoice.AUTHOR_ARTICLES});
+        this.getUserProfile()
+            .then((profile) => {
+                this.getUserFeed(profile);
+            });
+    }
+
     getUserProfile() {
         this.request = profileResource.get(this.props.match.params.user);
-        this.request.promise
-            .then((profile) => {
-                this.setState({
-                    profile: profile
-                });
-
-                if (!this.state.AuthorFeed || !this.state.FavoritedArticlesFeed) {
-                    this.setState({
-                        AuthorFeed: authorFeedFactory(profile.username),
-                        FavoritedArticlesFeed: favoritedArticlesFeedFactory(profile.username)
-                    });
-                }
+        this.request.promise = this.request.promise.then((profile) => {
+                this.setState({profile: profile});
+                return profile;
             })
             .catch((error) => {
                 if (error.statusCode === 404) {
                     this.setState({isUserProfileNotFound: true});
                 }
             });
+
+        return this.request.promise;
+    }
+
+    getUserFeed(profile) {
+        this.setState({
+            AuthorFeed: authorFeedFactory(profile.username),
+            FavoritedArticlesFeed: favoritedArticlesFeedFactory(profile.username)
+        });
     }
 
     render() {

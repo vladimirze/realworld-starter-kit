@@ -71,7 +71,7 @@
     ☐ User Profile page - My Articles, Favorite Articles
 ☐ Flatten /src/pages. Get rid of directories with one file.
 ☐ Replace class-based components with function-based components where possible, for simplicity.
-☐ [bug] User Profile - switching to other user's profile does not work properly (data stays the same)
+✔ [bug] User Profile - switching to other user's profile does not work properly (data stays the same) @done (15/02/2019, 22:09:40)
 
 # Known Issues
 ☐ API should return 403 http status code (not 401) when user is authenticated but not authorized to request the resource
