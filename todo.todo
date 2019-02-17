@@ -63,8 +63,8 @@
     ✔ User Profile page - when user does not exist @done (15/02/2019, 21:01:24)
 ☐ Look into making 404 handling better, currently every page will have repeat the logic of checking for 404.
 ☐ Users should be able to share link to the selected feed or tag they are viewing
-    ☐ Current selected tag & feed is not reflected in the URL
-    ☐ Home page
+    ✔ Current selected tag & feed is not reflected in the URL @done (17/02/2019, 12:53:20)
+    ✔ Home page @done (17/02/2019, 12:53:13)
     ☐ User Profile
 ☐ Users can't navigate to a particular page by specifying it in the URL. Current page is not reflected in the URL. 
     ☐ Home page - Your Feed, Global Feed
@@ -79,3 +79,4 @@
     ☐ UI should redirect user to login page
 ☐ JWT expiry is unhandled
 ☐ No truncation when enumerating pages (it will look ugly when there are lots of page)
+☐ Changing query parameter overrides entirely existing query params

@@ -3,6 +3,7 @@ import user from "../../resources/user";
 import React from "react";
 import {GlobalFeed, PersonalFeed, TagFeed} from "../../components/feed";
 import {PopularTags} from "../../components/TagList";
+import {Link, withRouter} from "react-router-dom";
 
 
 // if user is authenticated default is 'personal', if not then 'global'
@@ -13,7 +14,7 @@ const feedChoice = {
     NONE: 'none'
 };
 
-export default class HomePage extends Component {
+class HomePage extends Component {
     constructor(props) {
         super(props);
 
@@ -25,6 +26,7 @@ export default class HomePage extends Component {
         this.selectFeed = this.selectFeed.bind(this);
         this.onUserAuthenticationChange = this.onUserAuthenticationChange.bind(this);
         this.selectTag = this.selectTag.bind(this);
+        this.handleQueryParams = this.handleQueryParams.bind(this);
     }
 
     selectFeed(feed) {
@@ -40,6 +42,18 @@ export default class HomePage extends Component {
 
     componentDidMount() {
         user.isAuthenticated.subscribe(this.onUserAuthenticationChange);
+        this.handleQueryParams();
+    }
+
+    handleQueryParams() {
+        const queryParams = new URLSearchParams(this.props.location.search);
+        const feed = queryParams.get("feed");
+
+        if (feed && feedChoice.hasOwnProperty(feed.toUpperCase())) {
+            this.selectFeed(feed);
+        } else if (queryParams.has("tag")) {
+            this.selectTag(queryParams.get("tag"));
+        }
     }
 
     componentWillUnmount() {
@@ -48,6 +62,7 @@ export default class HomePage extends Component {
 
     selectTag(tag) {
         this.setState({selectedFeed: feedChoice.TAG, tag: tag});
+        this.props.history.push('/?tag=' + tag);
     }
 
     ifTagThen(tag, className) {
@@ -75,30 +90,29 @@ export default class HomePage extends Component {
                                     {
                                         this.state.isUserAuthenticated &&
                                         <li className="nav-item u-cursor" onClick={() => {this.selectFeed(feedChoice.PERSONAL)}}>
-                                            <span className={`nav-link ${this.ifTagThen(feedChoice.PERSONAL, "active")}`}>
+                                            <Link to="?feed=personal" className={`nav-link ${this.ifTagThen(feedChoice.PERSONAL, "active")}`}>
                                                 Your Feed
-                                            </span>
+                                            </Link>
                                         </li>
                                     }
 
                                     {
                                         <li className="nav-item u-cursor" onClick={() => {this.selectFeed(feedChoice.GLOBAL)}}>
-                                            <span className={`nav-link ${this.ifTagThen(feedChoice.GLOBAL, "active")}`}>
+                                            <Link to='/?feed=global' className={`nav-link ${this.ifTagThen(feedChoice.GLOBAL, "active")}`}>
                                                 Global Feed
-                                            </span>
+                                            </Link>
                                         </li>
                                     }
 
                                     {
                                         this.state.selectedFeed === feedChoice.TAG &&
                                         <li className="nav-item u-cursor">
-                                            <span className={`nav-link ${this.ifTagThen(feedChoice.TAG, "active")}`}>
+                                            <Link to={`?tag=${this.state.tag}`} className={`nav-link ${this.ifTagThen(feedChoice.TAG, "active")}`}>
                                                 <i className="ion-pound"></i>
                                                 {this.state.tag}
-                                            </span>
+                                            </Link>
                                         </li>
                                     }
-
                                 </ul>
                             </div>
 
@@ -135,3 +149,5 @@ export default class HomePage extends Component {
         );
     }
 }
+
+export default withRouter(HomePage);
