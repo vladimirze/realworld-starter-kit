@@ -1,6 +1,6 @@
 import {Component} from "react";
 import {profileResource} from "../../resources/profile";
-import {Link} from "react-router-dom";
+import {Link, withRouter} from "react-router-dom";
 import withAuthenticatedUser from "../../components/withAuthenticatedUser";
 import React from "react";
 import {authorFeedFactory, favoritedArticlesFeedFactory} from "../../components/feed";
@@ -19,15 +19,26 @@ class UserProfile extends Component {
 
         this.state = {
             profile: {},
-            selectedFeed: feedChoice.AUTHOR_ARTICLES,
+            selectedFeed: this.getSelectedFeedFromQueryParams(),
             AuthorFeed: undefined,
             FavoritedArticlesFeed: undefined,
             isUserProfileNotFound: false
         };
 
-        this.changeFeed = this.changeFeed.bind(this);
         this.getUserProfile = this.getUserProfile.bind(this);
         this.prepareUserProfilePage = this.prepareUserProfilePage.bind(this);
+        this.getSelectedFeedFromQueryParams = this.getSelectedFeedFromQueryParams.bind(this);
+    }
+
+    getSelectedFeedFromQueryParams() {
+        const queryParams = new URLSearchParams(this.props.location.search);
+        const feed = queryParams.get('feed');
+
+        if (feed && feedChoice.hasOwnProperty(feed.toUpperCase())) {
+            return feedChoice[feed.toUpperCase()];
+        } else {
+            return feedChoice.AUTHOR_ARTICLES;
+        }
     }
 
     isOwner() {
@@ -41,6 +52,8 @@ class UserProfile extends Component {
     componentDidUpdate(prevProps) {
         if (prevProps.match.params.user !== this.props.match.params.user) {
             this.prepareUserProfilePage();
+        } else if (prevProps.location.search !== this.props.location.search) {
+            this.setState({selectedFeed: this.getSelectedFeedFromQueryParams()});
         }
     }
 
@@ -54,12 +67,7 @@ class UserProfile extends Component {
         return this.state.selectedFeed === feed ? className : '';
     }
 
-    changeFeed(feed) {
-        this.setState({selectedFeed: feed});
-    }
-
     prepareUserProfilePage() {
-        this.setState({selectedFeed: feedChoice.AUTHOR_ARTICLES});
         this.getUserProfile()
             .then((profile) => {
                 this.getUserFeed(profile);
@@ -131,16 +139,16 @@ class UserProfile extends Component {
                             <div className="col-xs-12 col-md-10 offset-md-1">
                                 <div className="articles-toggle">
                                     <ul className="nav nav-pills outline-active">
-                                        <li className="nav-item u-cursor" onClick={() => {this.changeFeed(feedChoice.AUTHOR_ARTICLES)}}>
-                                            <span className={`nav-link ${this.ifFeedThen(feedChoice.AUTHOR_ARTICLES, "active")}`}>
+                                        <li className="nav-item u-cursor">
+                                            <Link to={{search: '?feed=author_articles'}} className={`nav-link ${this.ifFeedThen(feedChoice.AUTHOR_ARTICLES, "active")}`}>
                                                 My Articles
-                                            </span>
+                                            </Link>
                                         </li>
 
-                                        <li className="nav-item u-cursor" onClick={() => {this.changeFeed(feedChoice.AUTHOR_FAVORITES)}}>
-                                            <span className={`nav-link ${this.ifFeedThen(feedChoice.AUTHOR_FAVORITES, "active")}`}>
+                                        <li className="nav-item u-cursor">
+                                            <Link to={{search: '?feed=author_favorites'}} className={`nav-link ${this.ifFeedThen(feedChoice.AUTHOR_FAVORITES, "active")}`}>
                                                 Favorited Articles
-                                            </span>
+                                            </Link>
                                         </li>
                                     </ul>
                                 </div>
@@ -166,4 +174,4 @@ class UserProfile extends Component {
         )
     }
 }
-export default withAuthenticatedUser(UserProfile);
+export default withRouter(withAuthenticatedUser(UserProfile));
