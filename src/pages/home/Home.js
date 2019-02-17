@@ -45,6 +45,12 @@ class HomePage extends Component {
         this.handleQueryParams();
     }
 
+    componentDidUpdate(prevProps) {
+        if (prevProps.location.search !== this.props.location.search) {
+            this.handleQueryParams();
+        }
+    }
+
     handleQueryParams() {
         const queryParams = new URLSearchParams(this.props.location.search);
         const feed = queryParams.get("feed");
@@ -89,7 +95,7 @@ class HomePage extends Component {
                                 <ul className="nav nav-pills outline-active">
                                     {
                                         this.state.isUserAuthenticated &&
-                                        <li className="nav-item u-cursor" onClick={() => {this.selectFeed(feedChoice.PERSONAL)}}>
+                                        <li className="nav-item u-cursor">
                                             <Link to="?feed=personal" className={`nav-link ${this.ifTagThen(feedChoice.PERSONAL, "active")}`}>
                                                 Your Feed
                                             </Link>
@@ -97,7 +103,7 @@ class HomePage extends Component {
                                     }
 
                                     {
-                                        <li className="nav-item u-cursor" onClick={() => {this.selectFeed(feedChoice.GLOBAL)}}>
+                                        <li className="nav-item u-cursor">
                                             <Link to='/?feed=global' className={`nav-link ${this.ifTagThen(feedChoice.GLOBAL, "active")}`}>
                                                 Global Feed
                                             </Link>
