@@ -1,11 +1,12 @@
 import {Component} from "react";
 import {articleResource} from "../resources/article";
-import {Link} from "react-router-dom";
+import {Link, withRouter} from "react-router-dom";
 import {feedResource} from "../resources/feed";
 import React from "react";
 import {ArticleLikeButton} from "./LikeButton";
 import {date} from '../services/representator';
 import {ArticleTags} from "./TagList";
+import pagination from "../services/pagination";
 
 
 function feedFactory(dataSource, queryParams) {
@@ -21,7 +22,7 @@ function feedFactory(dataSource, queryParams) {
             this.state = {
                 feed: [],
                 isReady: false,
-                pageNumber: 1,
+                pageNumber: pagination.getCurrentPageNumber(this.props.location),
                 totalArticles: 0,
                 totalPages: 0
             };
@@ -37,7 +38,7 @@ function feedFactory(dataSource, queryParams) {
                         feed: feed.articles,
                         isReady: true,
                         totalArticles: feed.articlesCount,
-                        totalPages: Math.ceil(feed.articlesCount / this.MAX_ITEMS_PER_PAGE)
+                        totalPages: pagination.getTotalPages(feed.articlesCount, this.MAX_ITEMS_PER_PAGE)
                     });
                 })
                 .catch((error) => {
@@ -51,7 +52,11 @@ function feedFactory(dataSource, queryParams) {
         }
 
         componentDidMount() {
-            const queryParams = Object.assign({}, this.defaultQueryParams, {limit: this.MAX_ITEMS_PER_PAGE, offset: 0});
+            const queryParams = Object.assign(
+                {},
+                this.defaultQueryParams,
+                {limit: this.MAX_ITEMS_PER_PAGE, offset: pagination.getPageOffset(this.props.location, this.MAX_ITEMS_PER_PAGE)}
+            );
             this.feedRequest = dataSource(queryParams);
             this.getFeed(this.feedRequest.promise);
         }
@@ -76,36 +81,15 @@ function feedFactory(dataSource, queryParams) {
             }
 
             this.setState({pageNumber: page});
+            pagination.goPage(this.props.history, this.props.location, page);
+
             const queryParams = Object.assign(
                 {},
                 this.defaultQueryParams,
-                {limit: this.MAX_ITEMS_PER_PAGE, offset: (this.MAX_ITEMS_PER_PAGE * page) - this.MAX_ITEMS_PER_PAGE}
+                {limit: this.MAX_ITEMS_PER_PAGE, offset: pagination.getPageOffset(page, this.MAX_ITEMS_PER_PAGE)}
             );
             this.feedRequest = dataSource(queryParams);
             this.getFeed(this.feedRequest.promise);
-        }
-
-        paginate() {
-            const pages = [];
-            for (let i = 1; i <= this.state.totalPages; i += 1) {
-                pages.push(
-                    (
-                        <li className={`u-cursor page-item ${this.state.pageNumber === i ? 'active' : ''}`}
-                            key={i}
-                            onClick={() => {this.getPage(i)}}>
-                            <span className="page-link">
-                                {i}
-                            </span>
-                        </li>
-                    )
-                );
-            }
-
-            return (
-                <ul className="pagination">
-                    {pages}
-                </ul>
-            );
         }
 
         // increment/decrement `favorited` field for an article in place instead of fetching articles again.
@@ -175,23 +159,23 @@ function feedFactory(dataSource, queryParams) {
                         })
                     }
 
-                    {this.paginate()}
+                    {pagination.paginate(this.props.location, this.state.totalPages, this.getPage)}
                 </div>
             );
         }
     }
 }
 
-const GlobalFeed = feedFactory(articleResource.getList, {});
-const PersonalFeed = feedFactory(feedResource.getList, {});
-const TagFeed = feedFactory(articleResource.getList, {});
+const GlobalFeed = withRouter(feedFactory(articleResource.getList, {}));
+const PersonalFeed = withRouter(feedFactory(feedResource.getList, {}));
+const TagFeed = withRouter(feedFactory(articleResource.getList, {}));
 
 const authorFeedFactory = function(username) {
-    return feedFactory(articleResource.getList, {author: username, limit: 5});
+    return withRouter(feedFactory(articleResource.getList, {author: username, limit: 5}));
 };
 
 const favoritedArticlesFeedFactory = function(username) {
-    return feedFactory(articleResource.getList, {favorited: username, limit: 5});
+    return withRouter(feedFactory(articleResource.getList, {favorited: username, limit: 5}));
 };
 
 export {

@@ -66,9 +66,9 @@
     ✔ Current selected tag & feed is not reflected in the URL @done (17/02/2019, 12:53:20)
     ✔ Home page @done (17/02/2019, 12:53:13)
     ✔ User Profile @done (17/02/2019, 14:03:25)
-☐ Users can't navigate to a particular page by specifying it in the URL. Current page is not reflected in the URL. 
-    ☐ Home page - Your Feed, Global Feed
-    ☐ User Profile page - My Articles, Favorite Articles
+✔ Users can't navigate to a particular page by specifying it in the URL. Current page is not reflected in the URL. @done (22/02/2019, 11:03:13)
+    ✔ Home page - Your Feed, Global Feed @done (22/02/2019, 10:38:45)
+    ✔ User Profile page - My Articles, Favorite Articles @done (22/02/2019, 11:03:12)
 ☐ Flatten /src/pages. Get rid of directories with one file.
 ☐ Replace class-based components with function-based components where possible, for simplicity.
 ✔ [bug] User Profile - switching to other user's profile does not work properly (data stays the same) @done (15/02/2019, 22:09:40)
