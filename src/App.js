@@ -1,19 +1,19 @@
 import React, {Component, Fragment} from 'react';
 import './App.css';
 import {BrowserRouter as Router, Redirect, Route, Switch} from "react-router-dom";
-import Registration from "./pages/registration/Registration";
-import LogIn from './pages/login/LogIn';
+import Registration from "./pages/Registration";
+import LogIn from './pages/LogIn';
 
 import jwt from './services/jwt';
 import {addRequestInterceptor} from "./services/request";
 import user from './resources/user';
 import Navigation from "./components/Navigation";
-import ProfileSettings from "./pages/profile-settings/ProfileSettings";
-import Home from "./pages/home/Home";
-import UserProfile from "./pages/user-profile/UserProfile";
-import ArticleViewer from "./pages/article/ArticleViewer";
-import ArticleEditor from "./pages/article-editor/ArticleEditor";
-import ArticleCreator from "./pages/article-creator/ArticleCreator";
+import ProfileSettings from "./pages/ProfileSettings";
+import Home from "./pages/Home";
+import UserProfile from "./pages/UserProfile";
+import ArticleViewer from "./pages/ArticleViewer";
+import ArticleEditor from "./pages/ArticleEditor";
+import ArticleCreator from "./pages/ArticleCreator";
 import Footer from "./components/Footer";
 
 

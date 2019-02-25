@@ -1,15 +1,15 @@
 import {Component} from "react";
-import {articleResource} from "../../resources/article";
+import {articleResource} from "../resources/article";
 import {Link, withRouter} from "react-router-dom";
 import marked from "marked";
-import withAuthenticatedUser from "../../components/withAuthenticatedUser";
+import withAuthenticatedUser from "../components/withAuthenticatedUser";
 import React from "react";
-import CommentList from "../../components/CommentList";
-import {ArticleLikeButton} from "../../components/LikeButton";
-import {FollowUserButton} from "../../components/FollowButton";
-import ArticleAuthor from "../../components/ArticleAuthor";
-import {ArticleTags} from "../../components/TagList";
-import NotFound404 from "../../components/NotFound404";
+import CommentList from "../components/CommentList";
+import {ArticleLikeButton} from "../components/LikeButton";
+import {FollowUserButton} from "../components/FollowButton";
+import ArticleAuthor from "../components/ArticleAuthor";
+import {ArticleTags} from "../components/TagList";
+import NotFound404 from "../components/NotFound404";
 
 
 class BaseArticleMeta extends Component {

@@ -1,8 +1,8 @@
 import {Component} from "react";
-import user from "../../resources/user";
+import user from "../resources/user";
 import React from "react";
-import {GlobalFeed, PersonalFeed, TagFeed} from "../../components/feed";
-import {PopularTags} from "../../components/TagList";
+import {GlobalFeed, PersonalFeed, TagFeed} from "../components/feed";
+import {PopularTags} from "../components/TagList";
 import {Link, withRouter} from "react-router-dom";
 
 

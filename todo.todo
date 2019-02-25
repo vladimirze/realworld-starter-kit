@@ -69,7 +69,7 @@
 ✔ Users can't navigate to a particular page by specifying it in the URL. Current page is not reflected in the URL. @done (22/02/2019, 11:03:13)
     ✔ Home page - Your Feed, Global Feed @done (22/02/2019, 10:38:45)
     ✔ User Profile page - My Articles, Favorite Articles @done (22/02/2019, 11:03:12)
-☐ Flatten /src/pages. Get rid of directories with one file.
+✔ Flatten /src/pages. Get rid of directories with one file. @done (25/02/2019, 12:31:55)
 ☐ Replace class-based components with function-based components where possible, for simplicity.
 ✔ [bug] User Profile - switching to other user's profile does not work properly (data stays the same) @done (15/02/2019, 22:09:40)
 

@@ -1,8 +1,8 @@
 import {Component, Fragment} from "react";
-import {articleResource} from "../../resources/article";
+import {articleResource} from "../resources/article";
 import React from "react";
-import ArticleForm from "../../components/ArticleForm";
-import withAuthorizationCheck from "../../components/withAuthorizationCheck";
+import ArticleForm from "../components/ArticleForm";
+import withAuthorizationCheck from "../components/withAuthorizationCheck";
 
 
 class ArticleEditor extends Component {

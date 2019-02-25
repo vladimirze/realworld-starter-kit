@@ -1,8 +1,8 @@
 import {Component} from "react";
-import {articleResource} from "../../resources/article";
+import {articleResource} from "../resources/article";
 import {withRouter} from "react-router-dom";
 import React from "react";
-import ArticleForm from "../../components/ArticleForm";
+import ArticleForm from "../components/ArticleForm";
 
 
 class ArticleCreator extends Component {

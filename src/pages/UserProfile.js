@@ -1,11 +1,11 @@
 import {Component} from "react";
-import {profileResource} from "../../resources/profile";
+import {profileResource} from "../resources/profile";
 import {Link, withRouter} from "react-router-dom";
-import withAuthenticatedUser from "../../components/withAuthenticatedUser";
+import withAuthenticatedUser from "../components/withAuthenticatedUser";
 import React from "react";
-import {authorFeedFactory, favoritedArticlesFeedFactory} from "../../components/feed";
-import {FollowUserButton} from "../../components/FollowButton";
-import NotFound404 from "../../components/NotFound404";
+import {authorFeedFactory, favoritedArticlesFeedFactory} from "../components/feed";
+import {FollowUserButton} from "../components/FollowButton";
+import NotFound404 from "../components/NotFound404";
 
 
 const feedChoice = {
