@@ -2,8 +2,8 @@ import {Component} from "react";
 import React from "react";
 import withAuthenticatedUser from "./withAuthenticatedUser";
 import {withRouter} from "react-router-dom";
-import {ErrorViewer} from "./ErrorViewer";
-import NotFound404 from "./NotFound404";
+import {ErrorViewer} from "../components/ErrorViewer";
+import NotFound404 from "../components/NotFound404";
 
 
 

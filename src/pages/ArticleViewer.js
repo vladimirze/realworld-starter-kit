@@ -1,8 +1,8 @@
 import {Component} from "react";
-import {articleResource} from "../resources/article";
+import {articleResource} from "../api/article";
 import {Link, withRouter} from "react-router-dom";
 import marked from "marked";
-import withAuthenticatedUser from "../components/withAuthenticatedUser";
+import withAuthenticatedUser from "../hoc/withAuthenticatedUser";
 import React from "react";
 import CommentList from "../components/CommentList";
 import {ArticleLikeButton} from "../components/LikeButton";

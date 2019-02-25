@@ -1,7 +1,7 @@
 import {Component} from "react";
-import user from "../resources/user";
+import user from "../api/user";
 import React from "react";
-import withAuthenticatedUser from "../components/withAuthenticatedUser";
+import withAuthenticatedUser from "../hoc/withAuthenticatedUser";
 
 class ProfileSettings extends Component {
     constructor(props) {

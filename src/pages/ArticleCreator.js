@@ -1,5 +1,5 @@
 import {Component} from "react";
-import {articleResource} from "../resources/article";
+import {articleResource} from "../api/article";
 import {withRouter} from "react-router-dom";
 import React from "react";
 import ArticleForm from "../components/ArticleForm";

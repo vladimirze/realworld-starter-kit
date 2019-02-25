@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import {profileResource} from "../resources/profile";
-import withAuthenticatedUser from "./withAuthenticatedUser";
+import {profileResource} from "../api/profile";
+import withAuthenticatedUser from "../hoc/withAuthenticatedUser";
 
 
 export class FollowButton extends Component {

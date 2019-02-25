@@ -1,12 +1,12 @@
 import {Component} from "react";
-import {articleResource} from "../resources/article";
+import {articleResource} from "../api/article";
 import {Link, withRouter} from "react-router-dom";
-import {feedResource} from "../resources/feed";
+import {feedResource} from "../api/feed";
 import React from "react";
 import {ArticleLikeButton} from "./LikeButton";
 import {date} from '../services/representator';
 import {ArticleTags} from "./TagList";
-import pagination from "../services/pagination";
+import {pagination} from "../services/pagination";
 
 
 function feedFactory(dataSource, queryParams) {

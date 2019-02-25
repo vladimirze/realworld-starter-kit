@@ -1,7 +1,7 @@
 import {Component} from "react";
 import React from "react";
-import {articleResource} from "../resources/article";
-import withAuthenticatedUser from "./withAuthenticatedUser";
+import {articleResource} from "../api/article";
+import withAuthenticatedUser from "../hoc/withAuthenticatedUser";
 
 
 export default class LikeButton extends Component {

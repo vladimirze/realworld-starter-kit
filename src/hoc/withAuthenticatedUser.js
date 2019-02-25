@@ -1,5 +1,5 @@
 import {Component} from "react";
-import user from "../resources/user";
+import user from "../api/user";
 import React from "react";
 
 

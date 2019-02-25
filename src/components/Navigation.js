@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Link, NavLink} from 'react-router-dom';
-import user from "../resources/user";
+import user from "../api/user";
 
 
 export default class Navigation extends Component {

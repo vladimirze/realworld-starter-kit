@@ -1,6 +1,6 @@
 import {Component} from "react";
 import React from "react";
-import {tagResource} from "../resources/tag";
+import {tagResource} from "../api/tag";
 
 
 export default class TagList extends Component {
@@ -49,11 +49,9 @@ export default class TagList extends Component {
     }
 }
 
-export class ArticleTags extends Component {
-    render() {
-        return <TagList tags={this.props.tags}/>
-    }
-}
+export const ArticleTags = (props) => {
+    return <TagList tags={props.tags}/>
+};
 
 export class PopularTags extends Component {
     constructor(props) {

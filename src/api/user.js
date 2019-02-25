@@ -1,6 +1,6 @@
 import request from '../services/request';
 import Observable from '../services/Observable';
-import jwt from '../services/jwt';
+import {jwt} from '../services/jwt';
 
 
 const currentUser = new Observable();

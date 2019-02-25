@@ -1,6 +1,6 @@
 import {Component} from "react";
-import {commentResource} from "../resources/comment";
-import withAuthenticatedUser from "./withAuthenticatedUser";
+import {commentResource} from "../api/comment";
+import withAuthenticatedUser from "../hoc/withAuthenticatedUser";
 import React from "react";
 import CommentAuthor from "./CommentAuthor";
 

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import user from '../resources/user';
+import user from '../api/user';
 import {ErrorViewer} from "../components/ErrorViewer";
 import {Link, withRouter} from "react-router-dom";
 

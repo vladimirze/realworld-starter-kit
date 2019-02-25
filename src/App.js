@@ -4,9 +4,9 @@ import {BrowserRouter as Router, Redirect, Route, Switch} from "react-router-dom
 import Registration from "./pages/Registration";
 import LogIn from './pages/LogIn';
 
-import jwt from './services/jwt';
+import {jwt} from './services/jwt';
 import {addRequestInterceptor} from "./services/request";
-import user from './resources/user';
+import user from './api/user';
 import Navigation from "./components/Navigation";
 import ProfileSettings from "./pages/ProfileSettings";
 import Home from "./pages/Home";
@@ -14,7 +14,7 @@ import UserProfile from "./pages/UserProfile";
 import ArticleViewer from "./pages/ArticleViewer";
 import ArticleEditor from "./pages/ArticleEditor";
 import ArticleCreator from "./pages/ArticleCreator";
-import Footer from "./components/Footer";
+import {Footer} from "./components/Footer";
 
 
 addRequestInterceptor((url, options) => {
