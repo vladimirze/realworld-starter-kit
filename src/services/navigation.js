@@ -1,9 +1,9 @@
 export const navigation = {
-    search(location, toPath, queryParams, shouldPreserveQueryParams=true) {
+    search(location, toPath, queryParams, {preserveQueryParams = true} = {}) {
         const currentQueryParams = new URLSearchParams(location.search);
 
         let updatedQueryParams = {};
-        if (shouldPreserveQueryParams) {
+        if (preserveQueryParams) {
             for (const key of currentQueryParams.keys()) {
                 updatedQueryParams[key] = currentQueryParams.get(key);
             }
@@ -12,7 +12,22 @@ export const navigation = {
         return (toPath || location.pathname) + '?' + new URLSearchParams(Object.assign(updatedQueryParams, queryParams)).toString();
     },
 
-    updateQueryParams(history, location, queryParam) {
-        history.push(this.search(location, location.pathname, queryParam));
+    updateQueryParams(history, location, queryParam, options) {
+        history.push(this.search(location, location.pathname, queryParam, options));
+    },
+
+    getQueryParams(location) {
+        const queryParams = {};
+        const searchParams = new URLSearchParams(location.search);
+
+        searchParams.forEach((value, key) => {
+            queryParams[key] = value;
+        });
+
+        return queryParams;
+    },
+
+    go(history, ...args) {
+        history.push.apply(history, args);
     }
 };

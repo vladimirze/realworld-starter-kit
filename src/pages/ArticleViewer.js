@@ -10,6 +10,7 @@ import {FollowUserButton} from "../components/FollowButton";
 import ArticleAuthor from "../components/ArticleAuthor";
 import {ArticleTags} from "../components/TagList";
 import NotFound404 from "../components/NotFound404";
+import {navigation} from "../services/navigation";
 
 
 class BaseArticleMeta extends Component {
@@ -56,7 +57,7 @@ class BaseArticleMeta extends Component {
         this.request = articleResource.remove(this.props.match.params.slug);
         this.request.promise
             .then(() => {
-                this.props.history.push('/');
+                navigation.go(this.props.history, '/')
             })
             .catch(console.error);
     }

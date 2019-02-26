@@ -3,6 +3,7 @@ import {articleResource} from "../api/article";
 import {withRouter} from "react-router-dom";
 import React from "react";
 import ArticleForm from "../components/ArticleForm";
+import {navigation} from "../services/navigation";
 
 
 class ArticleCreator extends Component {
@@ -16,7 +17,7 @@ class ArticleCreator extends Component {
         this.request = articleResource.create(article);
         this.request.promise
             .then((response) => {
-                this.props.history.push(`/article/${response.article.slug}`);
+                navigation.go(this.props.history, `/article/${response.article.slug}`)
             })
             .catch(console.error);
     }

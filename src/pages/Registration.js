@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import user from '../api/user';
 import {ErrorViewer} from "../components/ErrorViewer";
 import {Link, withRouter} from "react-router-dom";
+import {navigation} from "../services/navigation";
 
 
 class Registration extends Component {
@@ -32,9 +33,9 @@ class Registration extends Component {
             })
             .then(() => {
                 if (this.props.location.state && this.props.location.state.from) {
-                    this.props.history.push(this.props.location.state.from);
+                    navigation.go(this.props.history, this.props.location.state.from);
                 } else {
-                    this.props.history.push('/');
+                    navigation.go(this.props.history, '/');
                 }
             })
             .catch((error) => {

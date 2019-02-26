@@ -4,6 +4,7 @@ import React from "react";
 import {GlobalFeed, PersonalFeed, TagFeed} from "../components/feed";
 import {PopularTags} from "../components/TagList";
 import {Link, withRouter} from "react-router-dom";
+import {navigation} from "../services/navigation";
 
 
 // if user is authenticated default is 'personal', if not then 'global'
@@ -52,13 +53,12 @@ class HomePage extends Component {
     }
 
     handleQueryParams() {
-        const queryParams = new URLSearchParams(this.props.location.search);
-        const feed = queryParams.get("feed");
+        const {feed, tag} = navigation.getQueryParams(this.props.location);
 
         if (feed && feedChoice.hasOwnProperty(feed.toUpperCase())) {
             this.selectFeed(feed);
-        } else if (queryParams.has("tag")) {
-            this.selectTag(queryParams.get("tag"));
+        } else if (tag) {
+            this.selectTag(tag);
         }
     }
 
@@ -67,8 +67,8 @@ class HomePage extends Component {
     }
 
     selectTag(tag) {
-        this.setState({selectedFeed: feedChoice.TAG, tag: tag});
-        this.props.history.push('/?tag=' + tag);
+        this.setState({selectedFeed: feedChoice.TAG, tag});
+        navigation.updateQueryParams(this.props.history, this.props.location, {tag}, {preserveQueryParams: false});
     }
 
     ifTagThen(tag, className) {
