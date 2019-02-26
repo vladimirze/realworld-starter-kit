@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import user from '../api/user';
 import {ErrorViewer} from "../components/ErrorViewer";
-import {Link, withRouter} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {navigation} from "../services/navigation";
+import withNavigation from "../hoc/withNavigation";
 
 
 class Registration extends Component {
@@ -33,9 +34,9 @@ class Registration extends Component {
             })
             .then(() => {
                 if (this.props.location.state && this.props.location.state.from) {
-                    navigation.go(this.props.history, this.props.location.state.from);
+                    this.props.navigation.go(this.props.location.state.from);
                 } else {
-                    navigation.go(this.props.history, '/');
+                    this.props.navigation.go('/');
                 }
             })
             .catch((error) => {
@@ -116,4 +117,4 @@ class Registration extends Component {
     }
 }
 
-export default withRouter(Registration);
+export default withNavigation(Registration);

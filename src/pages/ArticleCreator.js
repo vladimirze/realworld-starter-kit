@@ -1,9 +1,8 @@
 import {Component} from "react";
 import {articleResource} from "../api/article";
-import {withRouter} from "react-router-dom";
 import React from "react";
 import ArticleForm from "../components/ArticleForm";
-import {navigation} from "../services/navigation";
+import withNavigation from "../hoc/withNavigation";
 
 
 class ArticleCreator extends Component {
@@ -17,7 +16,7 @@ class ArticleCreator extends Component {
         this.request = articleResource.create(article);
         this.request.promise
             .then((response) => {
-                navigation.go(this.props.history, `/article/${response.article.slug}`)
+                this.props.navigation.go(`/article/${response.article.slug}`)
             })
             .catch(console.error);
     }
@@ -35,4 +34,4 @@ class ArticleCreator extends Component {
     }
 }
 
-export default withRouter(ArticleCreator);
+export default withNavigation(ArticleCreator);

@@ -1,9 +1,9 @@
 import {Component} from "react";
 import React from "react";
 import withAuthenticatedUser from "./withAuthenticatedUser";
-import {withRouter} from "react-router-dom";
 import {ErrorViewer} from "../components/ErrorViewer";
 import NotFound404 from "../components/NotFound404";
+import withNavigation from "./withNavigation";
 
 
 
@@ -87,7 +87,7 @@ const withAuthorizationCheck = (WrappedComponent, resolveFn, hasPermissionFn) =>
         }
     }
 
-    return withRouter(withAuthenticatedUser(AuthorizedOnly))
+    return withNavigation(withAuthenticatedUser(AuthorizedOnly))
 };
 
 export default withAuthorizationCheck;

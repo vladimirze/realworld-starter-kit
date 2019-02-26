@@ -1,6 +1,6 @@
 import {Component} from "react";
 import {articleResource} from "../api/article";
-import {Link, withRouter} from "react-router-dom";
+import {Link} from "react-router-dom";
 import marked from "marked";
 import withAuthenticatedUser from "../hoc/withAuthenticatedUser";
 import React from "react";
@@ -10,7 +10,7 @@ import {FollowUserButton} from "../components/FollowButton";
 import ArticleAuthor from "../components/ArticleAuthor";
 import {ArticleTags} from "../components/TagList";
 import NotFound404 from "../components/NotFound404";
-import {navigation} from "../services/navigation";
+import withNavigation from "../hoc/withNavigation";
 
 
 class BaseArticleMeta extends Component {
@@ -57,7 +57,7 @@ class BaseArticleMeta extends Component {
         this.request = articleResource.remove(this.props.match.params.slug);
         this.request.promise
             .then(() => {
-                navigation.go(this.props.history, '/')
+                this.props.navigation.go('/')
             })
             .catch(console.error);
     }
@@ -117,7 +117,7 @@ class BaseArticleMeta extends Component {
     }
 }
 
-const ArticleMeta = withRouter(BaseArticleMeta);
+const ArticleMeta = withNavigation(BaseArticleMeta);
 
 
 class ArticleViewer extends Component {
@@ -229,4 +229,4 @@ class ArticleViewer extends Component {
     }
 }
 
-export default withRouter(withAuthenticatedUser(ArticleViewer));
+export default withNavigation(withAuthenticatedUser(ArticleViewer));

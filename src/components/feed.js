@@ -1,12 +1,13 @@
 import {Component} from "react";
 import {articleResource} from "../api/article";
-import {Link, withRouter} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {feedResource} from "../api/feed";
 import React from "react";
 import {ArticleLikeButton} from "./LikeButton";
 import {date} from '../services/representator';
 import {ArticleTags} from "./TagList";
 import {pagination} from "../services/pagination";
+import withNavigation from "../hoc/withNavigation";
 
 
 function feedFactory(dataSource, queryParams) {
@@ -166,16 +167,16 @@ function feedFactory(dataSource, queryParams) {
     }
 }
 
-const GlobalFeed = withRouter(feedFactory(articleResource.getList, {}));
-const PersonalFeed = withRouter(feedFactory(feedResource.getList, {}));
-const TagFeed = withRouter(feedFactory(articleResource.getList, {}));
+const GlobalFeed = withNavigation(feedFactory(articleResource.getList, {}));
+const PersonalFeed = withNavigation(feedFactory(feedResource.getList, {}));
+const TagFeed = withNavigation(feedFactory(articleResource.getList, {}));
 
 const authorFeedFactory = function(username) {
-    return withRouter(feedFactory(articleResource.getList, {author: username, limit: 5}));
+    return withNavigation(feedFactory(articleResource.getList, {author: username, limit: 5}));
 };
 
 const favoritedArticlesFeedFactory = function(username) {
-    return withRouter(feedFactory(articleResource.getList, {favorited: username, limit: 5}));
+    return withNavigation(feedFactory(articleResource.getList, {favorited: username, limit: 5}));
 };
 
 export {

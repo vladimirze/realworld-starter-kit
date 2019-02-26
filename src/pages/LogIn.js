@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-import {Link, withRouter} from "react-router-dom";
+import {Link} from "react-router-dom";
 
 import user from '../api/user';
 import {ErrorViewer} from "../components/ErrorViewer";
-import {navigation} from "../services/navigation";
+import withNavigation from "../hoc/withNavigation";
 
 
 class LogIn extends Component {
@@ -29,9 +29,9 @@ class LogIn extends Component {
         this.loginRequest.promise
             .then(() => {
                 if (this.props.location.state && this.props.location.state.from) {
-                    navigation.go(this.props.history, this.props.location.state.from);
+                    this.props.navigation.go(this.props.location.state.from);
                 } else {
-                    navigation.go(this.props.history, '/');
+                    this.props.navigation.go('/');
                 }
             })
             .catch((error) => {
@@ -99,4 +99,4 @@ class LogIn extends Component {
     }
 }
 
-export default withRouter(LogIn);
+export default withNavigation(LogIn);

@@ -1,11 +1,12 @@
 import {Component} from "react";
 import {profileResource} from "../api/profile";
-import {Link, withRouter} from "react-router-dom";
+import {Link} from "react-router-dom";
 import withAuthenticatedUser from "../hoc/withAuthenticatedUser";
 import React from "react";
 import {authorFeedFactory, favoritedArticlesFeedFactory} from "../components/feed";
 import {FollowUserButton} from "../components/FollowButton";
 import NotFound404 from "../components/NotFound404";
+import withNavigation from "../hoc/withNavigation";
 
 
 const feedChoice = {
@@ -174,4 +175,4 @@ class UserProfile extends Component {
         )
     }
 }
-export default withRouter(withAuthenticatedUser(UserProfile));
+export default withNavigation(withAuthenticatedUser(UserProfile));

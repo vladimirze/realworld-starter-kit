@@ -3,7 +3,6 @@ import {articleResource} from "../api/article";
 import React from "react";
 import ArticleForm from "../components/ArticleForm";
 import withAuthorizationCheck from "../hoc/withAuthorizationCheck";
-import {navigation} from "../services/navigation";
 
 
 class ArticleEditor extends Component {
@@ -26,7 +25,7 @@ class ArticleEditor extends Component {
         this.articleRequest = articleResource.update(this.state.article.slug, article);
         this.articleRequest.promise
             .then((response) => {
-                navigation.go(this.props.history, `/article/${response.article.slug}`);
+                this.props.navigation.go(`/article/${response.article.slug}`);
             })
             .catch(console.error);
     }

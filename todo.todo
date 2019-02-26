@@ -72,6 +72,11 @@
 ✔ Flatten /src/pages. Get rid of directories with one file. @done (25/02/2019, 12:31:55)
 ✔ Replace class-based components with function-based components where possible, for simplicity. @done (25/02/2019, 18:21:35)
 ✔ [bug] User Profile - switching to other user's profile does not work properly (data stays the same) @done (15/02/2019, 22:09:40)
+☐ [bug] Home Page - feed is not being reset to default when clicking on conduit logo
+    ☐ go to home page
+    ☐ select tag in the Popular Tags 
+    ☐ click on conduit logo
+    ☐ result: home page still displays selected tag feed
 
 # Known Issues
 ☐ API should return 403 http status code (not 401) when user is authenticated but not authorized to request the resource
