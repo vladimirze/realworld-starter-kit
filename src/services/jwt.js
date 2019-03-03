@@ -19,5 +19,9 @@ export const jwt = {
     remove() {
         token = undefined;
         localStorage.removeItem(JWT_KEY_NAME);
+    },
+
+    isSet() {
+        return this.get() !== null;
     }
 };

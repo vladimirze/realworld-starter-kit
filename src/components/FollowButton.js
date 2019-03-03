@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {profileResource} from "../api/profile";
 import withAuthenticatedUser from "../hoc/withAuthenticatedUser";
+import {authenticationStatusEnum} from "../api/user";
 
 
 export class FollowButton extends Component {
@@ -84,7 +85,7 @@ class FollowUserButton extends Component {
                           onUnfollow={this.unfollow}
                           onFollow={this.follow}
                           subject={this.props.profile.username}
-                          isDisabled={!this.props.isUserAuthenticated}/>
+                          isDisabled={this.props.authenticationStatus !== authenticationStatusEnum.AUTHENTICATED}/>
         );
     }
 }

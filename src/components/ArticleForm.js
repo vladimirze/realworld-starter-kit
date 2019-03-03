@@ -36,7 +36,6 @@ export default class ArticleForm extends Component {
 
     handleTagInput(event) {
         const tags = event.target.value.split(' ');
-        console.log('tags: ', tags);
         this.setState({article: Object.assign({}, this.state.article, {[event.target.name]: tags})});
     }
 

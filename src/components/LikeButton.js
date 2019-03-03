@@ -2,6 +2,7 @@ import {Component} from "react";
 import React from "react";
 import {articleResource} from "../api/article";
 import withAuthenticatedUser from "../hoc/withAuthenticatedUser";
+import {authenticationStatusEnum} from "../api/user";
 
 
 export default class LikeButton extends Component {
@@ -64,7 +65,7 @@ class ArticleLikeButton extends Component {
             <LikeButton {...this.props}
                         onFavorite={this.favorite}
                         onUnfavorite={this.unfavorite}
-                        isDisabled={!this.props.isUserAuthenticated}/>
+                        isDisabled={this.props.authenticationStatus !== authenticationStatusEnum.AUTHENTICATED}/>
         );
     }
 }

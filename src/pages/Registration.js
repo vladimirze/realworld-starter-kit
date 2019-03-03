@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import user from '../api/user';
 import {ErrorViewer} from "../components/ErrorViewer";
 import {Link} from "react-router-dom";
-import {navigation} from "../services/navigation";
 import withNavigation from "../hoc/withNavigation";
 
 

@@ -1,91 +1,66 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {Link, NavLink} from 'react-router-dom';
-import user from "../api/user";
+import {authenticationStatusEnum} from "../api/user";
+import withAuthenticatedUser from "../hoc/withAuthenticatedUser";
 
 
-export default class Navigation extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            user: {}
-        };
+const Navigation = (props) => {
+    const isAuthenticated = props.authenticationStatus === authenticationStatusEnum.AUTHENTICATED;
 
-        this.updateUser = this.updateUser.bind(this);
-        this.updateIsAuthenticated = this.updateIsAuthenticated.bind(this);
-    }
+    return (
+        <nav className="navbar navbar-light">
+            <div className="container">
+                <Link className="navbar-brand" to="/">conduit</Link>
 
-    updateUser(authenticatedUser) {
-        this.setState({user: authenticatedUser});
-    }
+                <ul className="nav navbar-nav pull-xs-right">
+                    <li className="nav-item">
+                        <NavLink className="nav-link" activeClassName="active" exact to="/">Home</NavLink>
+                    </li>
 
-    updateIsAuthenticated(isAuthenticated) {
-        this.setState({isAuthenticated: isAuthenticated});
-    }
-
-    componentDidMount() {
-        user.currentUser.subscribe(this.updateUser);
-        user.isAuthenticated.subscribe(this.updateIsAuthenticated)
-    }
-
-    componentWillUnmount() {
-        user.currentUser.unsubscribe(this.updateUser);
-        user.isAuthenticated.unsubscribe(this.updateIsAuthenticated);
-    }
-
-    render() {
-        return (
-            <nav className="navbar navbar-light">
-                <div className="container">
-                    <Link className="navbar-brand" to="/">conduit</Link>
-
-                    <ul className="nav navbar-nav pull-xs-right">
+                    {
+                        isAuthenticated &&
                         <li className="nav-item">
-                            <NavLink className="nav-link" activeClassName="active" exact to="/">Home</NavLink>
+                            <NavLink className="nav-link" activeClassName="active" to="/editor">
+                                <i className="ion-compose"></i>&nbsp;New Post
+                            </NavLink>
                         </li>
+                    }
 
-                        {
-                            this.state.isAuthenticated &&
-                            <li className="nav-item">
-                                <NavLink className="nav-link" activeClassName="active" to="/editor">
-                                    <i className="ion-compose"></i>&nbsp;New Post
-                                </NavLink>
-                            </li>
-                        }
+                    {
+                        isAuthenticated &&
+                        <li className="nav-item">
+                            <NavLink className="nav-link" activeClassName="active" to="/settings">
+                                <i className="ion-gear-a"></i>&nbsp;Settings
+                            </NavLink>
+                        </li>
+                    }
 
-                        {
-                            this.state.isAuthenticated &&
-                            <li className="nav-item">
-                                <NavLink className="nav-link" activeClassName="active" to="/settings">
-                                    <i className="ion-gear-a"></i>&nbsp;Settings
-                                </NavLink>
-                            </li>
-                        }
+                    {
+                        !isAuthenticated &&
+                        <li className="nav-item">
+                            <NavLink className="nav-link" activeClassName="active" to="/login">Sign in</NavLink>
+                        </li>
+                    }
 
-                        {
-                            !this.state.isAuthenticated &&
-                            <li className="nav-item">
-                                <NavLink className="nav-link" activeClassName="active" to="/login">Sign in</NavLink>
-                            </li>
-                        }
+                    {
+                        !isAuthenticated &&
+                        <li className="nav-item">
+                            <NavLink className="nav-link" activeClassName="active" to="/register">Sign up</NavLink>
+                        </li>
+                    }
 
-                        {
-                            !this.state.isAuthenticated &&
-                            <li className="nav-item">
-                                <NavLink className="nav-link" activeClassName="active" to="/register">Sign up</NavLink>
-                            </li>
-                        }
+                    {
+                        isAuthenticated &&
+                        <li className="nav-item">
+                            <NavLink className="nav-link" activeClassName="active" to={`/@${props.currentUser.username}`}>
+                                {props.currentUser.username}
+                            </NavLink>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </nav>
+    );
+};
 
-                        {
-                            this.state.isAuthenticated &&
-                            <li className="nav-item">
-                                <NavLink className="nav-link" activeClassName="active" to={`/@${this.state.user.username}`}>
-                                    {this.state.user.username}
-                                </NavLink>
-                            </li>
-                        }
-                    </ul>
-                </div>
-            </nav>
-        );
-    }
-}
+export default withAuthenticatedUser(Navigation);

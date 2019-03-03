@@ -1,5 +1,5 @@
 import {Component} from "react";
-import user from "../api/user";
+import user, {authenticationStatusEnum} from "../api/user";
 import React from "react";
 
 
@@ -10,7 +10,7 @@ export default function withAuthenticatedUser(WrappedComponent) {
 
             this.state = {
                 currentUser: {},
-                isAuthenticated: false
+                authenticationStatus: authenticationStatusEnum.IN_PROGRESS
             };
 
             this.onCurrentUserChange = this.onCurrentUserChange.bind(this);
@@ -21,25 +21,25 @@ export default function withAuthenticatedUser(WrappedComponent) {
             this.setState({currentUser: user});
         }
 
-        onAuthentication(isAuthenticated) {
-            this.setState({isAuthenticated: isAuthenticated});
+        onAuthentication(authenticationStatus) {
+            this.setState({authenticationStatus: authenticationStatus});
         }
 
         componentDidMount() {
             user.currentUser.subscribe(this.onCurrentUserChange);
-            user.isAuthenticated.subscribe(this.onAuthentication);
+            user.authenticationStatus.subscribe(this.onAuthentication);
         }
 
         componentWillUnmount() {
             user.currentUser.unsubscribe(this.onCurrentUserChange);
-            user.isAuthenticated.unsubscribe(this.onAuthentication);
+            user.authenticationStatus.unsubscribe(this.onAuthentication);
         }
 
         render() {
             return (
                 <WrappedComponent {...this.props}
                                   currentUser={this.state.currentUser}
-                                  isUserAuthenticated={this.state.isAuthenticated}/>
+                                  authenticationStatus={this.state.authenticationStatus}/>
             );
         }
     }

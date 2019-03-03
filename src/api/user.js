@@ -2,9 +2,18 @@ import request from '../services/request';
 import Observable from '../services/Observable';
 import {jwt} from '../services/jwt';
 
+export const authenticationStatusEnum = {
+    AUTHENTICATED: 'authenticated',
+    NOT_AUTHENTICATED: 'not_authenticated',
+    IN_PROGRESS: 'in_progress'
+};
 
 const currentUser = new Observable();
-const isAuthenticated = new Observable(!!jwt.get());
+const authenticationStatus = new Observable(
+    jwt.isSet() ?
+    authenticationStatusEnum.IN_PROGRESS :
+    authenticationStatusEnum.NOT_AUTHENTICATED
+);
 
 function getCurrentUser() {
     const req = request('user', {
@@ -15,7 +24,13 @@ function getCurrentUser() {
         const user = authenticatedUser.user;
 
         currentUser.notify(user);
+        authenticationStatus.notify(authenticationStatusEnum.AUTHENTICATED);
+
         return user;
+    })
+    .catch((error) => {
+        authenticationStatus.notify(authenticationStatusEnum.NOT_AUTHENTICATED);
+        throw error;
     });
 
     return req;
@@ -36,7 +51,8 @@ function logIn(email, password) {
 
     req.promise = req.promise.then((authenticatedUser) => {
         jwt.set(authenticatedUser.user.token);
-        userResource.isAuthenticated.notify(true);
+        authenticationStatus.notify(authenticationStatusEnum.AUTHENTICATED);
+        currentUser.notify(authenticatedUser.user);
         return authenticatedUser;
     });
 
@@ -45,7 +61,7 @@ function logIn(email, password) {
 
 function logOut() {
     jwt.remove();
-    userResource.isAuthenticated.notify(false);
+    userResource.authenticationStatus.notify(authenticationStatusEnum.NOT_AUTHENTICATED);
     window.location.href = '/';
     return Promise.resolve(true);
 }
@@ -69,7 +85,7 @@ function update(updatedUser) {
 const userResource = {
     getCurrentUser: getCurrentUser,
     currentUser: currentUser,
-    isAuthenticated: isAuthenticated,
+    authenticationStatus: authenticationStatus,
     register: register,
     logIn: logIn,
     logOut: logOut,

@@ -77,6 +77,8 @@
     ☐ select tag in the Popular Tags 
     ☐ click on conduit logo
     ☐ result: home page still displays selected tag feed
+☐ [code style] Move all react lifecycle methods to top of the class except for render() (above the non-react methods, except for)
+☐ Move ProtectedRoute component into its own file
 
 # Known Issues
 ☐ API should return 403 http status code (not 401) when user is authenticated but not authorized to request the resource

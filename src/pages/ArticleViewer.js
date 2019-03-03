@@ -11,6 +11,7 @@ import ArticleAuthor from "../components/ArticleAuthor";
 import {ArticleTags} from "../components/TagList";
 import NotFound404 from "../components/NotFound404";
 import withNavigation from "../hoc/withNavigation";
+import {authenticationStatusEnum} from "../api/user";
 
 
 class BaseArticleMeta extends Component {
@@ -196,7 +197,7 @@ class ArticleViewer extends Component {
                             </div>
 
                             {
-                                !this.props.isUserAuthenticated &&
+                                (this.props.authenticationStatus !== authenticationStatusEnum.AUTHENTICATED) &&
                                 <div className="row">
                                     <div className="col-xs-12 col-md-8 offset-md-2">
                                         <p>

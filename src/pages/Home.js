@@ -1,13 +1,14 @@
 import {Component} from "react";
-import user from "../api/user";
 import React from "react";
 import {GlobalFeed, PersonalFeed, TagFeed} from "../components/feed";
 import {PopularTags} from "../components/TagList";
 import {Link} from "react-router-dom";
 import withNavigation from "../hoc/withNavigation";
+import withAuthenticatedUser from "../hoc/withAuthenticatedUser";
+import {authenticationStatusEnum} from "../api/user";
 
 
-// if user is authenticated default is 'personal', if not then 'global'
+// if user is authenticated default feed is 'personal', if not then 'global'
 const feedChoice = {
     GLOBAL: 'global',
     PERSONAL: 'personal',
@@ -20,35 +21,22 @@ class HomePage extends Component {
         super(props);
 
         this.state = {
-            isUserAuthenticated: false,
             selectedFeed: feedChoice.NONE
         };
 
-        this.selectFeed = this.selectFeed.bind(this);
-        this.onUserAuthenticationChange = this.onUserAuthenticationChange.bind(this);
-        this.selectTag = this.selectTag.bind(this);
+        this.updateTagQueryParam = this.updateTagQueryParam.bind(this);
         this.handleQueryParams = this.handleQueryParams.bind(this);
+        this.getDefaultFeed = this.getDefaultFeed.bind(this);
     }
 
-    selectFeed(feed) {
-        this.setState({selectedFeed: feed});
-    }
-
-    onUserAuthenticationChange(isUserAuthenticated) {
-        this.setState({
-            isUserAuthenticated: isUserAuthenticated,
-            selectedFeed: isUserAuthenticated ? feedChoice.PERSONAL : feedChoice.GLOBAL
-        });
-    }
-
-    componentDidMount() {
-        user.isAuthenticated.subscribe(this.onUserAuthenticationChange);
-        this.handleQueryParams();
-    }
-
-    componentDidUpdate(prevProps) {
-        if (prevProps.location.search !== this.props.location.search) {
-            this.handleQueryParams();
+    getDefaultFeed() {
+        switch (this.props.authenticationStatus) {
+            case authenticationStatusEnum.AUTHENTICATED:
+                return feedChoice.PERSONAL;
+            case authenticationStatusEnum.NOT_AUTHENTICATED:
+                return feedChoice.GLOBAL;
+            default:
+                return feedChoice.NONE;
         }
     }
 
@@ -56,19 +44,28 @@ class HomePage extends Component {
         const {feed, tag} = this.props.navigation.getQueryParams();
 
         if (feed && feedChoice.hasOwnProperty(feed.toUpperCase())) {
-            this.selectFeed(feed);
+            if ((feed === feedChoice.PERSONAL) &&
+                this.props.authenticationStatus !== authenticationStatusEnum.AUTHENTICATED) {
+                // viewing personal feed allowed only for authenticated users
+                this.props.navigation.go('/login', {state: {from: this.props.location}});
+            }
+            this.setState({selectedFeed: feed});
         } else if (tag) {
-            this.selectTag(tag);
+            this.setState({selectedFeed: feedChoice.TAG, tag});
+        } else {
+            this.setState({selectedFeed: this.getDefaultFeed()});
         }
     }
 
-    componentWillUnmount() {
-        user.isAuthenticated.unsubscribe(this.onUserAuthenticationChange);
+    updateTagQueryParam(tag) {
+        this.props.navigation.updateQueryParams({tag}, {preserveQueryParams: false});
     }
 
-    selectTag(tag) {
-        this.setState({selectedFeed: feedChoice.TAG, tag});
-        this.props.navigation.updateQueryParams({tag}, {preserveQueryParams: false});
+    componentDidUpdate(prevProps) {
+        if ((prevProps.authenticationStatus !== this.props.authenticationStatus) ||
+            (prevProps.location.search !== this.props.location.search)) {
+            this.handleQueryParams();
+        }
     }
 
     ifTagThen(tag, className) {
@@ -94,7 +91,7 @@ class HomePage extends Component {
                             <div className="feed-toggle">
                                 <ul className="nav nav-pills outline-active">
                                     {
-                                        this.state.isUserAuthenticated &&
+                                        (this.props.authenticationStatus === authenticationStatusEnum.AUTHENTICATED) &&
                                         <li className="nav-item u-cursor">
                                             <Link to="?feed=personal" className={`nav-link ${this.ifTagThen(feedChoice.PERSONAL, "active")}`}>
                                                 Your Feed
@@ -144,7 +141,7 @@ class HomePage extends Component {
                             <div className="sidebar">
                                 <p>Popular Tags</p>
 
-                                <PopularTags onSelect={this.selectTag}/>
+                                <PopularTags onSelect={this.updateTagQueryParam}/>
                             </div>
                         </div>
 
@@ -156,4 +153,4 @@ class HomePage extends Component {
     }
 }
 
-export default withNavigation(HomePage);
+export default withAuthenticatedUser(withNavigation(HomePage));

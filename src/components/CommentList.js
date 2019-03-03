@@ -4,6 +4,7 @@ import withAuthenticatedUser from "../hoc/withAuthenticatedUser";
 import React from "react";
 import CommentEditor from "./CommentEditor";
 import CommentViewer from "./CommentViewer";
+import {authenticationStatusEnum} from "../api/user";
 
 
 class CommentList extends Component {
@@ -67,7 +68,7 @@ class CommentList extends Component {
 
 
                 {
-                    this.state.isReady && this.props.isUserAuthenticated &&
+                    this.state.isReady && (this.props.authenticationStatus === authenticationStatusEnum.AUTHENTICATED) &&
                     <CommentEditor
                         articleSlug={this.props.articleSlug}
                         onPostSuccess={this.getComments}

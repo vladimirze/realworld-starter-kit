@@ -6,7 +6,7 @@ import LogIn from './pages/LogIn';
 
 import {jwt} from './services/jwt';
 import {addRequestInterceptor} from "./services/request";
-import user from './api/user';
+import user, {authenticationStatusEnum} from './api/user';
 import Navigation from "./components/Navigation";
 import ProfileSettings from "./pages/ProfileSettings";
 import Home from "./pages/Home";
@@ -15,6 +15,7 @@ import ArticleViewer from "./pages/ArticleViewer";
 import ArticleEditor from "./pages/ArticleEditor";
 import ArticleCreator from "./pages/ArticleCreator";
 import {Footer} from "./components/Footer";
+import withAuthenticatedUser from "./hoc/withAuthenticatedUser";
 
 
 addRequestInterceptor((url, options) => {
@@ -30,35 +31,21 @@ class ProtectedRoute extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            isRouteReady: false,
-            isAuthenticated: false
-        };
-
         this.isAuthenticatedUser = this.isAuthenticatedUser.bind(this);
         this.isAnonymousUser = this.isAnonymousUser.bind(this);
-        this.onAuthentication = this.onAuthentication.bind(this);
+        this.isUserLoading = this.isUserLoading.bind(this);
     }
 
-    onAuthentication(isAuthenticated) {
-        this.setState({isAuthenticated: isAuthenticated, isRouteReady: true});
-    }
-
-
-    componentDidMount() {
-        user.isAuthenticated.subscribe(this.onAuthentication);
-    }
-
-    componentWillUnmount() {
-        user.isAuthenticated.unsubscribe(this.onAuthentication);
+    isUserLoading() {
+        return this.props.authenticationStatus === authenticationStatusEnum.IN_PROGRESS;
     }
 
     isAuthenticatedUser() {
-        return this.state.isRouteReady && this.state.isAuthenticated;
+        return this.props.authenticationStatus === authenticationStatusEnum.AUTHENTICATED;
     }
 
     isAnonymousUser() {
-        return this.state.isRouteReady && !this.state.isAuthenticated;
+        return this.props.authenticationStatus === authenticationStatusEnum.NOT_AUTHENTICATED;
     }
 
     render() {
@@ -67,7 +54,7 @@ class ProtectedRoute extends Component {
         return (
             <Fragment>
                 {
-                    !this.state.isRouteReady &&
+                    this.isUserLoading() &&
                     <span>Route is loading...</span>
                 }
 
@@ -89,31 +76,13 @@ class ProtectedRoute extends Component {
         );
     }
 }
-
+ProtectedRoute = withAuthenticatedUser(ProtectedRoute);
 
 class App extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            isAuthenticated: false
-        };
-
-        this.onAuthentication = this.onAuthentication.bind(this);
-    }
-
-    onAuthentication(isAuthenticated) {
-        this.setState({isAuthenticated: isAuthenticated});
-        if (isAuthenticated) {
+    componentDidMount() {
+        if (jwt.isSet()) {
             user.getCurrentUser();
         }
-    }
-
-    componentDidMount() {
-        user.isAuthenticated.subscribe(this.onAuthentication);
-    }
-
-    componentWillUnmount() {
-        user.isAuthenticated.unsubscribe(this.onAuthentication);
     }
 
     render() {
@@ -142,4 +111,4 @@ class App extends Component {
     }
 }
 
-export default App;
+export default withAuthenticatedUser(App);
