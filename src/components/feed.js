@@ -23,18 +23,50 @@ function feedFactory(dataSource, queryParams) {
             this.state = {
                 feed: [],
                 isReady: false,
-                pageNumber: pagination.getCurrentPageNumber(this.props.location),
                 totalArticles: 0,
                 totalPages: 0
             };
 
-            this.getPage = this.getPage.bind(this);
+            this.getFeed = this.getFeed.bind(this);
             this.handleLikeButton = this.handleLikeButton.bind(this);
+            this.updatePageQueryParam = this.updatePageQueryParam.bind(this);
         }
 
-        getFeed(promise) {
+        componentDidMount() {
+            this.getFeed();
+        }
+
+        componentWillUnmount() {
+            for (const request of [this.feedRequest, this.favoriteRequest, this.unfavoriteRequest]) {
+                if (request) {
+                    request.abort();
+                }
+            }
+        }
+
+        componentDidUpdate(prevProps) {
+            // if query parameter ?page changed. get a new page.
+            const {page: prevPage} = prevProps.navigation.queryParams;
+            const {page: currentPage} = this.props.navigation.queryParams;
+            if (prevPage !== currentPage) {
+                this.getFeed();
+            }
+        }
+
+        getFeed() {
             this.setState({isReady: false});
-            promise.then((feed) => {
+
+            const queryParams = Object.assign(
+                {},
+                this.defaultQueryParams,
+                {
+                    limit: this.MAX_ITEMS_PER_PAGE,
+                    offset: pagination.getPageOffset(this.props.location, this.MAX_ITEMS_PER_PAGE)
+                }
+            );
+
+            this.feedRequest = dataSource(queryParams);
+            this.feedRequest.promise.then((feed) => {
                     this.setState({
                         feed: feed.articles,
                         isReady: true,
@@ -50,47 +82,6 @@ function feedFactory(dataSource, queryParams) {
                     console.error(error);
                     this.setState({isReady: false});
                 });
-        }
-
-        componentDidMount() {
-            const queryParams = Object.assign(
-                {},
-                this.defaultQueryParams,
-                {limit: this.MAX_ITEMS_PER_PAGE, offset: pagination.getPageOffset(this.props.location, this.MAX_ITEMS_PER_PAGE)}
-            );
-            this.feedRequest = dataSource(queryParams);
-            this.getFeed(this.feedRequest.promise);
-        }
-
-        componentWillUnmount() {
-            if (this.feedRequest) {
-                this.feedRequest.abort();
-            }
-
-            if (this.favoriteRequest) {
-                this.favoriteRequest.abort();
-            }
-
-            if (this.unfavoriteRequest) {
-                this.unfavoriteRequest.abort();
-            }
-        }
-
-        getPage(page) {
-            if (this.state.pageNumber === page) {
-                return;
-            }
-
-            this.setState({pageNumber: page});
-            pagination.goPage(this.props.history, this.props.location, page);
-
-            const queryParams = Object.assign(
-                {},
-                this.defaultQueryParams,
-                {limit: this.MAX_ITEMS_PER_PAGE, offset: pagination.getPageOffset(page, this.MAX_ITEMS_PER_PAGE)}
-            );
-            this.feedRequest = dataSource(queryParams);
-            this.getFeed(this.feedRequest.promise);
         }
 
         // increment/decrement `favorited` field for an article in place instead of fetching articles again.
@@ -110,6 +101,10 @@ function feedFactory(dataSource, queryParams) {
 
             feed.splice(index, 1, article);
             this.setState({feed: feed});
+        }
+
+        updatePageQueryParam(page) {
+            pagination.goPage(this.props.history, this.props.location, page);
         }
 
         render() {
@@ -160,7 +155,7 @@ function feedFactory(dataSource, queryParams) {
                         })
                     }
 
-                    {pagination.paginate(this.props.location, this.state.totalPages, this.getPage)}
+                    {pagination.paginate(this.props.location, this.state.totalPages, this.updatePageQueryParam)}
                 </div>
             );
         }
