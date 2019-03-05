@@ -8,7 +8,7 @@ function provideNavigation(WrappedComponent) {
         const boundNavigation = {
             search: navigation.search.bind(navigation, props.location),
             updateQueryParams: navigation.updateQueryParams.bind(navigation, props.history, props.location),
-            getQueryParams: navigation.getQueryParams.bind(navigation, props.location),
+            queryParams: navigation.getQueryParams(props.location),
             go: navigation.go.bind(navigation, props.history)
         };
 
@@ -21,10 +21,3 @@ function provideNavigation(WrappedComponent) {
 export default function withNavigation(WrappedComponent) {
     return withRouter(provideNavigation(WrappedComponent));
 }
-
-/*
-    TODO: Home Page bug with navigation
-        - select tag
-        - click on conduit logo
-        - the query params will disappear (which is OK) but the state will remain in selected tag
- */

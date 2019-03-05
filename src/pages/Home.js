@@ -41,7 +41,7 @@ class HomePage extends Component {
     }
 
     handleQueryParams() {
-        const {feed, tag} = this.props.navigation.getQueryParams();
+        const {feed, tag} = this.props.navigation.queryParams;
 
         if (feed && feedChoice.hasOwnProperty(feed.toUpperCase())) {
             if ((feed === feedChoice.PERSONAL) &&
