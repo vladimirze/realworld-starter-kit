@@ -46,24 +46,6 @@ class UserProfile extends Component {
         return this.props.currentUser.username === this.props.match.params.user;
     }
 
-    componentDidMount() {
-        this.prepareUserProfilePage();
-    }
-
-    componentDidUpdate(prevProps) {
-        if (prevProps.match.params.user !== this.props.match.params.user) {
-            this.prepareUserProfilePage();
-        } else if (prevProps.location.search !== this.props.location.search) {
-            this.setState({selectedFeed: this.getSelectedFeedFromQueryParams()});
-        }
-    }
-
-    componentWillUnmount() {
-        if (this.request) {
-            this.request.abort();
-        }
-    }
-
     ifFeedThen(feed, className) {
         return this.state.selectedFeed === feed ? className : '';
     }
@@ -95,6 +77,24 @@ class UserProfile extends Component {
             AuthorFeed: authorFeedFactory(profile.username),
             FavoritedArticlesFeed: favoritedArticlesFeedFactory(profile.username)
         });
+    }
+
+    componentDidMount() {
+        this.prepareUserProfilePage();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.match.params.user !== this.props.match.params.user) {
+            this.prepareUserProfilePage();
+        } else if (prevProps.location.search !== this.props.location.search) {
+            this.setState({selectedFeed: this.getSelectedFeedFromQueryParams()});
+        }
+    }
+
+    componentWillUnmount() {
+        if (this.request) {
+            this.request.abort();
+        }
     }
 
     render() {

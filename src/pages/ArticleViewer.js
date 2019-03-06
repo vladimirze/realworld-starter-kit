@@ -133,6 +133,10 @@ class ArticleViewer extends Component {
         this.updateArticle = this.updateArticle.bind(this);
     }
 
+    updateArticle(article) {
+        this.setState({article: article});
+    }
+
     componentDidMount() {
         this.request = articleResource.get(this.props.match.params.slug);
         this.request.promise
@@ -152,10 +156,6 @@ class ArticleViewer extends Component {
 
     componentWillUnmount() {
         this.request.abort();
-    }
-
-    updateArticle(article) {
-        this.setState({article: article});
     }
 
     render() {

@@ -32,27 +32,6 @@ function feedFactory(dataSource, queryParams) {
             this.updatePageQueryParam = this.updatePageQueryParam.bind(this);
         }
 
-        componentDidMount() {
-            this.getFeed();
-        }
-
-        componentWillUnmount() {
-            for (const request of [this.feedRequest, this.favoriteRequest, this.unfavoriteRequest]) {
-                if (request) {
-                    request.abort();
-                }
-            }
-        }
-
-        componentDidUpdate(prevProps) {
-            // if query parameter ?page changed. get a new page.
-            const {page: prevPage} = prevProps.navigation.queryParams;
-            const {page: currentPage} = this.props.navigation.queryParams;
-            if (prevPage !== currentPage) {
-                this.getFeed();
-            }
-        }
-
         getFeed() {
             this.setState({isReady: false});
 
@@ -105,6 +84,27 @@ function feedFactory(dataSource, queryParams) {
 
         updatePageQueryParam(page) {
             pagination.goPage(this.props.history, this.props.location, page);
+        }
+
+        componentDidMount() {
+            this.getFeed();
+        }
+
+        componentDidUpdate(prevProps) {
+            // if query parameter ?page changed. get a new page.
+            const {page: prevPage} = prevProps.navigation.queryParams;
+            const {page: currentPage} = this.props.navigation.queryParams;
+            if (prevPage !== currentPage) {
+                this.getFeed();
+            }
+        }
+
+        componentWillUnmount() {
+            for (const request of [this.feedRequest, this.favoriteRequest, this.unfavoriteRequest]) {
+                if (request) {
+                    request.abort();
+                }
+            }
         }
 
         render() {

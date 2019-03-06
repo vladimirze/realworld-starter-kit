@@ -15,12 +15,6 @@ class ArticleEditor extends Component {
         this.saveChanges = this.saveChanges.bind(this);
     }
 
-    componentWillUnmount() {
-        if (this.articleRequest) {
-            this.articleRequest.abort();
-        }
-    }
-
     saveChanges(article) {
         this.articleRequest = articleResource.update(this.state.article.slug, article);
         this.articleRequest.promise
@@ -28,6 +22,12 @@ class ArticleEditor extends Component {
                 this.props.navigation.go(`/article/${response.article.slug}`);
             })
             .catch(console.error);
+    }
+
+    componentWillUnmount() {
+        if (this.articleRequest) {
+            this.articleRequest.abort();
+        }
     }
 
     render() {

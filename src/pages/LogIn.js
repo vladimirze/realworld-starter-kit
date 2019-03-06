@@ -43,14 +43,14 @@ class LogIn extends Component {
             });
     }
 
+    handleInputChange(event) {
+        this.setState({[event.target.name]: event.target.value});
+    }
+
     componentWillUnmount() {
         if (this.loginRequest) {
             this.loginRequest.abort();
         }
-    }
-
-    handleInputChange(event) {
-        this.setState({[event.target.name]: event.target.value});
     }
 
     render() {

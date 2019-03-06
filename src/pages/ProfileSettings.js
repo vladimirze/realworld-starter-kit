@@ -8,7 +8,7 @@ class ProfileSettings extends Component {
         super(props);
 
         this.state = {
-            user: this._getDefaultUserSettings()
+            user: this.getDefaultUserSettings()
         };
         this.handleInputChange = this.handleInputChange.bind(this);
         this.updateSettings = this.updateSettings.bind(this);
@@ -37,13 +37,7 @@ class ProfileSettings extends Component {
         user.logOut();
     }
 
-    componentWillUnmount() {
-        if (this.request) {
-            this.request.abort();
-        }
-    }
-
-    _getDefaultUserSettings() {
+    getDefaultUserSettings() {
         return {
                 image: this.props.currentUser.image || '',
                 email: this.props.currentUser.email || '',
@@ -60,6 +54,12 @@ class ProfileSettings extends Component {
             this.setState({
                 user: this._getDefaultUserSettings()
             });
+        }
+    }
+
+    componentWillUnmount() {
+        if (this.request) {
+            this.request.abort();
         }
     }
 

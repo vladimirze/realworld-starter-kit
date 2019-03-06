@@ -61,15 +61,15 @@ class HomePage extends Component {
         this.props.navigation.updateQueryParams({tag}, {preserveQueryParams: false});
     }
 
+    ifTagThen(tag, className) {
+        return tag === this.state.selectedFeed ? className : '';
+    }
+
     componentDidUpdate(prevProps) {
         if ((prevProps.authenticationStatus !== this.props.authenticationStatus) ||
             (prevProps.location.search !== this.props.location.search)) {
             this.handleQueryParams();
         }
-    }
-
-    ifTagThen(tag, className) {
-        return tag === this.state.selectedFeed ? className : '';
     }
 
     render() {

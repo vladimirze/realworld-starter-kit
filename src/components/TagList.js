@@ -64,6 +64,10 @@ export class PopularTags extends Component {
         this.selectTag = this.selectTag.bind(this);
     }
 
+    selectTag(tag) {
+        this.props.onSelect(tag);
+    }
+
     componentDidMount() {
         this.request = tagResource.getList();
         this.request.promise
@@ -77,10 +81,6 @@ export class PopularTags extends Component {
         if (this.request) {
             this.request.abort();
         }
-    }
-
-    selectTag(tag) {
-        this.props.onSelect(tag);
     }
 
     render() {

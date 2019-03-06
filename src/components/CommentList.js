@@ -38,14 +38,6 @@ class CommentList extends Component {
             });
     }
 
-    componentDidMount() {
-        this.getComments();
-    }
-
-    componentWillUnmount() {
-        this.request.abort();
-    }
-
     removeComment(commentId) {
         this.request = commentResource.remove(this.props.articleSlug, commentId);
         this.request.promise
@@ -56,6 +48,14 @@ class CommentList extends Component {
 
     isCommentAuthor(comment) {
         return commentResource.isAuthor(this.props.currentUser, comment);
+    }
+
+    componentDidMount() {
+        this.getComments();
+    }
+
+    componentWillUnmount() {
+        this.request.abort();
     }
 
     render() {

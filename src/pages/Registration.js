@@ -47,6 +47,10 @@ class Registration extends Component {
             });
     }
 
+    handleInputChange(event) {
+        this.setState({[event.target.name]: event.target.value});
+    }
+
     componentWillUnmount() {
         if (this.registrationRequest) {
             this.registrationRequest.abort();
@@ -55,10 +59,6 @@ class Registration extends Component {
         if (this.loginRequest) {
             this.loginRequest.abort();
         }
-    }
-
-    handleInputChange(event) {
-        this.setState({[event.target.name]: event.target.value});
     }
 
     render() {
