@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/vladimirze/realworld-starter-kit/precache-manifest.39b9e432e7eceef37852bd21034248f8.js"
+  "/realworld-starter-kit/precache-manifest.a7861b296803a08040c6a45932ea596b.js"
 );
 
 workbox.clientsClaim();
@@ -28,7 +28,7 @@ self.__precacheManifest = [].concat(self.__precacheManifest || []);
 workbox.precaching.suppressWarnings();
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 
-workbox.routing.registerNavigationRoute("/vladimirze/realworld-starter-kit/index.html", {
+workbox.routing.registerNavigationRoute("/realworld-starter-kit/index.html", {
   
   blacklist: [/^\/_/,/\/[^\/]+\.[^\/]+$/],
 });
