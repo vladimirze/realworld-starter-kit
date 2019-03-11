@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/realworld-starter-kit/precache-manifest.269c1ec42cb42645fa435e88a0b41e30.js"
+  "/realworld-starter-kit/precache-manifest.b627c1b0c7e2c61b31e9666dd2df2420.js"
 );
 
 workbox.clientsClaim();
