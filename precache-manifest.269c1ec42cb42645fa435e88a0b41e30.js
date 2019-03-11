@@ -4,19 +4,19 @@ self.__precacheManifest = [
     "url": "/realworld-starter-kit/static/js/runtime~main.ce06dfb5.js"
   },
   {
-    "revision": "078f1d2b6941dd861e96",
-    "url": "/realworld-starter-kit/static/js/main.078f1d2b.chunk.js"
+    "revision": "2b99ec4c4552b544ef58",
+    "url": "/realworld-starter-kit/static/js/main.2b99ec4c.chunk.js"
   },
   {
     "revision": "e97ff5cfbe52f8aa82bb",
     "url": "/realworld-starter-kit/static/js/1.e97ff5cf.chunk.js"
   },
   {
-    "revision": "078f1d2b6941dd861e96",
+    "revision": "2b99ec4c4552b544ef58",
     "url": "/realworld-starter-kit/static/css/main.c7d7d045.chunk.css"
   },
   {
-    "revision": "1e87ed32837650c94de3cb3aab3ac848",
+    "revision": "e24fbb5d3702b162f3baf7fe4177a61b",
     "url": "/realworld-starter-kit/index.html"
   }
 ];
